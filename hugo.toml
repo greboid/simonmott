@@ -28,6 +28,13 @@ author = "Simon"
 headerImage = "/wp-content/uploads/2016/06/header.jpg"
 topPosts = ["post/owntracks-and-my-google-timeline"]
 
+[outputs]
+home = ["HTML", "RSS", "SearchIndex"]
+
+[outputFormats.SearchIndex]
+mediaType = "application/json"
+baseName = "search"
+
 [menus]
 [[menus.main]]
 name = "Home"

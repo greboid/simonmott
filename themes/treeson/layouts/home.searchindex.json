@@ -1,0 +1,13 @@
+{{- /* Search index consumed by js/search.js, kept in sync with the posts automatically. */ -}}
+[
+{{- range $i, $p := where site.RegularPages "Type" "post" }}
+{{- if $i }},{{ end }}
+  {
+    "title": {{ $p.Title | jsonify }},
+    "url": {{ $p.RelPermalink | jsonify }},
+    "date": {{ $p.Date.Format "2006-01-02" | jsonify }},
+    "date_display": {{ partial "date-ordinal.html" $p.Date | jsonify }},
+    "text": {{ $p.Plain | jsonify }}
+  }
+{{- end }}
+]

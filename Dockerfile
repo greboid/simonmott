@@ -8,7 +8,7 @@ WORKDIR /src
 RUN hugo --destination /out
 
 # ---- Stage 2: serve with nginx ----
-FROM nginx:1.27-alpine
+FROM nginx:1.28-alpine
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /out /usr/share/nginx/html

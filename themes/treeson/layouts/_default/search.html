@@ -46,5 +46,5 @@
 {{ end }}
 
 {{ define "scriptsextra" }}
-<script src="{{ "js/search.js" | relURL }}"></script>
+<script src="{{ partial "asset-url.html" "js/search.js" }}" defer></script>
 {{ end }}

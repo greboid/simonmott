@@ -1,0 +1,6 @@
+{{- /* Publish a theme asset from assets/, minified and fingerprinted for production builds. */ -}}
+{{- $asset := resources.Get . -}}
+{{- if hugo.IsProduction -}}
+    {{- $asset = $asset | minify | fingerprint -}}
+{{- end -}}
+{{- $asset.RelPermalink -}}

@@ -1,28 +1,11 @@
-{{ "<!-- theme customizer styles, copied verbatim from the original site -->" | safeHTML }}
-<style data-from="original" type="text/css">
-img.wp-smiley,
-img.emoji {
-	display: inline !important;
-	border: none !important;
-	box-shadow: none !important;
-	height: 1em !important;
-	width: 1em !important;
-	margin: 0 0.07em !important;
-	vertical-align: -0.1em !important;
-	background: none !important;
-	padding: 0 !important;
-}
-</style>
-<style data-from="original" type='text/css'>img#wpstats{display:none}</style>
-<style data-from="original" type="text/css" id="mythemes-custom-style-header">
+{{ "<!-- theme customizer styles, carried over from the original site (dead rules removed) -->" | safeHTML }}
+<style>
     .mythemes-header a.header-description{
         color: rgba( 255,255,255 , 0.5 );
     }
     .mythemes-header a.header-description:hover{
         color: rgba( 255,255,255 , 0.7 );
     }
-</style>
-<style data-from="original" type="text/css">
 
     /* HEADER */
     body{
@@ -32,70 +15,25 @@ img.emoji {
         color: #ffffff;
     }
 
-    /* BACKGROUND IMAGE */
-    body > div.content,
-    body footer aside{
-        background-image: url();
-        background-repeat: ;
-        background-position: ;
-        background-attachment: ;
-    }
-
     /* BREADCRUMBS */
     div.mythemes-page-header{
         padding-top: 60px;
         padding-bottom: 60px;
     }
 
-</style>
-<style data-from="original" type="text/css" id="mythemes-custom-style-background">
-
     /* BACKGROUND COLOR */
     body > div.content,
     body footer aside{
         background-color: #ffffff;
     }
 
-
     /* MENU NAVIGATION */
-    /* BACKGROUND COLOR */
     body.scroll-nav .mythemes-poor{
         background-color: rgba( 255,255,255 , 0.91 );
     }
     .mythemes-poor{
         background-color: #ffffff;
     }
-
-</style>
-<style data-from="original" type="text/css" id="mythemes-custom-style-color-btn-1">
-
-    /* FIRST BUTTON */
-    .header-button-wrapper a.btn.first-btn.header-button{
-        color: rgba( 255,255,255 , 0.4 );
-        border: 1px solid rgba( 255,255,255 , 0.2 );
-        background: rgba( 255,255,255 , 0.03 );
-    }
-    .header-button-wrapper a.btn.first-btn.header-button:hover{
-        color: rgba( 255,255,255 , 0.9 );
-        border: 1px solid rgba( 255,255,255 , 0.7 );
-    }
-
-</style>
-<style data-from="original" type="text/css" id="mythemes-custom-style-color-btn-2">
-
-    /* SECOND BUTTON */
-    .header-button-wrapper a.btn.second-btn.header-button{
-        color: rgba( 255,255,255 , 0.4 );
-        border: 1px solid rgba( 255,255,255 , 0.2 );
-        background: rgba( 255,255,255 , 0.03 );
-    }
-    .header-button-wrapper a.btn.second-btn.header-button:hover{
-        color: rgba( 255,255,255 , 0.9 );
-        border: 1px solid rgba( 255,255,255 , 0.7 );
-    }
-
-</style>
-<style data-from="original" type="text/css" id="mythemes-custom-style-color-1">
 
     /* COLOR 1 */
     nav.base-nav ul li a,
@@ -108,12 +46,6 @@ img.emoji {
     nav.base-nav ul li.current-menu-ancestor > a,
     div.widget-grofile.grofile a.grofile-full-link:hover{
         color: #00001f;
-    }
-
-    /* COMMENTS */
-    div.comments-list > ol li.pingback header cite a:hover,
-    div.comments-list > ol li.comment header cite a:hover{
-        color: #232e79;
     }
 
     /* BUTTONS */
@@ -131,7 +63,7 @@ img.emoji {
     .hentry button,
     .hentry input[type="button"],
     .hentry input[type="submit"],
-    
+
     /* WIDGETS */
     div.widget_calendar table th,
     div.widget_post_meta ul li span.post-tag,
@@ -140,10 +72,6 @@ img.emoji {
     article div.post-meta-tags a:hover,
     article div.post-meta-categories a,
 
-    /* COMMENTS */
-    div.comments-list > ol li.comment header span.comment-meta span.comment-replay a:hover,
-    div#comments  p.form-submit input[type="submit"],
-
     /* PAGINATION */
     div.pagination nav span{
         background-color: #05105b;
@@ -151,32 +79,18 @@ img.emoji {
 
     /* BUTTONS */
     /* BORDER BOTTOM */
-    /* CLASSES */
     .btn,
     .button,
     .mythemes-button,
-
-    /* FORMS */
     button,
     input[type="submit"],
     input[type="button"],
-
-    /* POST CONTENT */
     .hentry button,
     .hentry input[type="button"],
     .hentry input[type="submit"],
-
-    /* POST META */
     div.widget_post_meta ul li span.post-tag,
-
-    /* POST META */
     article div.post-meta-tags a:hover,
     article div.post-meta-categories a,
-
-    /* COMMENTS */
-    div#comments  p.form-submit input[type="submit"],
-
-    /* PAGINATION */
     div.pagination nav span{
         border-bottom: 1px solid #000033;
     }
@@ -204,7 +118,6 @@ img.emoji {
     article.sticky a.more-link:hover{
         color: #05105b;
     }
-        
 
     /* FOOTER */
     footer .mythemes-black-side{
@@ -219,11 +132,8 @@ img.emoji {
         color: #9ba6f1;
     }
     footer .mythemes-black-side .mythemes-copyright a:hover{
-        color: #c3ceff;   
+        color: #c3ceff;
     }
-
-</style>
-<style data-from="original" type="text/css" id="mythemes-custom-style-color-2">
 
     /* COLOR 2 */
     nav.base-nav ul li.current-menu-item > a{
@@ -232,68 +142,34 @@ img.emoji {
 
     /* HOVER COLOR */
     a:hover,
-
-    /* META */
     article div.meta a:hover{
         color: #7db74d;
     }
 
     /* SECOND BUTTONS */
-    /* CLASSES */
     .btn.second-button,
     .button.second-button,
     .mythemes-button.second-button,
-
-    /* MENU */
     .mythemes-nav-btn button.btn-base-nav,
-
-    /* WIDGETS */
     div.widget_post_tags div.tagcloud a,
     div.widget_tag_cloud div.tagcloud a,
-    div.widget_newsletter form button[type="submit"],
-
-    /* COMMENTS */
-    div.comments-list > ol li.comment header span.comment-meta span.comment-replay a,
-    div.comment-respond h3.comment-reply-title small a,
-    
-    /* POST META */
-    article div.post-meta-categories a:hover,
-    article div.post-meta-tags a{
+    div.widget_newsletter form button[type="submit"]{
         background-color: #5f992f;
     }
-
-    /* SECOND BUTTONS */
-    /* BORDER BOTTOM */
-    /* CLASSES */
     .btn.second-button,
     .button.second-button,
     .mythemes-button.second-button,
-
-    /* MENU */
     .mythemes-nav-btn button.btn-base-nav,
-
-    /* WIDGETS */
     div.widget_post_tags div.tagcloud a,
     div.widget_tag_cloud div.tagcloud a,
     div.widget_newsletter form button[type="submit"],
-
-    /* POST META */
     article div.post-meta-tags a,
-    article div.post-meta-categories a:hover,
-
-    /* COMMENTS */
-    div.comment-respond h3.comment-reply-title small a{
+    article div.post-meta-categories a:hover{
         border-bottom: 1px solid #377107;
     }
 
-</style>
-<style data-from="original" type="text/css" id="mythemes-custom-style-color-3">
-
     /* COLOR 3 */
-    /* LINK */
     a,
-
-    /* WIDGETS */
     div.widget ul li a:hover,
     div.widget_calendar table td a:hover,
     div.widget_categories ul li a:hover,
@@ -307,30 +183,28 @@ img.emoji {
         color: #416a9d;
     }
 
-</style>
-<style data-from="original" type="text/css" id="mythemes-custom-css">
-
+    /* CUSTOM CSS */
     div.content div.container aside.mythemes-header-items,
-div.content div.container aside.mythemes-header-items + div.row{
+    div.content div.container aside.mythemes-header-items + div.row{
     display: none;
-}
+    }
 
-.mythemes-post-social {
-display: none;
-}
+    .mythemes-post-social {
+    display: none;
+    }
 
-div.widget.widget_text {
-margin-bottom: 0px;
-margin-top:-50px;
-padding-bottom: 15px;
-}
+    div.widget.widget_text {
+    margin-bottom: 0px;
+    margin-top:-50px;
+    padding-bottom: 15px;
+    }
 
-div.mythemes-header a.header-title {
-font-weight: bold;
-margin-top: 100px;
-}
+    div.mythemes-header a.header-title {
+    font-weight: bold;
+    margin-top: 100px;
+    }
 
-.hentry, .hentry p, article p {
-  color: #5d5d5d;
-}
+    .hentry, .hentry p, article p {
+      color: #5d5d5d;
+    }
 </style>

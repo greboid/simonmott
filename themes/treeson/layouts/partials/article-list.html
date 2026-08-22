@@ -11,7 +11,7 @@
             <ul class="post-categories">
 	{{- range sort (.GetTerms "categories") "LinkTitle" }}<li><a href="{{ .RelPermalink }}" rel="category tag">{{ .LinkTitle }}</a></li>
 	{{- end }}</ul>
-            <a class="author" href="{{ site.Home.RelPermalink }}" title="Writed by {{ site.Params.author }}">by {{ site.Params.author }}</a>
+            <a class="author" href="{{ site.Home.RelPermalink }}" title="Written by {{ site.Params.author }}">by {{ site.Params.author }}</a>
 
             <time datetime="{{ .Date.Format "2006-01-02" }}">on {{ partial "date-ordinal.html" .Date }}</time>
 
