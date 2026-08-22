@@ -1,0 +1,52 @@
++++
+title = "Dual-stacking Proxmox Web UI (pveproxy)"
+date = 2018-06-20T20:49:59Z
+url = "/2018/06/dual-stacking-proxmox-web-ui-pveproxy/"
+wp_id = 352
+more = true
+categories = ["Debugging", "System Administration", "Tweaking"]
+tags = ["dual-stack", "ipv6", "proxmox", "pveproxy"]
++++
+<p><a href="/wp-content/uploads/2018/06/Proxmox-logo-stacked.png"><img loading="lazy" class="alignright size-full wp-image-354" src="/wp-content/uploads/2018/06/Proxmox-logo-stacked.png" alt="" width="200" height="190" /></a>As part of my recent (and ongoing) project to implement native IPv6 on my own infrastructure (except at home&#8230; I&#8217;m looking at you <a href="https://www.hyperoptic.com/">Hyperoptic</a>), I decided to try to dual-stack as much as possible so that when I have IPv6 connectivity, services would prefer that over IPv4, without making things unavailable.</p>
+<p>As it turns out, Proxmox&#8217;s Web interface (pveproxy) doesn&#8217;t listen on the IPv6 address family by default. This stumped me for a little while, but its pretty simple to fix when you know whats going on.</p>
+<p>This post is going to spend most of its time explaining why this happens rather than the fix. If you&#8217;re just here to see how to do it, check below.</p>
+<!--more-->
+
+<p><span id="more-352"></span></p>
+<h5>Dual-Stacking pveproxy &#8211; aka &#8220;The Fix&#8221;</h5>
+<p>pveproxy seems to rely on the contents of <code>/etc/hosts</code> in order to figure out what address family to use when binding port 8006 (the default GUI port). In order to change this we need to edit our <code>/etc/hosts</code> file and change the line which identifies our Proxmox host</p>
+<p>We start with (for example)</p>
+<pre>10.0.0.100 pvehost.some.domain pvehost pvelocalhost</pre>
+<p>And we should change it to</p>
+<pre>::ffff:10.0.0.100 pvehost.some.domain pvehost pvelocalhost</pre>
+<p>All we&#8217;ve done here is add <code>::ffff:</code> before the IP address of our node. This tells the OS that its an IPv6 address &#8211; but its a special <a href="https://en.wikipedia.org/wiki/IPv6#IPv4-mapped_IPv6_addresses">IPv4-mapped-IPv6 address</a>. Restart the <code>pveproxy</code> service and you should now see it binds to an IPv6 socket</p>
+<pre>tcp6       0      0 :::8006                 :::*                    LISTEN      -</pre>
+<p>Viola &#8211; The Proxmox Web interface should work on both IPv4 and IPv6.</p>
+<h5>How pveproxy chooses which family to use&#8230;</h5>
+<p>By default, pveproxy decides to bind to an IPv4 family socket. By changing the family to v6, enables it to work for both families, primarily because of how the OS is configured.</p>
+<p>Specifically, this depends on the value of <code>bindv6only</code> in sysctl. If this is enabled then the socket would <strong>only</strong> work for IPv6 addresses and applications would have to specifically bind to both v4 and v6 address families independently, depending on which they want to support.</p>
+<p>Leaving <code>bindv6only</code> disabled (default) is my preferred choice here as this would affect more than just Proxmox for me.</p>
+<p>In order to figure this one out, I had to dig into the supplied perl modules for Proxmox. At the time of writing, I was using Proxmox 5.2 for my testing. Because I&#8217;m looking at the source for the modules, I wont quote line numbers as they will likely change over time. I will however link to the corresponding git commits.</p>
+<p>If we start with the module for pveproxy &#8211; <code>/usr/share/perl5/PVE/Service/pveproxy.pm</code><br />
+(Git: <a href="https://git.proxmox.com/?p=pve-manager.git;a=blob;f=PVE/Service/pveproxy.pm;h=2d3d4cf7ff410a04c6fe0579f59dde4fec1e56e3;hb=HEAD#l70">2d3d4cf7ff410a04c6fe0579f59dde4fec1e56e3</a>)</p>
+<pre><code class="prettyprint lang-perl">    my $family = PVE::Tools::get_host_address_family($self-&gt;{nodename});
+    my $socket = $self-&gt;create_reusable_socket(8006, undef, $family);
+</code></pre>
+<p>It&#8217;s pretty clear here that it gets the address family for <em>something</em>, and then creates a socket bound to port 8006 using that family. Tracing back to where <code>nodename</code> actually gets set, we end up looking at <code>/usr/share/perl5/PVE/INotify.pm</code><br />
+(Git: <a href="https://git.proxmox.com/?p=pve-common.git;a=blob;f=src/PVE/INotify.pm;h=0b9ea4adc3e078a47369cd97bc6c271a45f16870;hb=HEAD#l502">0b9ea4adc3e078a47369cd97bc6c271a45f16870)</a>)</p>
+<pre><code class="prettyprint lang-perl">sub nodename {
+    return $cached_nodename if $cached_nodename;
+    my ($sysname, $nodename) = POSIX::uname();
+    $nodename =~ s/\..*$//; # strip domain part, if any
+    die "unable to read node name\n" if !$nodename;
+    $cached_nodename = $nodename;
+    return $cached_nodename;
+}</code></pre>
+<p>My understanding of what the above snippet does (<a href="http://perldoc.perl.org/POSIX.html#uname">POSIX::uname</a>) is that it in-fact grabs the same values as would be visible from <code>uname</code> on command line. Specifically the &#8220;kernel-name&#8221; and &#8220;nodename&#8221; arguments</p>
+<pre><code class="prettyprint lang-bsh">root@pvehost:~# uname -sn
+Linux pvehost
+
+root@pvehost:~# uname --kernel-name --nodename
+Linux pvehost</code></pre>
+<p>From here, a host lookup is performed against the <code>nodename</code> value. On a fresh install this is typically an IPv4 address, so pveproxy will only ever bind to the IPv4 address family. The change to the host entry made earlier now technically makes this an IPv6 address, thus the family chosen is IPv6.</p>
+<p>Personally, I&#8217;d like to have a bit more control over how pveproxy binds in the future.</p>

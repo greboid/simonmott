@@ -1,0 +1,53 @@
+<header>
+
+<div class="mythemes-header overflow-wrapper parallax-container" style="height: 400px;">
+    <div class="valign-cell-wrapper" style="background: rgba( 1,0,81, 0.19 );">
+
+        <!-- VERTICAL ALIGN CENTER -->
+        <div class="valign-cell">
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <a class="header-title" href="{{ site.Home.RelPermalink }}" title="{{ site.Title }} - {{ site.Params.description }}">{{ site.Title }}</a><a class="header-description" href="{{ site.Home.RelPermalink }}" title="{{ site.Title }} - {{ site.Params.description }}">{{ site.Params.description }}</a>                    </div>
+                </div>
+
+        </div>
+    </div>
+
+
+    <div class="parallax" style="background-image: url({{ site.Params.headerImage | absURL }});"><img src="{{ site.Params.headerImage | absURL }}" alt="{{ site.Title }} - {{ site.Params.description }}"></div></div>
+            <div class="mythemes-poor">
+                <div class="container">
+
+                    <div class="row mythemes-nav-small-device">
+                        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 mythemes-nav-label">
+                                                        <a href="{{ site.Home.RelPermalink }}" title="{{ site.Title }} - {{ site.Params.description }}">
+                                {{ site.Title }}                            </a>
+                        </div>
+                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 mythemes-nav-btn">
+                            <button type="button" class="btn-collapse btn-base-nav" data-toggle=".header-nav.base-nav">
+                                <i>+</i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <nav class="mythemes-nav-inline base-nav header-nav nav-collapse">
+
+                            <div class="nav-wrapper"><ul id="menu-popular" class="mythemes-menu">{{ range site.Menus.main }}{{ if .HasChildren }}<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href="#">{{ .Name }}</a>
+<ul class="sub-menu">
+	{{ range .Children }}<li class="menu-item menu-item-type-post_type menu-item-object-post"><a href="{{ .URL }}">{{ .Name }}</a></li>
+{{ end }}</ul>
+</li>
+{{ else }}<li class="menu-item menu-item-type-custom menu-item-object-custom{{ if and $.IsHome (eq $.RelPermalink "/") }} current-menu-item current_page_item{{ end }}"><a href="{{ .URL }}">{{ .Name }}</a></li>
+{{ end }}{{ end }}<li class="menu-item menu-item-type-custom menu-item-object-custom theme-toggle-item"><a href="#" id="theme-toggle" title="Toggle dark mode"><i class="mythemes-icon-moon icon-moon"></i><i class="mythemes-icon-sun icon-sun"></i></a></li></ul></div>                            </nav>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </header>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Proxmox on Simon Mott</title>
+    <link>https://www.simonmott.co.uk/tag/proxmox/</link>
+    <description>Recent content in Proxmox on Simon Mott</description>
+    <generator>Hugo</generator>
+    <language>en-GB</language>
+    <lastBuildDate>Wed, 20 Jun 2018 20:49:59 +0000</lastBuildDate>
+    <atom:link href="https://www.simonmott.co.uk/tag/proxmox/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Dual-stacking Proxmox Web UI (pveproxy)</title>
+      <link>https://www.simonmott.co.uk/2018/06/dual-stacking-proxmox-web-ui-pveproxy/</link>
+      <pubDate>Wed, 20 Jun 2018 20:49:59 +0000</pubDate>
+      <guid>https://www.simonmott.co.uk/2018/06/dual-stacking-proxmox-web-ui-pveproxy/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://www.simonmott.co.uk/wp-content/uploads/2018/06/Proxmox-logo-stacked.png&#34;&gt;&lt;img loading=&#34;lazy&#34; class=&#34;alignright size-full wp-image-354&#34; src=&#34;https://www.simonmott.co.uk/wp-content/uploads/2018/06/Proxmox-logo-stacked.png&#34; alt=&#34;&#34; width=&#34;200&#34; height=&#34;190&#34; /&gt;&lt;/a&gt;As part of my recent (and ongoing) project to implement native IPv6 on my own infrastructure (except at home&amp;#8230; I&amp;#8217;m looking at you &lt;a href=&#34;https://www.hyperoptic.com/&#34;&gt;Hyperoptic&lt;/a&gt;), I decided to try to dual-stack as much as possible so that when I have IPv6 connectivity, services would prefer that over IPv4, without making things unavailable.&lt;/p&gt;&#xA;&lt;p&gt;As it turns out, Proxmox&amp;#8217;s Web interface (pveproxy) doesn&amp;#8217;t listen on the IPv6 address family by default. This stumped me for a little while, but its pretty simple to fix when you know whats going on.&lt;/p&gt;&#xA;&lt;p&gt;This post is going to spend most of its time explaining why this happens rather than the fix. If you&amp;#8217;re just here to see how to do it, check below.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

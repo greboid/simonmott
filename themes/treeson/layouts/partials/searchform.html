@@ -1,0 +1,8 @@
+<form action="{{ "search/" | relURL }}" method="get" id="searchform">
+    <fieldset>
+        <div id="searchbox">
+            <input type="text" name="s"  id="keywords" value="type here..." onfocus="if (this.value == 'type here...') {this.value = '';}" onblur="if (this.value == '') {this.value = 'type here...';}">
+            <button type="submit"><i class="mythemes-icon-search-5"></i></button>
+        </div>
+    </fieldset>
+</form>

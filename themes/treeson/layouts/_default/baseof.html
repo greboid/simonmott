@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en-GB" prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script>(function(){var t=null;try{t=window.localStorage.getItem('sm-theme');}catch(e){}if(t!=='dark'&&t!=='light'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);})();</script>
+        <link rel="profile" href="http://gmpg.org/xfn/11" />
+        <title>{{ block "title" . }}{{ site.Title }}{{ end }}</title>
+        <meta name="description" content="{{ site.Params.description }}" />
+        <link rel="canonical" href="{{ .Permalink }}" />
+        <meta property="og:locale" content="en_GB" />
+        <meta property="og:type" content="{{ block "ogtype" . }}website{{ end }}" />
+        <meta property="og:title" content="{{ block "ogtitle" . }}{{ site.Title }}{{ end }}" />
+        <meta property="og:description" content="{{ site.Params.description }}" />
+        <meta property="og:url" content="{{ .Permalink }}" />
+        <meta property="og:site_name" content="{{ site.Title }}" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:description" content="{{ site.Params.description }}" />
+        <meta name="twitter:title" content="{{ block "ogtitle2" . }}{{ site.Title }}{{ end }}" />
+        <link rel="alternate" type="application/rss+xml" title="{{ site.Title }} &raquo; Feed" href="{{ "index.xml" | absURL }}" />
+        <link rel='stylesheet' id='mythemes-google-fonts-roboto-css' href='https://fonts.googleapis.com/css?family=Roboto%3A300%2C400%2C500%2C600%2C700' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-google-fonts-open-sans-css' href='https://fonts.googleapis.com/css?family=Open+Sans%3A300%2C400%2C700' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-icons-css' href='{{ "css/mythemes-icons.css" | relURL }}' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-effects-css' href='{{ "css/effects.css" | relURL }}' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-header-css' href='{{ "css/header.css" | relURL }}' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-bootstrap-css' href='{{ "css/bootstrap.min.css" | relURL }}' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-typography-css' href='{{ "css/typography.css" | relURL }}' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-navigation-css' href='{{ "css/navigation.css" | relURL }}' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-nav-css' href='{{ "css/nav.css" | relURL }}' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-blog-css' href='{{ "css/blog.css" | relURL }}' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-forms-css' href='{{ "css/forms.css" | relURL }}' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-elements-css' href='{{ "css/elements.css" | relURL }}' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-widgets-css' href='{{ "css/widgets.css" | relURL }}' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-comments-css' href='{{ "css/comments.css" | relURL }}' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-comments-typography-css' href='{{ "css/comments-typography.css" | relURL }}' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-footer-css' href='{{ "css/footer.css" | relURL }}' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-pretty-photo-css' href='{{ "css/prettyPhoto.css" | relURL }}' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-plugins-css' href='{{ "css/plugins.css" | relURL }}' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-style-css' href='{{ "css/treeson.css" | relURL }}' type='text/css' media='all' />
+        <link rel='stylesheet' id='prettify-css' href='{{ "css/prettify.css" | relURL }}' type='text/css' media='all' />
+        <link rel='stylesheet' id='social-logos-css' href='{{ "wp-content/plugins/jetpack/_inc/social-logos/social-logos.min.css" | relURL }}' type='text/css' media='all' />
+        <link rel='stylesheet' id='jetpack_css-css' href='{{ "css/jetpack.css" | relURL }}' type='text/css' media='all' />
+        {{ partial "custom-css.html" . }}
+        <link rel='stylesheet' id='mythemes-darkmode-css' href='{{ "css/darkmode.css" | relURL }}' type='text/css' media='all' />
+        {{ block "headextra" . }}{{ end }}
+    </head>
+    <body class="{{ block "bodyclass" . }}{{ end }}">
+        {{ partial "header.html" . }}
+        {{ block "pageheader" . }}{{ end }}
+        {{ block "main" . }}{{ end }}
+        {{ partial "footer.html" . }}
+        <script src='{{ "js/jquery.min.js" | relURL }}'></script>
+        <script src='{{ "js/jquery-migrate.min.js" | relURL }}'></script>
+        <script src='{{ "js/bootstrap.min.js" | relURL }}'></script>
+        <script src='{{ "js/functions.js" | relURL }}'></script>
+        <script src='{{ "js/jquery.prettyPhoto.js" | relURL }}'></script>
+        <script src='{{ "js/jquery.prettyPhoto.settings.js" | relURL }}'></script>
+        <script src='{{ "js/prettify.js" | relURL }}'></script>
+        <script>jQuery(document).ready(function () { prettyPrint(); });</script>
+        {{ block "scriptsextra" . }}{{ end }}
+        <script>(function(){var b=document.getElementById('theme-toggle');if(!b){return;}b.addEventListener('click',function(e){e.preventDefault();var r=document.documentElement;var t=r.getAttribute('data-theme')==='dark'?'light':'dark';r.setAttribute('data-theme',t);try{window.localStorage.setItem('sm-theme',t);}catch(err){}});})();</script>
+    </body>
+</html>

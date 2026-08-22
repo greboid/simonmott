@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Learning on Simon Mott</title>
+    <link>https://www.simonmott.co.uk/category/learning/</link>
+    <description>Recent content in Learning on Simon Mott</description>
+    <generator>Hugo</generator>
+    <language>en-GB</language>
+    <lastBuildDate>Sat, 12 Feb 2022 16:31:06 +0000</lastBuildDate>
+    <atom:link href="https://www.simonmott.co.uk/category/learning/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>A Stratum 1 Time Server – The Basics</title>
+      <link>https://www.simonmott.co.uk/2022/02/a-stratum-1-time-server-the-basics/</link>
+      <pubDate>Sat, 12 Feb 2022 16:31:06 +0000</pubDate>
+      <guid>https://www.simonmott.co.uk/2022/02/a-stratum-1-time-server-the-basics/</guid>
+      <description>&lt;p&gt;A while ago, I decided to play around with trying to create something cheap that would be able to synchronise its time by using GPS instead of over the internet &amp;#8211; essentially building my own Stratum 1 time server. I intend this to be a series of articles about NTP and time servers, but let&amp;#8217;s start with the basics&amp;#8230;&lt;/p&gt;&#xA;&lt;h5&gt;What is a Stratum 1 Time Server?&lt;/h5&gt;&#xA;&lt;p&gt;&lt;img class=&#34;alignright wp-image-266&#34; src=&#34;https://www.simonmott.co.uk/wp-content/uploads/2017/03/stratum.png&#34; alt=&#34;&#34; width=&#34;300&#34; height=&#34;268&#34; /&gt;The lower the &amp;#8220;Stratum&amp;#8221; number the more accurate the time it should be able to tell. Usually Stratum 1 time servers are directly connected to an accurate source of time such as (but not limited to) Atomic, GPS or even Radio clocks. The stratum of the machine which itself is directly interfacing with the accurate time source would be &amp;#8220;Stratum 0&amp;#8221;. For each additional layer of NTP servers added, the stratum increases by 1.&lt;/p&gt;&#xA;&lt;p&gt;So if the server that&amp;#8217;s connected directly to the time source is stratum 0, it would appear to any clients who want to synchronise with it as a stratum 1 source. If someone then tries to synchronise to one of those, they would see a stratum 2 source and so on. The image on the right illustrates the top-down increase in stratum and was taken from &lt;a href=&#34;https://en.wikipedia.org/wiki/Network_Time_Protocol&#34;&gt;Wikipedia&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;Generally the higher the stratum number, the less-accurate its view of time is. A stratum ranges from stratum 1 all the way to stratum 15 indicating the time is getting further away from a reference clock the higher you go. Stratum 16 indicates the clock is pretty far from the reference and should be considered un-synchronised and should not be used.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Me, myself and I</title>
+      <link>https://www.simonmott.co.uk/2011/03/me-myself-and-i/</link>
+      <pubDate>Tue, 22 Mar 2011 00:00:00 +0000</pubDate>
+      <guid>https://www.simonmott.co.uk/2011/03/me-myself-and-i/</guid>
+      <description>&lt;p style=&#34;text-align: justify;&#34;&gt;As you have have discovered, I&amp;#8217;m not especially big on blogging. I lead quite a mundane (or at least I think so) life compared to some other people I know. That said I feel I should share at least something new!&lt;/p&gt;&#xA;&lt;p style=&#34;text-align: justify;&#34;&gt;I had some advise from a few of my closest peers to which the &amp;#8220;jist&amp;#8221; was the need to not sit on my arse and at least try to better myself. As of a few days ago I made the decision to look into the possibility of gaining some professional certifications. I am looking to start a career in the IT industry and, partly because of where I live (and my unwillingness to just get up and move) and my lack of industrial experience &amp;#8230; its not going very well.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Java Development</title>
+      <link>https://www.simonmott.co.uk/2010/01/java-development/</link>
+      <pubDate>Sun, 24 Jan 2010 00:00:00 +0000</pubDate>
+      <guid>https://www.simonmott.co.uk/2010/01/java-development/</guid>
+      <description>&lt;p style=&#34;text-align: justify;&#34;&gt;Yesterday, I took my first official steps at attempting to learn Java. It has been on the back of my mind for a long time (since the days of Visual Basic 6) but I have just never settled into it; Yes, I&amp;#8217;ve tinkered, but never anything serious.&lt;/p&gt;&#xA;&lt;p style=&#34;text-align: justify;&#34;&gt;Thanks to some of my long time friends I now have a place to develop my skills and a place to get assistance as and when I need it. Since early 2007 they have been on-off developing an alternate &lt;a href=&#34;http://en.wikipedia.org/wiki/Internet_Relay_Chat&#34;&gt;IRC client&lt;/a&gt; for Linux that happens to be cross platform with a wide selection of operating systems due to it being Java based. In my opinion their client has far surpassed any IRC client that I&amp;#8217;ve ever come across. If you don&amp;#8217;t agree, keep watching, you soon will!&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

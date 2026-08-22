@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Debugging on Simon Mott</title>
+    <link>https://www.simonmott.co.uk/tag/debugging/</link>
+    <description>Recent content in Debugging on Simon Mott</description>
+    <generator>Hugo</generator>
+    <language>en-GB</language>
+    <lastBuildDate>Sat, 24 Jun 2023 14:52:58 +0000</lastBuildDate>
+    <atom:link href="https://www.simonmott.co.uk/tag/debugging/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Auto mount LUKS without a filesystem</title>
+      <link>https://www.simonmott.co.uk/2023/06/auto-mount-luks-without-a-filesystem/</link>
+      <pubDate>Sat, 24 Jun 2023 14:52:58 +0000</pubDate>
+      <guid>https://www.simonmott.co.uk/2023/06/auto-mount-luks-without-a-filesystem/</guid>
+      <description>&lt;p&gt;One of my friends recently installed a new storage server in our shared lab environment and graciously gave me some storage space on it via iSCSI. I use Proxmox for my personal lab, and I intended to store some non-critical VM disks on this new storage so I could play around with properly using HA (High Availability) with Proxmox. Additionally, I wanted to gain some experience using iSCSI at the same time. While I trust my friend, the storage itself is outside of my control, so I figured it would be good practice to encrypt my data. The general go-to solution for this would seem to be LUKS.</description>
+    </item>
+    <item>
+      <title>Routed Subnets, rp_filter and arp_ignore</title>
+      <link>https://www.simonmott.co.uk/2016/09/routed-subnet-rp_filter-arp_ignore/</link>
+      <pubDate>Fri, 23 Sep 2016 20:40:25 +0000</pubDate>
+      <guid>https://www.simonmott.co.uk/2016/09/routed-subnet-rp_filter-arp_ignore/</guid>
+      <description>&lt;p&gt;Over the past couple of years, I&amp;#8217;ve been quite accustomed to my ISP providing me with an IP block (typically a /29) instead of just a single static IP, but recently I&amp;#8217;ve switched to &lt;a href=&#34;https://www.hyperoptic.com/&#34;&gt;Hyperoptic&lt;/a&gt; for their &lt;a href=&#34;https://en.wikipedia.org/wiki/Fiber_to_the_x#Fiber_to_the_premises&#34;&gt;FTTP&lt;/a&gt; offering (Because, Gigabit!). Unfortunately, they seem to only offer single IPs for residential service and require you to be on their business package which costs £££ if you want more IPs.&lt;/p&gt;&#xA;&lt;p&gt;To get around this I decided to try to tunnel some IPs home &amp;#8211; My setup is rather complex but I&amp;#8217;m going to skip over the specifics for most of it and focus on the issue I was facing &amp;#8211; lets ignore how the IPs route around the rest of my network and ultimately end up at the router for now and just look at the rather simplified view below.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Odd behaviour with /etc/mtab being a regular file</title>
+      <link>https://www.simonmott.co.uk/2016/07/odd-behaviour-with-etcmtab-regular-file/</link>
+      <pubDate>Wed, 13 Jul 2016 00:00:00 +0000</pubDate>
+      <guid>https://www.simonmott.co.uk/2016/07/odd-behaviour-with-etcmtab-regular-file/</guid>
+      <description>&lt;p&gt;One of our customers had recently requested a Bare-Metal Restore (BMR) of one of their servers; which is a pretty routine task for us. However, upon bringing the restored server up I&amp;#8217;d noticed some odd behaviour with some of its services, notably snmpd.&lt;/p&gt;&#xA;&lt;p&gt;Our monitoring successfully polls most metrics that we look for, however fails on getting disk statistics and eventually snmpd just starts timing out. Using &lt;code&gt;snmpbulkwalk&lt;/code&gt; I could see that I was getting a response right up until midway through the &lt;strong&gt;HOST-RESOURCES MIB&lt;/strong&gt;. It did look to be hanging on mount points and once snmpbulkwalk had timed out, I couldn&amp;#8217;t get a successful response from snmpd again. This was also seemingly affecting MariaDB, preventing it from starting, amongst other things.</description>
+    </item>
+    <item>
+      <title>Slow DNS resolving using bind9 as caching resolver</title>
+      <link>https://www.simonmott.co.uk/2016/06/slow-dns-resolving-using-bind9-caching-resolver/</link>
+      <pubDate>Sun, 26 Jun 2016 00:00:00 +0000</pubDate>
+      <guid>https://www.simonmott.co.uk/2016/06/slow-dns-resolving-using-bind9-caching-resolver/</guid>
+      <description>&lt;p&gt;I currently have 4 DNS servers across my estate and until recently these were all configured to forward all queries to Google DNS (8.8.8.8). I ended up having an issue with Google caching an undesired record value so I opted to change my DNS servers so that they no longer forward queries elsewhere, but instead try to answer it themselves; Doing this gives me slightly more control over my DNS cache.&lt;/p&gt;&#xA;&lt;p&gt;As I use named (bind9) this was a pretty trivial change &amp;#8211; Simply remove the &lt;code&gt;forwarders { 8.8.8.8; };&lt;/code&gt; clause in my configuration and that should be that.&lt;/p&gt;&#xA;&lt;p&gt;During my post-change testing though I&amp;#8217;d noticed that resolution was taking significantly longer for un-cached queries than I&amp;#8217;d expect (microsoft.gointeract.io is only used to illustrate my issue):</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,80 @@
++++
+title = "Routed Subnets, rp_filter and arp_ignore"
+date = 2016-09-23T20:40:25Z
+url = "/2016/09/routed-subnet-rp_filter-arp_ignore/"
+wp_id = 222
+more = true
+categories = ["Networking", "System Administration"]
+tags = ["arp", "debugging", "ipv4", "linux", "networking", "routing"]
++++
+<p>Over the past couple of years, I&#8217;ve been quite accustomed to my ISP providing me with an IP block (typically a /29) instead of just a single static IP, but recently I&#8217;ve switched to <a href="https://www.hyperoptic.com/">Hyperoptic</a> for their <a href="https://en.wikipedia.org/wiki/Fiber_to_the_x#Fiber_to_the_premises">FTTP</a> offering (Because, Gigabit!). Unfortunately, they seem to only offer single IPs for residential service and require you to be on their business package which costs £££ if you want more IPs.</p>
+<p>To get around this I decided to try to tunnel some IPs home &#8211; My setup is rather complex but I&#8217;m going to skip over the specifics for most of it and focus on the issue I was facing &#8211; lets ignore how the IPs route around the rest of my network and ultimately end up at the router for now and just look at the rather simplified view below.</p>
+<!--more-->
+
+<p><span id="more-222"></span></p>
+<h3>The Problem</h3>
+<p><a href="/wp-content/uploads/2016/09/rp_filter.png"><img class="size-full wp-image-241 alignright" src="/wp-content/uploads/2016/09/rp_filter.png" alt="rp_filter" width="398" height="419" srcset="/wp-content/uploads/2016/09/rp_filter.png 398w, /wp-content/uploads/2016/09/rp_filter-285x300.png 285w" sizes="(max-width: 398px) 100vw, 398px" /></a></p>
+<p>The image shows that I essentially have a router which has two NICs, one connected to the public internet, and one connected to a switch within my network. The second NIC has two IPs assigned to it as follows:</p>
+<ul>
+<li><strong>10.0.2.51/24</strong> which is my internal private subnet</li>
+<li><strong>172.26.0.9/29</strong> which is the subnet I want to tunnel/route to my server (172.x for the sake of this document)</li>
+</ul>
+<p>Traffic would come into <em>Router</em> from an upstream device with a destination of 172.26.0.13. As the router has a route to a subnet in which that IP resides (by virtue of it having an IP in that subnet), it knows that IP should be reachable directly via our NIC2 interface and so ARPs for 172.26.0.13 out of it. Because both interfaces on <em>Server</em> and NIC2 on <em>Router</em> all sit in the same broadcast domain, my server happily replies to the ARP request (out of both interfaces &#8211; more on this later) so the router now forwards traffic down the wire to my server; Except there&#8217;s no reply&#8230; but only sometimes.</p>
+<p>After much head scratching, I noticed that when I do <em>sometimes</em> get a correct response from 172.26.0.13, the ARP table for <em>Router</em> was showing the MAC address for NIC1 on <em>Server</em>. When I don&#8217;t get a reply (usually after the ARP entry expires) it instead shows the MAC for NIC2 &#8211; But having the MAC for NIC2 is what I&#8217;d expect, so whats going on?</p>
+<h3>The Explanation</h3>
+<p>After spending a good amount of time throwing arbitrary queries into Google and cussing to myself, I eventually caved and asked my Network Engineer for a flat-mate, <a href="https://blog.dataforce.org.uk/">Dataforce</a>, for a fresh set of eyes.</p>
+<p>We both spent a little while talking through the setup and testing various things and after a while took a look at a sysctl setting for <code>rp_filter</code> (Reverse Path Filter). Consulting kernel documentation at <a href="https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt">https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt</a>, it says the following for rp_filter:</p>
+<pre>rp_filter - INTEGER
+	0 - No source validation.
+	1 - Strict mode as defined in RFC3704 Strict Reverse Path
+	    Each incoming packet is tested against the FIB and if the interface
+	    is not the best reverse path the packet check will fail.
+	    By default failed packets are discarded.
+	2 - Loose mode as defined in RFC3704 Loose Reverse Path
+	    Each incoming packet's source address is also tested against the FIB
+	    and if the source address is not reachable via any interface
+	    the packet check will fail.
+
+	Current recommended practice in RFC3704 is to enable strict mode
+	to prevent IP spoofing from DDos attacks. If using asymmetric routing
+	or other complicated routing, then loose mode is recommended.</pre>
+<p>If I check the current value for <em>Server</em>, it is indeed <strong>STRICT</strong> (1)</p>
+<pre>root@server:~# cat /proc/sys/net/ipv4/conf/all/rp_filter
+1</pre>
+<p>This implies that when a packet is received on an interface, the source IP is checked against the local routing table to see if the route in which the server would normally talk to the source IP, is the same interface at which the packet was received. My server&#8217;s default route (0.0.0.0) is out via NIC1, so traffic that ultimately comes from the internet via my tunnelled subnet would arrive on NIC2, but rp_filter would match against NIC1 &#8211; thus the check fails and the packet is dropped as invalid.</p>
+<h3>The Solution</h3>
+<p>Based on the documentation above, I either want to set rp_filter to be either 0 (<strong>NONE</strong>) or 2 (<strong>LOOSE</strong>). This is done via sysctl and the value can be changed whilst live in one of two ways:</p>
+<pre>root@server:~# sysctl -w net.ipv4.conf.all.rp_filter=2
+net.ipv4.conf.all.rp_filter = 2</pre>
+<p>or</p>
+<pre>root@server:~# echo 2 &gt; /proc/sys/net/ipv4/conf/all/rp_filter</pre>
+<p>Using either of these methods will only change the value until the server is rebooted. The value reverts to whatever is defined in sysctl.conf on boot so to make this change permanent, either edit your config, or add the following line if its not already defined:</p>
+<pre>root@server:~# echo "net.ipv4.conf.all.rp_filter = 2" &gt;&gt; /etc/sysctl.conf</pre>
+<p>Changing this to <strong>LOOSE</strong> (2) means that when a packet is received on an interface, rp_filter will check the route table to see if the source IP is reachable via <strong>any</strong> interface and if so, accept it (because it matches against 0.0.0.0). If I were to set this to <strong>NONE</strong> (0), it outright wouldn&#8217;t do any verification checks so would just work normally regardless &#8211; the choice as to which you use is up to you.</p>
+<h3>Bonus Issues!</h3>
+<p>Now, if you recall I mentioned earlier that without this change, it <em>sometimes</em> worked and <em>sometimes</em> didn&#8217;t. This is a whole different issue altogether!</p>
+<p>When <em>Router</em> sends an ARP request, its a broadcast, so <em>Server</em> will see it on both NIC1 and NIC2 as they are both within the same broadcast domain. By default <em>Server</em> will respond to the ARP request out of both interfaces because it has the requested IP on one of its local interfaces. So, sometimes when <em>Router</em> ARPs for 172.26.0.13, the reply that leaves NIC1 on <em>Server</em> arrives back at <em>Router</em> first, so <em>Router</em> sends packets to NIC1.</p>
+<p>Using the scenario above with rp_filter set <strong>STRICT</strong>, packets arrive into NIC1 and the source would be reachable via NIC1 so everything just kinda works. However when ARP replies from NIC2 arrive back at <em>Router</em> first, we are back to <em>Server</em> dropping packets as invalid because of rp_filter being <strong>STRICT</strong>.</p>
+<p>Now that we understand rp_filter a bit better and have changed it to <strong>LOOSE</strong>, we should probably make sure that <em>Server</em> only responds to ARP on the interface with the IP being requested. Whilst everything seemingly just works without doing this, we should make sure the flow of traffic is predictable and not randomly switching between interfaces based on which ARP reply arrives back first; so lets take a look back at the kernel documentation linked above and focus on <code>arp_ignore</code></p>
+<pre>arp_ignore - INTEGER
+	Define different modes for sending replies in response to
+	received ARP requests that resolve local target IP addresses:
+	0 - (default): reply for any local target IP address, configured
+	on any interface
+	1 - reply only if the target IP address is local address
+	configured on the incoming interface
+	2 - reply only if the target IP address is local address
+	configured on the incoming interface and both with the
+	sender's IP address are part from same subnet on this interface
+	3 - do not reply for local addresses configured with scope host,
+	only resolutions for global and link addresses are replied
+	4-7 - reserved
+	8 - do not reply for all local addresses
+
+	The max value from conf/{all,interface}/arp_ignore is used
+	when ARP request is received on the {interface}</pre>
+<p>So as above, lets set the value that best suits to what we need and make it persistent, in this case I chose 2</p>
+<pre>root@server:~# echo 2 &gt; /proc/sys/net/ipv4/conf/all/arp_ignore
+root@server:~# echo "net.ipv4.conf.all.arp_ignore = 2" &gt;&gt; /etc/sysctl.conf</pre>
+<p>We&#8217;ve now ensured that ARP replies are sent out of only the interface which has the IP being requested. Reverse Path Filter will no longer drop packets based on which interface the source is reachable and I can now talk to my server via my tunnelled IPs and everyone&#8217;s happy! 🙂</p>
+<p><em>*Icons provided by <a href="https://icons8.com">https://icons8.com</a>*</em></p>

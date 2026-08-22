@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Parted on Simon Mott</title>
+    <link>https://www.simonmott.co.uk/tag/parted/</link>
+    <description>Recent content in Parted on Simon Mott</description>
+    <generator>Hugo</generator>
+    <language>en-GB</language>
+    <lastBuildDate>Sun, 12 Mar 2017 01:04:30 +0000</lastBuildDate>
+    <atom:link href="https://www.simonmott.co.uk/tag/parted/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Shoehorning Proxmox into mdadm RAID1</title>
+      <link>https://www.simonmott.co.uk/2017/03/shoehorning-proxmox-into-mdadm-raid1/</link>
+      <pubDate>Sun, 12 Mar 2017 01:04:30 +0000</pubDate>
+      <guid>https://www.simonmott.co.uk/2017/03/shoehorning-proxmox-into-mdadm-raid1/</guid>
+      <description>&lt;p&gt;My home server has always been somewhat of a Frankenstein&amp;#8217;s Monster when it comes to hardware. Until about 2 years ago, it consisted of a large JBOD array of several different drive sizes with no kind of redundancy what-so-ever &amp;#8211; for both OS and Data disks. That all changed though when I decided to invest in some 3TB disks and build a &amp;#8220;proper&amp;#8221; RAID array for my data; Which coincidentally was around the same time my data storage array lost a drive resulting in about 800GB of data-loss &amp;#8211; I was unable to source a decent hardware RAID card at the time so I went with Software RAID (mdadm) instead.&lt;/p&gt;&#xA;&lt;p&gt;The chassis which houses my home server happens to be an old &lt;a href=&#34;https://www.xcase.co.uk/&#34;&gt;X-Case&lt;/a&gt; model that has 10 internal bays, a couple of 5.25&amp;#8243; for Optical drives and a 5.25&amp;#8243; to 3.5&amp;#8243; caddy that seems to be designed for a floppy drive (it has a cut-out at the front for access). I use the floppy slot to house my OS disk and the rest are for my data disks which are all in RAID6 for redundancy. This gives me a total of 11 hard drives in this chassis in its default configuration.&lt;/p&gt;&#xA;&lt;p&gt;When I rebuilt my server to make use of Proxmox, I put in a known-working drive as the OS drive; It was an old drive at the time but didn&amp;#8217;t have much in the way of power on hours so I figured it&amp;#8217;d last me a while. Here I am a few years later and the drive is still going, but SMART data is showing some figures that&amp;#8217;re making me worried it&amp;#8217;s going to start having problems soon so I set about replacing it.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Growing my Linux RAID5 array</title>
+      <link>https://www.simonmott.co.uk/2016/07/growing-my-linux-raid5-array/</link>
+      <pubDate>Sat, 09 Jul 2016 00:00:00 +0000</pubDate>
+      <guid>https://www.simonmott.co.uk/2016/07/growing-my-linux-raid5-array/</guid>
+      <description>&lt;p&gt;Recently I&amp;#8217;ve needed to expand my RAID5 array by adding another disk. My experience with mdadm since starting to use it back in 2009 was for RAID1 only so I&amp;#8217;ve never really needed to actually expand an array and so I thought I&amp;#8217;d document the process here for future reference.&lt;/p&gt;&#xA;&lt;p&gt;This process should in theory work for RAID4 and RAID6 personailities too, not just RAID5.&lt;/p&gt;&#xA;&lt;p&gt;My array consists of 4x 3TB WD Red NAS drives in RAID5 for a total of ~9TB of space. I&amp;#8217;m not going to cover creating of the array here because its mostly the same as RAID1, this instead will cover how to add a new disk to it and subsequent growing of LVM and ext4 to make use of the extra space. You can see how everything is stacked together in the image below.</description>
+    </item>
+  </channel>
+</rss>

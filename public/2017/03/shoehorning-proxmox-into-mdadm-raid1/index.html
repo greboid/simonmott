@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en-GB" prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script>(function(){var t=null;try{t=window.localStorage.getItem('sm-theme');}catch(e){}if(t!=='dark'&&t!=='light'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);})();</script>
+        <link rel="profile" href="http://gmpg.org/xfn/11" />
+        <title>Shoehorning Proxmox into mdadm RAID1 - Simon Mott</title>
+        <meta name="description" content="All about me" />
+        <link rel="canonical" href="https://www.simonmott.co.uk/2017/03/shoehorning-proxmox-into-mdadm-raid1/" />
+        <meta property="og:locale" content="en_GB" />
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="Shoehorning Proxmox into mdadm RAID1" />
+        <meta property="og:description" content="All about me" />
+        <meta property="og:url" content="https://www.simonmott.co.uk/2017/03/shoehorning-proxmox-into-mdadm-raid1/" />
+        <meta property="og:site_name" content="Simon Mott" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:description" content="All about me" />
+        <meta name="twitter:title" content="Shoehorning Proxmox into mdadm RAID1" />
+        <link rel="alternate" type="application/rss+xml" title="Simon Mott &raquo; Feed" href="https://www.simonmott.co.uk/index.xml" />
+        <link rel='stylesheet' id='mythemes-google-fonts-roboto-css' href='https://fonts.googleapis.com/css?family=Roboto%3A300%2C400%2C500%2C600%2C700' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-google-fonts-open-sans-css' href='https://fonts.googleapis.com/css?family=Open+Sans%3A300%2C400%2C700' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-icons-css' href='/css/mythemes-icons.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-effects-css' href='/css/effects.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-header-css' href='/css/header.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-bootstrap-css' href='/css/bootstrap.min.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-typography-css' href='/css/typography.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-navigation-css' href='/css/navigation.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-nav-css' href='/css/nav.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-blog-css' href='/css/blog.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-forms-css' href='/css/forms.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-elements-css' href='/css/elements.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-widgets-css' href='/css/widgets.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-comments-css' href='/css/comments.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-comments-typography-css' href='/css/comments-typography.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-footer-css' href='/css/footer.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-pretty-photo-css' href='/css/prettyPhoto.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-plugins-css' href='/css/plugins.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-style-css' href='/css/treeson.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='prettify-css' href='/css/prettify.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='social-logos-css' href='/wp-content/plugins/jetpack/_inc/social-logos/social-logos.min.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='jetpack_css-css' href='/css/jetpack.css' type='text/css' media='all' />
+        <!-- theme customizer styles, copied verbatim from the original site -->
+<style data-from="original" type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 0.07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<style data-from="original" type='text/css'>img#wpstats{display:none}</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-header">
+    .mythemes-header a.header-description{
+        color: rgba( 255,255,255 , 0.5 );
+    }
+    .mythemes-header a.header-description:hover{
+        color: rgba( 255,255,255 , 0.7 );
+    }
+</style>
+<style data-from="original" type="text/css">
+
+     
+    body{
+        background-color: #343b43;
+    }
+    .mythemes-header a.header-title{
+        color: #ffffff;
+    }
+
+     
+    body > div.content,
+    body footer aside{
+        background-image: url();
+        background-repeat: ;
+        background-position: ;
+        background-attachment: ;
+    }
+
+     
+    div.mythemes-page-header{
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-background">
+
+     
+    body > div.content,
+    body footer aside{
+        background-color: #ffffff;
+    }
+
+
+     
+     
+    body.scroll-nav .mythemes-poor{
+        background-color: rgba( 255,255,255 , 0.91 );
+    }
+    .mythemes-poor{
+        background-color: #ffffff;
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-color-btn-1">
+
+     
+    .header-button-wrapper a.btn.first-btn.header-button{
+        color: rgba( 255,255,255 , 0.4 );
+        border: 1px solid rgba( 255,255,255 , 0.2 );
+        background: rgba( 255,255,255 , 0.03 );
+    }
+    .header-button-wrapper a.btn.first-btn.header-button:hover{
+        color: rgba( 255,255,255 , 0.9 );
+        border: 1px solid rgba( 255,255,255 , 0.7 );
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-color-btn-2">
+
+     
+    .header-button-wrapper a.btn.second-btn.header-button{
+        color: rgba( 255,255,255 , 0.4 );
+        border: 1px solid rgba( 255,255,255 , 0.2 );
+        background: rgba( 255,255,255 , 0.03 );
+    }
+    .header-button-wrapper a.btn.second-btn.header-button:hover{
+        color: rgba( 255,255,255 , 0.9 );
+        border: 1px solid rgba( 255,255,255 , 0.7 );
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-color-1">
+
+     
+    nav.base-nav ul li a,
+    div.widget-grofile.grofile a.grofile-full-link{
+        color: #414c97;
+    }
+    nav.base-nav ul li:hover > a,
+    nav.base-nav ul li > a:hover,
+    nav.base-nav ul li.current-menu-item > a,
+    nav.base-nav ul li.current-menu-ancestor > a,
+    div.widget-grofile.grofile a.grofile-full-link:hover{
+        color: #00001f;
+    }
+
+     
+    div.comments-list > ol li.pingback header cite a:hover,
+    div.comments-list > ol li.comment header cite a:hover{
+        color: #232e79;
+    }
+
+     
+     
+    .btn,
+    .button,
+    .mythemes-button,
+
+     
+    button,
+    input[type="submit"],
+    input[type="button"],
+
+     
+    .hentry button,
+    .hentry input[type="button"],
+    .hentry input[type="submit"],
+    
+     
+    div.widget_calendar table th,
+    div.widget_post_meta ul li span.post-tag,
+
+     
+    article div.post-meta-tags a:hover,
+    article div.post-meta-categories a,
+
+     
+    div.comments-list > ol li.comment header span.comment-meta span.comment-replay a:hover,
+    div#comments  p.form-submit input[type="submit"],
+
+     
+    div.pagination nav span{
+        background-color: #05105b;
+    }
+
+     
+     
+     
+    .btn,
+    .button,
+    .mythemes-button,
+
+     
+    button,
+    input[type="submit"],
+    input[type="button"],
+
+     
+    .hentry button,
+    .hentry input[type="button"],
+    .hentry input[type="submit"],
+
+     
+    div.widget_post_meta ul li span.post-tag,
+
+     
+    article div.post-meta-tags a:hover,
+    article div.post-meta-categories a,
+
+     
+    div#comments  p.form-submit input[type="submit"],
+
+     
+    div.pagination nav span{
+        border-bottom: 1px solid #000033;
+    }
+
+     
+    div.pagination nav a,
+    article div.meta,
+    article div.meta a,
+    article a.more-link:hover,
+    article div.meta ul.post-categories li a{
+        color: #05105b;
+    }
+    article div.meta ul.post-categories li a:hover{
+        background-color: #05105b;
+    }
+    article a.more-link:hover{
+        border: 3px solid #05105b;
+    }
+
+     
+    article.sticky a.more-link{
+        background: #05105b;
+        border: 3px solid #05105b;
+    }
+    article.sticky a.more-link:hover{
+        color: #05105b;
+    }
+        
+
+     
+    footer .mythemes-black-side{
+        background: #05105b;
+    }
+    footer .mythemes-black-side .mythemes-copyright p,
+    footer .mythemes-black-side .mythemes-menu a{
+        color: #646fba;
+    }
+    footer .mythemes-black-side .mythemes-copyright a,
+    footer .mythemes-black-side .mythemes-menu a:hover{
+        color: #9ba6f1;
+    }
+    footer .mythemes-black-side .mythemes-copyright a:hover{
+        color: #c3ceff;   
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-color-2">
+
+     
+    nav.base-nav ul li.current-menu-item > a{
+        color: #7db74d;
+    }
+
+     
+    a:hover,
+
+     
+    article div.meta a:hover{
+        color: #7db74d;
+    }
+
+     
+     
+    .btn.second-button,
+    .button.second-button,
+    .mythemes-button.second-button,
+
+     
+    .mythemes-nav-btn button.btn-base-nav,
+
+     
+    div.widget_post_tags div.tagcloud a,
+    div.widget_tag_cloud div.tagcloud a,
+    div.widget_newsletter form button[type="submit"],
+
+     
+    div.comments-list > ol li.comment header span.comment-meta span.comment-replay a,
+    div.comment-respond h3.comment-reply-title small a,
+    
+     
+    article div.post-meta-categories a:hover,
+    article div.post-meta-tags a{
+        background-color: #5f992f;
+    }
+
+     
+     
+     
+    .btn.second-button,
+    .button.second-button,
+    .mythemes-button.second-button,
+
+     
+    .mythemes-nav-btn button.btn-base-nav,
+
+     
+    div.widget_post_tags div.tagcloud a,
+    div.widget_tag_cloud div.tagcloud a,
+    div.widget_newsletter form button[type="submit"],
+
+     
+    article div.post-meta-tags a,
+    article div.post-meta-categories a:hover,
+
+     
+    div.comment-respond h3.comment-reply-title small a{
+        border-bottom: 1px solid #377107;
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-color-3">
+
+     
+     
+    a,
+
+     
+    div.widget ul li a:hover,
+    div.widget_calendar table td a:hover,
+    div.widget_categories ul li a:hover,
+    div.widget_recent_comments_with_avatar ul li h5 a:hover{
+        color: #5f88bb;
+    }
+
+     
+    .hentry h2 a:hover,
+    article h2 a:hover{
+        color: #416a9d;
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-css">
+
+    div.content div.container aside.mythemes-header-items,
+div.content div.container aside.mythemes-header-items + div.row{
+    display: none;
+}
+
+.mythemes-post-social {
+display: none;
+}
+
+div.widget.widget_text {
+margin-bottom: 0px;
+margin-top:-50px;
+padding-bottom: 15px;
+}
+
+div.mythemes-header a.header-title {
+font-weight: bold;
+margin-top: 100px;
+}
+
+.hentry, .hentry p, article p {
+  color: #5d5d5d;
+}
+</style>
+
+        <link rel='stylesheet' id='mythemes-darkmode-css' href='/css/darkmode.css' type='text/css' media='all' />
+        
+    </head>
+    <body class="single single-post postid-247 single-format-standard">
+        <header>
+
+<div class="mythemes-header overflow-wrapper parallax-container" style="height: 400px;">
+    <div class="valign-cell-wrapper" style="background: rgba( 1,0,81, 0.19 );">
+
+        
+        <div class="valign-cell">
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <a class="header-title" href="/" title="Simon Mott - All about me">Simon Mott</a><a class="header-description" href="/" title="Simon Mott - All about me">All about me</a>                    </div>
+                </div>
+
+        </div>
+    </div>
+
+
+    <div class="parallax" style="background-image: url(https://www.simonmott.co.uk/wp-content/uploads/2016/06/header.jpg);"><img src="https://www.simonmott.co.uk/wp-content/uploads/2016/06/header.jpg" alt="Simon Mott - All about me"></div></div>
+            <div class="mythemes-poor">
+                <div class="container">
+
+                    <div class="row mythemes-nav-small-device">
+                        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 mythemes-nav-label">
+                                                        <a href="/" title="Simon Mott - All about me">
+                                Simon Mott                            </a>
+                        </div>
+                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 mythemes-nav-btn">
+                            <button type="button" class="btn-collapse btn-base-nav" data-toggle=".header-nav.base-nav">
+                                <i>+</i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <nav class="mythemes-nav-inline base-nav header-nav nav-collapse">
+
+                            <div class="nav-wrapper"><ul id="menu-popular" class="mythemes-menu"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/">Home</a></li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href="#">Popular</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-post"><a href="/2010/03/logical-volume-manager-lvm/">LVM</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-post"><a href="/2012/03/vpn-bonding/">VPN Bonding</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom theme-toggle-item"><a href="#" id="theme-toggle" title="Toggle dark mode"><i class="mythemes-icon-moon icon-moon"></i><i class="mythemes-icon-sun icon-sun"></i></a></li></ul></div>                            </nav>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </header>
+
+        
+        
+    <div class="content">
+        <div class="container">
+            <div class="row">
+
+
+<section class="col-sm-8 col-md-9 col-lg-9">
+                <div class="content-border right"><article class="post-247 post type-post status-publish format-standard hentry category-system-administration tag-disks tag-ext4 tag-lvm tag-mdadm tag-parted tag-partitions tag-raid tag-raid1 tag-sgdisk">
+
+                                
+                                <h1 class="post-title">Shoehorning Proxmox into mdadm RAID1</h1>
+
+                                
+                                        <div class="mythemes-top-meta meta">
+
+            <ul class="post-categories"><li><a href="/category/system-administration/" rel="category tag">System Administration</a></li></ul>
+            <a class="author" href="/" title="Writed by Simon">by Simon</a>
+
+            <time datetime="2017-03-12">on 12th March 2017</time>
+
+                    </div>
+
+
+                                
+                                <p>My home server has always been somewhat of a Frankenstein&#8217;s Monster when it comes to hardware. Until about 2 years ago, it consisted of a large JBOD array of several different drive sizes with no kind of redundancy what-so-ever &#8211; for both OS and Data disks. That all changed though when I decided to invest in some 3TB disks and build a &#8220;proper&#8221; RAID array for my data; Which coincidentally was around the same time my data storage array lost a drive resulting in about 800GB of data-loss &#8211; I was unable to source a decent hardware RAID card at the time so I went with Software RAID (mdadm) instead.</p>
+<p>The chassis which houses my home server happens to be an old <a href="https://www.xcase.co.uk/">X-Case</a> model that has 10 internal bays, a couple of 5.25&#8243; for Optical drives and a 5.25&#8243; to 3.5&#8243; caddy that seems to be designed for a floppy drive (it has a cut-out at the front for access). I use the floppy slot to house my OS disk and the rest are for my data disks which are all in RAID6 for redundancy. This gives me a total of 11 hard drives in this chassis in its default configuration.</p>
+<p>When I rebuilt my server to make use of Proxmox, I put in a known-working drive as the OS drive; It was an old drive at the time but didn&#8217;t have much in the way of power on hours so I figured it&#8217;d last me a while. Here I am a few years later and the drive is still going, but SMART data is showing some figures that&#8217;re making me worried it&#8217;s going to start having problems soon so I set about replacing it.</p>
+
+
+
+
+<p><span id="more-247"></span></p>
+<h3>Step 1 &#8211; Replace the problem drive</h3>
+<p><a href="/wp-content/uploads/2017/03/IMG_20170301_170544.jpg"><img class="alignright size-medium wp-image-248" src="/wp-content/uploads/2017/03/IMG_20170301_170544-300x225.jpg" alt="" width="300" height="225" srcset="/wp-content/uploads/2017/03/IMG_20170301_170544-300x225.jpg 300w, /wp-content/uploads/2017/03/IMG_20170301_170544-768x576.jpg 768w, /wp-content/uploads/2017/03/IMG_20170301_170544-1024x768.jpg 1024w" sizes="(max-width: 300px) 100vw, 300px" /></a>Sure, I could have just bought a new drive and re-installed my server from scratch, but frankly I couldn&#8217;t be bothered with all the niggly applications and configurations I&#8217;d need to get right to make it all work nicely again.</p>
+<p>Besides, <em>where&#8217;s the fun in that?</em></p>
+<p>I bought a 3.5&#8243; to Dual 2.5&#8243; adaptor off eBay (In-Win 3RAMZF078700) which, as you might guess, should nicely house a couple of 2.5&#8243; drives where my old 3.5&#8243; OS disk used to live. Having already made use of mdadm on this system, and now having two drives, I should be able to use them in RAID1 for my OS disk.</p>
+<p>I chose to get two HGST Travelstar 7K1000 drives because a friend uses <em><strong>a lot</strong></em> of them and has (so far) had no problems with them. They also spin at 7200RPM so should get reasonable performance in RAID1 given I&#8217;m limited to essentially a single drive&#8217;s performance over more conventional 2.5&#8243; drives which operate at 5400RPM.</p>
+<p>There were a couple of things I needed to consider before embarking on this project though &#8211; most of which were potential physical constraints inside the chassis itself.</p>
+<h5><strong>Do I have enough SATA data ports?</strong></h5>
+<p>My SuperMicro X8DTL-3F motherboard has 6 SATA ports and 8 SAS ports. I learned the hard way that you can only boot from the SATA ports, and that the on-board LSI SAS controller does not support drives larger than 2TB. For my configuration this leaves me with just the 6 on board SATA ports so I invested in an LSI 9211-8i HBA (It&#8217;s actually a cross-flashed Dell H200A &#8211; <a href="http://blog.michael.kuron-germany.de/2014/11/crossflashing-dell-perc-h200-to-lsi-9211-8i/comment-page-1/">http://blog.michael.kuron-germany.de/2014/11/crossflashing-dell-perc-h200-to-lsi-9211-8i/comment-page-1/</a>)</p>
+<p>The 9211-8i in theory supports 8 drives &#8211; combine the 6 SATA ports on the motherboard with the 8 on the HBA and I have theoretically got 14 ports available to use with my 2 boot drives (RAID1) and 10 data drives (RAID6)</p>
+<p>I can only fit 11 disks in the chassis (12 if you count the 2.5&#8243; disks instead) so I should have enough.</p>
+<h5><strong>Do I have enough SATA power connectors?</strong></h5>
+<p>My PSU is an EVGA 650 GQ which has 9 native SATA power ports and a further 3 molex connectors to which I can attach some 2xSATA splitters. I use one of the molex connectors for cooling though so I only get 4 SATA connectors from molex and 9 from native. This should be enough for my purposes.</p>
+<h5><strong>Will the dual 2.5&#8243; bracket even fit where a 3.5&#8243; disk would normally go?</strong></h5>
+<p><a href="/wp-content/uploads/2017/03/IMG_20170301_171623.jpg"><img loading="lazy" class="alignleft wp-image-249 size-medium" src="/wp-content/uploads/2017/03/IMG_20170301_171623-300x225.jpg" width="300" height="225" srcset="/wp-content/uploads/2017/03/IMG_20170301_171623-300x225.jpg 300w, /wp-content/uploads/2017/03/IMG_20170301_171623-768x576.jpg 768w, /wp-content/uploads/2017/03/IMG_20170301_171623-1024x768.jpg 1024w" sizes="(max-width: 300px) 100vw, 300px" /></a>The HGST Travelstar disks come in at 9.5mm in height. The disk that sits on the bottom of the bracket has enough clearance for a 12mm drive, but the top one was a potential problem as it could sit on the bracket taller than a standard 3.5&#8243; drive.</p>
+<p>I&#8217;d fitted the 2.5&#8243; drives and stood the bracket next to two different 3.5&#8243; models and as you can see, its about the same height. It is slightly taller than the drive on the right (WD800JD) But is about the same height as the one on the left (WD10EADS)</p>
+<p>I do have open-air above my drives in this chassis so height restrictions are not a problem for me; However if you wanted to use this bracket in a more conventional 3.5&#8243; bay, you should not have any issues using two 9.5mm drives.</p>
+<p>The placement of these drives in the &#8220;floppy&#8221; bay unfortunately means there is no airflow from case fans so I did have to consider the gap between the drives to allow for cooling &#8211; which as you can see should be ample clearance.</p>
+<h3>Step 2 &#8211; Cloning the original</h3>
+<p>As my plan was to go from a single 3.5&#8243; drive to two 2.5&#8243; drives, that does beg the question as to how I get the data onto the smaller drives. I could have skipped this step and jumped right into Step 4 to assemble the RAID array using both the old and one of the new drives, to later replace the old drive with the remaining new one.</p>
+<p>Instead, I opted to use a tool called <a href="http://clonezilla.org/">CloneZilla</a> which will clone the original drive onto the new one (although you could have just used <code>dd</code>) whilst leaving the original untouched should I need to revert (or re-clone) it at a later date. This was a personal choice but I like the idea of having the safety net should anything go wrong further down the line then, at least I <em>could </em>start again if needed.</p>
+<p>First we connect one of the new HGST drives up and temporarily plug in the old OS drive so that we can clone it. Next I booted Clonezilla and followed the on-screen instructions clone the drives.</p>
+<p>You might need to zero the destination disk first so that everything clones over nicely.</p>
+<p><span style="color: #ff0000;"><strong>It&#8217;s very important that you make sure your destination drive is correct because CloneZilla will overwite anything thats already there</strong></span></p>
+<p><a href="/wp-content/uploads/2017/03/in-progress2.jpg"><img loading="lazy" class="aligncenter size-full wp-image-252" src="/wp-content/uploads/2017/03/in-progress2.jpg" alt="" width="800" height="600" srcset="/wp-content/uploads/2017/03/in-progress2.jpg 800w, /wp-content/uploads/2017/03/in-progress2-300x225.jpg 300w, /wp-content/uploads/2017/03/in-progress2-768x576.jpg 768w" sizes="(max-width: 800px) 100vw, 800px" /></a></p>
+<p>Once the clone is complete, you should be able to disconnect the old drive and boot from the new one. If all goes well then your system should look the same from the OS&#8217;s point of view other than the fact you&#8217;re now on a larger disk (In my case anyway, I went from 160GB to 1TB).</p>
+<h3>Step 3 &#8211; Fixing the partitions on the larger disk</h3>
+<p>Before we delve too deep into this, I realize my partitions are not standard for Proxmox these days in that I have a /boot partition outside of the main root partition (for me /dev/sdd2 is /boot). Nonetheless this should not affect the overall process if your partitions are different &#8211; you just need to skip the parts that&#8217;re specific to me and adjust according to your configuration.</p>
+<p>Naturally your mileage may vary depending on how your system is set up. Don&#8217;t just blindly paste commands into a terminal as you could cause irreversible data-loss 🙂 &#8211; Make sure you understand what you&#8217;re doing!</p>
+<p>Now that we&#8217;ve a cloned the old OS disk onto one of the new (larger) disks, I thought now would be a good time to fix the primary data partition (where the &#8220;pve&#8221; LV lives) so that it takes up the entirety of the disk. I went from a 160GB to 1TB drive so to do this I simply loaded <code>parted</code> and took a look at the partitions whilst telling it to display sector count instead of the default &#8211; It showed me a warning about the GPT size being wrong and offered to correct it for me.</p>
+<pre>root@yuzuki:~# parted /dev/sdd
+GNU Parted 3.2
+Using /dev/sdd
+Welcome to GNU Parted! Type 'help' to view a list of commands.
+(parted) <strong>unit s</strong>
+(parted) <strong>print free</strong>
+Warning: Not all of the space available to /dev/sdd appears to be used, you can fix the GPT
+to use all of the space (an extra 1640943360 blocks) or continue with the current setting? 
+Fix/Ignore? <strong>Fix</strong>
+Model: ATA HGST HTS721010A9 (scsi)
+Disk /dev/sdd: 1953525168s
+Sector size (logical/physical): 512B/4096B
+Partition Table: gpt
+Disk Flags: 
+
+Number  Start       End          Size         File system  Name     Flags
+        34s         2047s        2014s        Free Space
+ 1      2048s       4095s        2048s                     primary  bios_grub
+ 2      4096s       1048575s     1044480s     ext3         primary  boot, esp
+ 3      <strong>1048576s</strong>    312580095s   311531520s                primary  lvm
+        312580096s  <strong>1953525134s</strong>  1640945039s  Free Space
+</pre>
+<p>Here we can see the current starting sector for our last partition (partition 3, aka /dev/sdd3) is <strong>1048576</strong> and the last usable sector of free space is <strong>1953525134</strong>. We should simply be able to remove the partition table (It wont remove data) and then re-create it with a larger size. As long as the starting position is the same then everything should line-up.</p>
+<pre>(parted) <strong>rm 3</strong>
+Error: Partition(s) 3 on /dev/sdd have been written, but we have been unable to inform the
+kernel of the change, probably because it/they are in use.  As a result, the old partition(s)
+will remain in use.  You should reboot now before making
+further changes.
+Ignore/Cancel? <strong>i</strong>
+(parted) <strong>mkpart primary 1048576 1953525134</strong>
+(parted) <strong>toggle 3 lvm</strong>
+(parted) <strong>print</strong>
+Model: ATA HGST HTS721010A9 (scsi)
+Disk /dev/sdd: 1953525168s
+Sector size (logical/physical): 512B/4096B
+Partition Table: gpt
+Disk Flags: 
+
+Number  Start     End          Size         File system  Name     Flags
+ 1      2048s     4095s        2048s                     primary  bios_grub
+ 2      4096s     1048575s     1044480s     ext3         primary  boot, esp
+ 3      <strong>1048576s</strong>  <strong>1953525134s</strong>  1952476559s               primary  lvm
+
+(parted) <strong>quit</strong>
+Information: You may need to update /etc/fstab.
+</pre>
+<p>Finally we need to make sure that LVM is aware of the new disk size lest we forget about it later on</p>
+<pre>root@yuzuki:~# pvdisplay /dev/sdd3
+  --- Physical volume ---
+  PV Name               /dev/sdd3
+  VG Name               pve
+  PV Size               <strong>148.55 GiB</strong> / not usable 3.00 MiB
+  Allocatable           yes 
+  PE Size               4.00 MiB
+  Total PE              <strong>38028</strong>
+  Free PE               <strong>4095</strong>
+  Allocated PE          33933
+  PV UUID               6p74nl-SxZp-4xu7-j3lH-ACsg-Hs9I-5rNwpq
+
+root@yuzuki:~# pvresize /dev/sdd3
+  Physical volume "/dev/sdd3" changed
+  1 physical volume(s) resized / 0 physical volume(s) not resized
+  
+root@yuzuki:~# pvdisplay /dev/sdd3
+  --- Physical volume ---
+  PV Name               /dev/sdd3
+  VG Name               pve
+  PV Size               <strong>931.01 GiB</strong> / not usable 312.50 KiB
+  Allocatable           yes 
+  PE Size               4.00 MiB
+  Total PE              <strong>238339</strong>
+  Free PE               <strong>204406</strong>
+  Allocated PE          33933
+  PV UUID               6p74nl-SxZp-4xu7-j3lH-ACsg-Hs9I-5rNwpq
+</pre>
+<p>If you didn&#8217;t want to implement RAID1 then this is where you&#8217;d stop &#8211; We&#8217;ve moved our OS to a new disk without reinstalling.</p>
+<p>I however do want to implement RAID1 so in Step 4 I&#8217;ll walk through how to prepare the second RAID member and begin the process of moving towards having a complete array.</p>
+<h3>Step 4 &#8211; Preparing for RAID</h3>
+<p>The purpose of this article is to document how I implemented software RAID1 on a live system without having to reinstall. In the previous steps, I took a little detour in that I cloned the original disk onto one of the new replacement disks. Primarily this was to preserve the original data should anything not go according to plan. The following steps are where you&#8217;d start if you wanted to skip the cloning process and work on the source disk without a &#8220;spare&#8221; copy of your data.</p>
+<p>It&#8217;s important that you identify which companion disk you intend to use for your array. A useful tool to use here would be <code>smartctl</code>. With this tool you can query each disk until you find which ones you want to work with (Especially useful if you have a lot of disks).</p>
+<pre>root@yuzuki:~# smartctl -i /dev/sdd
+smartctl 6.6 2016-05-31 r4324 [x86_64-linux-4.4.35-2-pve] (local build)
+Copyright (C) 2002-16, Bruce Allen, Christian Franke, www.smartmontools.org
+
+=== START OF INFORMATION SECTION ===
+Model Family:     HGST Travelstar 7K1000
+Device Model:     HGST HTS721010A9E630
+Serial Number:    JR1000********
+LU WWN Device Id: 5 000cca 8c8d62953
+Firmware Version: JB0OA3U0
+User Capacity:    1,000,204,886,016 bytes [1.00 TB]
+Sector Sizes:     512 bytes logical, 4096 bytes physical
+Rotation Rate:    7200 rpm
+Form Factor:      2.5 inches
+Device is:        In smartctl database [for details use: -P show]
+ATA Version is:   ATA8-ACS T13/1699-D revision 6
+SATA Version is:  SATA 3.0, 6.0 Gb/s (current: 3.0 Gb/s)
+Local Time is:    Mon Mar  6 21:16:45 2017 GMT
+SMART support is: Available - device has SMART capability.
+SMART support is: Enabled
+</pre>
+<p>In my case, <code>/dev/sdd</code> is the non-RAID disk which currently houses my OS and <code>/dev/sde</code> is the blank disk I want to initialize my array onto. Firstly we need to copy the current partition table from <code>/dev/sdd</code> to <code>/dev/sde</code>. As the partition table is GPT, we should use <code>sgdisk</code> to do this.</p>
+<pre>root@yuzuki:~# sgdisk -R=/dev/sde /dev/sdd
+The operation has completed successfully.</pre>
+<p>Once this command has completed, we should now change the type code for <code>/dev/sde2</code> and <code>/dev/sde3</code> to reflect that these partitions are members of software RAID. You can do this with any partition tool that supports GPT, but in my case I&#8217;ll use <code>sgdisk</code> to change the types.</p>
+<pre>root@yuzuki:~# sgdisk -t 2:fd00 /dev/sde
+The operation has completed successfully.
+
+root@yuzuki:~# sgdisk -t 3:fd00 /dev/sde
+The operation has completed successfully.</pre>
+<p>This should nicely result in <code>/dev/sde</code> having the same partition structure as <code>/dev/sdd</code> (but with both partition types as Linux RAID)</p>
+<pre>root@yuzuki:~# fdisk -l /dev/sde
+
+Disk /dev/sde: 931.5 GiB, 1000204886016 bytes, 1953525168 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 4096 bytes
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+Disklabel type: gpt
+Disk identifier: A4EF094E-5546-4DC1-A262-2B08B9C586B1
+
+Device       Start        End    Sectors  Size Type
+/dev/sde1     2048       4095       2048    1M BIOS boot
+/dev/sde2     4096    1048575    1044480  510M Linux RAID
+/dev/sde3  1048576 1953525134 1952476559  931G Linux RAID
+</pre>
+<h3>Step 5 &#8211; Initialize RAID</h3>
+<p>We&#8217;re now at the stage where both our disks should be nearly identically partitioned and we can actually start creating our arrays. We&#8217;ll first do this in a degraded state which will allow us to move data around.</p>
+<p>In my case <span style="font-family: monospace;"><code>/dev/sdd2</code> is <code>/boot</code> and <code>/dev/sdd3</code> houses my LVM data (ultimately containing <code>/</code> and swap).</span></p>
+<p><span style="font-family: monospace;">I already have <code>/dev/md0</code> as my primary data storage RAID, so <code>/dev/md1</code> will be for <code>/boot</code> and <code>/dev/md2</code> for everything else.</span></p>
+<p>Lets start by creating both mdadm devices, but using the currently empty disk (<code>/dev/sde</code>) &#8211; I chose to ignore the notice displayed as my version of grub has support for mdadm out of the box.</p>
+<pre>root@yuzuki:~# mdadm --create <strong>/dev/md1</strong> --level=1 --raid-disks=2 missing <strong>/dev/sde2</strong>
+mdadm: Note: this array has metadata at the start and
+    may not be suitable as a boot device.  If you plan to
+    store '/boot' on this device please ensure that
+    your boot-loader understands md/v1.x metadata, or use
+    --metadata=0.90
+Continue creating array? <strong>y</strong>
+mdadm: Defaulting to version 1.2 metadata
+mdadm: array /dev/md1 started.
+
+root@yuzuki:~# mdadm --create <strong>/dev/md2</strong> --level=1 --raid-disks=2 missing <strong>/dev/sde3</strong>
+mdadm: Note: this array has metadata at the start and
+    may not be suitable as a boot device.  If you plan to
+    store '/boot' on this device please ensure that
+    your boot-loader understands md/v1.x metadata, or use
+    --metadata=0.90
+Continue creating array? <strong>y</strong>
+mdadm: Defaulting to version 1.2 metadata
+mdadm: array /dev/md2 started.</pre>
+<p>Next we need to ensure that the new arrays are started at boot. Typically this is done by adding them to <code>mdadm.conf</code>. The location of this file may vary depending on your OS but on debian its in <code>/etc/mdadm</code>. I simply take a look at the 2 arrays and add them to the end of the config file</p>
+<pre>root@yuzuki:~# mdadm --detail --scan /dev/md{1,2} &gt;&gt; /etc/mdadm/mdadm.conf</pre>
+<p>We should now be in a position where you have <code>/dev/md1</code> and <code>/dev/md2</code> and they should both start automatically on-boot. Next we&#8217;ll look at making use of them!</p>
+<h3>Step 6 &#8211; Configure grub and move /boot</h3>
+<p>We should now have our degraded arrays which we can now immediately start to use. I&#8217;ll begin by creating a new file system on <code>/dev/md1</code> for use with <code>/boot</code> and then move data to it. Obviously if your <code>/boot</code> is not a separate partition but is included in your root partition then you don&#8217;t need to worry about this part.</p>
+<pre>root@yuzuki:~# mkfs.ext4 /dev/md1
+mke2fs 1.42.12 (29-Aug-2014)
+Creating filesystem with 521920 1k blocks and 130560 inodes
+Filesystem UUID: 37e651bc-ffc1-41d8-a9c7-99ca9273b829
+Superblock backups stored on blocks: 
+        8193, 24577, 40961, 57345, 73729, 204801, 221185, 401409
+
+Allocating group tables: done                            
+Writing inode tables: done                            
+Creating journal (8192 blocks): done
+Writing superblocks and filesystem accounting information: done 
+
+root@yuzuki:~# mkdir /mnt/tmp
+root@yuzuki:~# mount /dev/md1 /mnt/tmp/
+root@yuzuki:~# cp -ax /boot/* /mnt/tmp/
+root@yuzuki:~# umount /mnt/tmp 
+root@yuzuki:~# rmdir /mnt/tmp
+</pre>
+<p>Once all this is done, lets edit <code>/etc/fstab</code> to tell our system to mount <code>/boot</code> from the new array. Your <code>fstab</code> will be different to mine, but find where <code>/boot</code> is mounted and change it to <code>/dev/md1</code> (I kept my original UUID around just in-case)</p>
+<pre>root@yuzuki:~# cat /etc/fstab 
+# &lt;file system&gt; &lt;mount point&gt; &lt;type&gt; &lt;options&gt; &lt;dump&gt; &lt;pass&gt;
+#UUID=f6f3e14e-a2fe-468f-80ee-8824dab51e36 /boot ext3 defaults 0 1
+
+<strong>/dev/md1 /boot ext4 defaults 0 1
+</strong>/dev/pve/root / ext4 errors=remount-ro 0 1
+/dev/data/wdred /mnt/storage ext4 defaults,barrier=0 0 1
+/dev/pve/swap none swap sw 0 0
+proc /proc proc defaults 0 0
+</pre>
+<p>It&#8217;s critical you make sure there are no errors here, getting this wrong could result in an un-bootable system!</p>
+<p>At this point I chose to reboot my system to ensure it&#8217;s booting correctly and running <code>/boot</code> from the correct place</p>
+<pre>root@yuzuki:~# mount | grep boot
+<strong>/dev/md1</strong> on <strong>/boot</strong> type ext4 (rw,relatime,stripe=4,data=ordered)
+</pre>
+<p>mdadm needs to be told to start all arrays on-boot (As we intend to host <code>/</code> in an array) so edit <code>/etc/default/mdadm</code> and change <code>INITRDSTART</code> to &#8216;all&#8217; (Mine was set to &#8216;none&#8217; by default)</p>
+<pre>root@yuzuki:~# grep ^INITRDSTART /etc/default/mdadm
+INITRDSTART='all'</pre>
+<p>Followed by some grub and initrd changes</p>
+<pre>root@yuzuki:~# echo 'GRUB_DISABLE_LINUX_UUID=true' &gt;&gt; /etc/default/grub
+root@yuzuki:~# echo raid1 &gt;&gt; /etc/modules
+root@yuzuki:~# echo raid1 &gt;&gt; /etc/initramfs-tools/modules
+</pre>
+<p>And then make sure grub (boot loader) exists on the 2 new RAID disks followed by a grub update and RAM disk update</p>
+<pre>root@yuzuki:~# grub-install /dev/sdd
+Installing for i386-pc platform.
+Installation finished. No error reported.
+root@yuzuki:~# grub-install /dev/sde
+Installing for i386-pc platform.
+Installation finished. No error reported.
+
+root@yuzuki:~# update-grub
+Generating grub configuration file ...
+Found linux image: /boot/vmlinuz-4.4.35-2-pve
+Found initrd image: /boot/initrd.img-4.4.35-2-pve
+Found memtest86+ image: /memtest86+.bin
+Found memtest86+ multiboot image: /memtest86+_multiboot.bin
+done
+
+root@yuzuki:~# update-initramfs -u
+update-initramfs: Generating /boot/initrd.img-4.4.35-2-pve
+</pre>
+<p>Now we&#8217;re in the final stretch!</p>
+<h3>Step 7 &#8211; Assembling the arrays</h3>
+<p>If everything has gone to plan, our system should now be running <code>/boot</code> from <code>/dev/md1</code> which means the old <code>/boot</code> partition on <code>/dev/sdd2</code> is no longer needed. We should set its type to <strong>Linux RAID</strong> and add it to our array</p>
+<pre>root@yuzuki:~# sgdisk -t 2:fd00 /dev/sdd
+Warning: The kernel is still using the old partition table.
+The new table will be used at the next reboot.
+The operation has completed successfully.
+
+root@yuzuki:~# mdadm --add /dev/md1 /dev/sdd2
+mdadm: added /dev/sdd2
+
+root@yuzuki:~# cat /proc/mdstat 
+Personalities : [raid6] [raid5] [raid4] [raid1] 
+md2 : active raid1 sde3[1]
+      976107200 blocks super 1.2 [2/1] [_U]
+      bitmap: 1/8 pages [4KB], 65536KB chunk
+
+md1 : active raid1 sdd2[2] sde2[1]
+      521920 blocks super 1.2 [2/1] [_U]
+      [===========&gt;.........]  recovery = 55.2% (288896/521920) finish=0.0min speed=144448K/sec
+      
+md0 : active raid6 sdh1[0] sdc1[6] sda1[7] sdg1[5] sdf1[4] sdi1[2] sdb1[1]
+      14650670080 blocks super 1.2 level 6, 512k chunk, algorithm 2 [7/7] [UUUUUUU]
+      
+unused devices: &lt;none&gt;
+</pre>
+<p>And viola, we now have (when its recovered) a working software RAID for <code>/boot</code></p>
+<p>Next we&#8217;ll add <code>/dev/md2</code> to LVM and make the space available to our <code>pve</code> volume group so that we can simply <code>pvmove</code> the remaining data to our RAID array.</p>
+<pre>root@yuzuki:~# pvcreate /dev/md2
+  Physical volume "/dev/md2" successfully created
+root@yuzuki:~# pvdisplay 
+  --- Physical volume ---
+  PV Name               /dev/sdd3
+  VG Name               pve
+  PV Size               <strong>931.01 GiB</strong> / not usable 312.50 KiB
+  Allocatable           yes 
+  PE Size               4.00 MiB
+  Total PE              238339
+  Free PE               204406
+  Allocated PE          33933
+  PV UUID               6p74nl-SxZp-4xu7-j3lH-ACsg-Hs9I-5rNwpq
+   
+  "/dev/md2" is a new physical volume of "930.89 GiB"
+  --- NEW Physical volume ---
+  PV Name               /dev/md2
+  VG Name               
+  PV Size               <strong>930.89 GiB</strong>
+  Allocatable           NO
+  PE Size               0   
+  Total PE              0
+  Free PE               0
+  Allocated PE          0
+  PV UUID               PzVPqV-Rn1V-ASA5-Q4Ni-cXhS-LUCu-QZUTiC
+  
+  
+root@yuzuki:~# vgextend pve /dev/md2
+  Volume group "pve" successfully extended
+</pre>
+<p>You might notice that <code>/dev/sdd3</code> and <code>/dev/md2</code> aren&#8217;t the same size according to LVM &#8211; I suspect this is because of RAID metadata overheads. Thankfully because I am moving from smaller to larger disks, I have enough <strong>Free PE</strong> that I can move without issue. If however you have no Free PE&#8217;s and your disks are not equal in size like shown above, you might need to shrink one of your Logical Volumes and fix the file system later.</p>
+<p>I&#8217;m happy that I can proceed here so I move the contents of <code>/dev/sdd3</code> to <code>/dev/md2</code> within LVM</p>
+<pre>root@yuzuki:~# pvmove /dev/sdd3 /dev/md2
+  /dev/sdd3: Moved: 100.0%
+</pre>
+<p>The pvmove itself will take a while depending on how much data there is to move (<strong>Allocated PE</strong>) but once that is done, all we have left to do is remove the old disk from LVM</p>
+<pre>root@yuzuki:~# vgreduce pve /dev/sdd3
+  Removed "/dev/sdd3" from volume group "pve"
+
+root@yuzuki:~# pvremove /dev/sdd3
+  Labels on physical volume "/dev/sdd3" successfully wiped
+</pre>
+<p>And then to add the old partition to our corresponding mdadm array</p>
+<pre>root@yuzuki:~# mdadm --add /dev/md2 /dev/sdd3
+mdadm: added /dev/sdd3
+
+root@yuzuki:~# cat /proc/mdstat 
+Personalities : [raid1] [raid6] [raid5] [raid4] 
+md2 : active raid1 sdd3[2] sde3[1]
+      976107200 blocks super 1.2 [2/1] [_U]
+      [&gt;....................]  recovery =  1.3% (12725760/976107200) finish=133.5min speed=120174K/sec
+      bitmap: 2/8 pages [8KB], 65536KB chunk
+
+md1 : active raid1 sdd2[2] sde2[1]
+      521920 blocks super 1.2 [2/2] [UU]
+      
+md0 : active raid6 sdh1[0] sdb1[6] sda1[7] sdg1[5] sdf1[4] sdi1[2] sdc1[1]
+      14650670080 blocks super 1.2 level 6, 512k chunk, algorithm 2 [7/7] [UUUUUUU]
+      
+unused devices: &lt;none&gt;
+</pre>
+<p>A final reboot to make sure everything comes up correctly and if so, its just a matter of waiting for RAID recovery to complete.</p>
+                                <div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon-text sd-sharing"><h3 class="sd-title">Share this:</h3><div class="sd-content"><ul><li class="share-reddit"><a rel="nofollow" data-shared="" class="share-reddit sd-button share-icon" href="https://www.reddit.com/submit?url=https%3a%2f%2fwww.simonmott.co.uk%2f2017%2f03%2fshoehorning-proxmox-into-mdadm-raid1%2f&amp;title=Shoehorning&#43;Proxmox&#43;into&#43;mdadm&#43;RAID1" rel="noopener noreferrer" target="_blank" title="Click to share on Reddit"><span>Reddit</span></a></li><li class="share-twitter"><a rel="nofollow" data-shared="sharing-twitter-247" class="share-twitter sd-button share-icon" href="https://twitter.com/intent/tweet?text=Shoehorning&#43;Proxmox&#43;into&#43;mdadm&#43;RAID1&amp;url=https%3a%2f%2fwww.simonmott.co.uk%2f2017%2f03%2fshoehorning-proxmox-into-mdadm-raid1%2f" rel="noopener noreferrer" target="_blank" title="Click to share on Twitter"><span>Twitter</span></a></li><li class="share-facebook"><a rel="nofollow" data-shared="sharing-facebook-247" class="share-facebook sd-button share-icon" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fwww.simonmott.co.uk%2f2017%2f03%2fshoehorning-proxmox-into-mdadm-raid1%2f" rel="noopener noreferrer" target="_blank" title="Click to share on Facebook"><span>Facebook</span></a></li><li class="share-end"></li></ul></div></div></div>
+                                <div class="clearfix"></div>
+
+	        <div class="post-meta-terms">
+	            <div class="post-meta-tags">
+	                <span class="btn"><i class="mythemes-icon-tags"></i></span>
+	                <a href="/tag/disks/" rel="tag">Disks</a><a href="/tag/ext4/" rel="tag">Ext4</a><a href="/tag/lvm/" rel="tag">Lvm</a><a href="/tag/mdadm/" rel="tag">Mdadm</a><a href="/tag/parted/" rel="tag">Parted</a><a href="/tag/partitions/" rel="tag">Partitions</a><a href="/tag/raid/" rel="tag">Raid</a><a href="/tag/raid1/" rel="tag">Raid1</a><a href="/tag/sgdisk/" rel="tag">Sgdisk</a>	                <div class="clear clearfix"></div>
+	            </div>
+	        </div>                            </article>
+
+                            
+
+
+                </div>
+                </section>
+
+            <aside class="col-sm-4 col-md-3 col-lg-3 sidebar-to-right"><div id="search-4" class="widget widget_search"><form action="/search/" method="get" id="searchform">
+    <fieldset>
+        <div id="searchbox">
+            <input type="text" name="s"  id="keywords" value="type here..." onfocus="if (this.value == 'type here...') {this.value = '';}" onblur="if (this.value == '') {this.value = 'type here...';}">
+            <button type="submit"><i class="mythemes-icon-search-5"></i></button>
+        </div>
+    </fieldset>
+</form>
+</div><div id="top-posts-2" class="widget widget_top-posts"><h4 class="widget-title"><i></i>Top Posts &amp; Pages</h4><ul>				<li>
+										<a href="/2026/08/owntracks-and-my-google-timeline/" class="bump-view" data-bump-view="tp">
+						OwnTracks and my Google Timeline					</a>
+									</li>
+			</ul></div>
+		<div id="recent-posts-8" class="widget widget_recent_entries">
+		<h4 class="widget-title"><i></i>Recent Posts</h4>
+		<ul>
+											<li>
+					<a href="/2026/08/owntracks-and-my-google-timeline/">OwnTracks and my Google Timeline</a>
+									</li>
+											<li>
+					<a href="/2024/12/using-ffmpegs-vpp_qsv-detail-enhancement-filter/">Using ffmpeg’s vpp_qsv detail enhancement filter</a>
+									</li>
+											<li>
+					<a href="/2024/12/transcoding-with-an-intel-arc-gpu/">Transcoding with an Intel Arc GPU</a>
+									</li>
+											<li>
+					<a href="/2023/06/auto-mount-luks-without-a-filesystem/">Auto mount LUKS without a filesystem</a>
+									</li>
+											<li>
+					<a href="/2022/02/a-stratum-1-time-server-the-basics/">A Stratum 1 Time Server – The Basics</a>
+									</li>
+											
+					</ul>
+
+		</div><div id="categories-6" class="widget widget_categories"><h4 class="widget-title"><i></i>Categories</h4>
+			<ul>
+					<li class="cat-item"><a href="/category/benchmarks/">Benchmarks</a>
+</li>
+	<li class="cat-item"><a href="/category/coding/">Coding</a>
+</li>
+	<li class="cat-item"><a href="/category/data/">Data</a>
+</li>
+	<li class="cat-item"><a href="/category/debugging/">Debugging</a>
+</li>
+	<li class="cat-item"><a href="/category/firmware/">Firmware</a>
+</li>
+	<li class="cat-item"><a href="/category/gaming/">Gaming</a>
+</li>
+	<li class="cat-item"><a href="/category/general/">General</a>
+</li>
+	<li class="cat-item"><a href="/category/learning/">Learning</a>
+</li>
+	<li class="cat-item"><a href="/category/networking/">Networking</a>
+</li>
+	<li class="cat-item"><a href="/category/system-administration/">System Administration</a>
+</li>
+	<li class="cat-item"><a href="/category/technology/">Technology</a>
+</li>
+	<li class="cat-item"><a href="/category/tweaking/">Tweaking</a>
+</li>
+	
+			</ul>
+
+			</div><div id="archives-5" class="widget widget_archive"><h4 class="widget-title"><i></i>Archives</h4>
+			<ul>
+			
+				<li><a href='/2026-08/'>August 2026</a></li>
+			
+				<li><a href='/2024-12/'>December 2024</a></li>
+			
+				<li><a href='/2023-06/'>June 2023</a></li>
+			
+				<li><a href='/2022-02/'>February 2022</a></li>
+			
+				<li><a href='/2018-08/'>August 2018</a></li>
+			
+				<li><a href='/2018-06/'>June 2018</a></li>
+			
+				<li><a href='/2017-07/'>July 2017</a></li>
+			
+				<li><a href='/2017-03/'>March 2017</a></li>
+			
+				<li><a href='/2016-09/'>September 2016</a></li>
+			
+				<li><a href='/2016-07/'>July 2016</a></li>
+			
+				<li><a href='/2016-06/'>June 2016</a></li>
+			
+				<li><a href='/2013-08/'>August 2013</a></li>
+			
+				<li><a href='/2012-03/'>March 2012</a></li>
+			
+				<li><a href='/2012-02/'>February 2012</a></li>
+			
+				<li><a href='/2011-04/'>April 2011</a></li>
+			
+				<li><a href='/2011-03/'>March 2011</a></li>
+			
+				<li><a href='/2010-04/'>April 2010</a></li>
+			
+				<li><a href='/2010-03/'>March 2010</a></li>
+			
+				<li><a href='/2010-01/'>January 2010</a></li>
+			
+				<li><a href='/2009-09/'>September 2009</a></li>
+			
+				<li><a href='/2009-08/'>August 2009</a></li>
+			
+			</ul>
+
+			</div></aside>
+
+
+            </div>
+
+        </div>
+    </div>
+
+        <footer>
+
+            <div class="mythemes-black-side">
+                <div class="container mythemes-copyright">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-6 col-lg-6">
+                            <p>
+                                <span class="copyright">Copyright © Simon Mott</span>
+                                <span>Designed by <a href="http://mythem.es/" target="_blank" title="myThem.es">myThem.es</a>.</span>
+                            </p>
+                        </div>
+                                                <div class="col-sm-6 col-md-6 col-lg-6">
+                            <div class="mythemes-social">
+                                <a href="https://twitter.com/simon_mott" class="mythemes-icon-twitter " target="_blank"></a><a href="https://github.com/tsumaru720" class="mythemes-icon-github " target="_blank"></a><a href="https://www.flickr.com/photos/tsumaru720" class="mythemes-icon-flickr " target="_blank"></a><a href="https://www.facebook.com/dementedidiot" class="mythemes-icon-facebook " target="_blank"></a><a href="https://www.simonmott.co.uk/feed/" class="mythemes-icon-rss " target="_blank"></a>                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </footer>
+
+        <script src='/js/jquery.min.js'></script>
+        <script src='/js/jquery-migrate.min.js'></script>
+        <script src='/js/bootstrap.min.js'></script>
+        <script src='/js/functions.js'></script>
+        <script src='/js/jquery.prettyPhoto.js'></script>
+        <script src='/js/jquery.prettyPhoto.settings.js'></script>
+        <script src='/js/prettify.js'></script>
+        <script>jQuery(document).ready(function () { prettyPrint(); });</script>
+        
+        <script>(function(){var b=document.getElementById('theme-toggle');if(!b){return;}b.addEventListener('click',function(e){e.preventDefault();var r=document.documentElement;var t=r.getAttribute('data-theme')==='dark'?'light':'dark';r.setAttribute('data-theme',t);try{window.localStorage.setItem('sm-theme',t);}catch(err){}});})();</script>
+    </body>
+</html>

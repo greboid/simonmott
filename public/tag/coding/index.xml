@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Coding on Simon Mott</title>
+    <link>https://www.simonmott.co.uk/tag/coding/</link>
+    <description>Recent content in Coding on Simon Mott</description>
+    <generator>Hugo</generator>
+    <language>en-GB</language>
+    <lastBuildDate>Sun, 24 Jan 2010 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.simonmott.co.uk/tag/coding/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Java Development</title>
+      <link>https://www.simonmott.co.uk/2010/01/java-development/</link>
+      <pubDate>Sun, 24 Jan 2010 00:00:00 +0000</pubDate>
+      <guid>https://www.simonmott.co.uk/2010/01/java-development/</guid>
+      <description>&lt;p style=&#34;text-align: justify;&#34;&gt;Yesterday, I took my first official steps at attempting to learn Java. It has been on the back of my mind for a long time (since the days of Visual Basic 6) but I have just never settled into it; Yes, I&amp;#8217;ve tinkered, but never anything serious.&lt;/p&gt;&#xA;&lt;p style=&#34;text-align: justify;&#34;&gt;Thanks to some of my long time friends I now have a place to develop my skills and a place to get assistance as and when I need it. Since early 2007 they have been on-off developing an alternate &lt;a href=&#34;http://en.wikipedia.org/wiki/Internet_Relay_Chat&#34;&gt;IRC client&lt;/a&gt; for Linux that happens to be cross platform with a wide selection of operating systems due to it being Java based. In my opinion their client has far surpassed any IRC client that I&amp;#8217;ve ever come across. If you don&amp;#8217;t agree, keep watching, you soon will!&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,58 @@
+{{ define "title" }}{{ .Title }} - {{ site.Title }}{{ end }}
+
+{{ define "ogtitle" }}{{ .Title }}{{ end }}
+{{ define "ogtitle2" }}{{ .Title }}{{ end }}
+{{ define "ogtype" }}article{{ end }}
+
+{{ define "bodyclass" }}single single-post postid-{{ .Params.wp_id }} single-format-standard{{ end }}
+
+{{ define "main" }}
+    <div class="content">
+        <div class="container">
+            <div class="row">
+
+<!-- CONTENT -->
+<section class="col-sm-8 col-md-9 col-lg-9">
+                <div class="content-border right"><article class="post-{{ .Params.wp_id }} post type-post status-publish format-standard hentry{{ range sort (.GetTerms "categories") "LinkTitle" }} category-{{ index (last 1 (split (trim .RelPermalink "/") "/")) 0 }}{{ end }}{{ range sort (.GetTerms "tags") "LinkTitle" }} tag-{{ index (last 1 (split (trim .RelPermalink "/") "/")) 0 }}{{ end }}">
+
+                                <!-- TITLE -->
+                                <h1 class="post-title">{{ .Title }}</h1>
+
+                                <!-- TOP META : AUTHOR / TIME / COMMENTS -->
+                                        <div class="mythemes-top-meta meta">
+
+            <ul class="post-categories">
+	{{- range sort (.GetTerms "categories") "LinkTitle" }}<li><a href="{{ .RelPermalink }}" rel="category tag">{{ .LinkTitle }}</a></li>
+	{{- end }}</ul>
+            <a class="author" href="{{ site.Home.RelPermalink }}" title="Writed by {{ site.Params.author }}">by {{ site.Params.author }}</a>
+
+            <time datetime="{{ .Date.Format "2006-01-02" }}">on {{ partial "date-ordinal.html" .Date }}</time>
+
+                    </div>
+
+
+                                <!-- CONTENT -->
+                                {{ .Content }}
+                                <div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon-text sd-sharing"><h3 class="sd-title">Share this:</h3><div class="sd-content"><ul><li class="share-reddit"><a rel="nofollow" data-shared="" class="share-reddit sd-button share-icon" href="https://www.reddit.com/submit?url={{ .Permalink }}&amp;title={{ .Title | urlquery }}" rel="noopener noreferrer" target="_blank" title="Click to share on Reddit"><span>Reddit</span></a></li><li class="share-twitter"><a rel="nofollow" data-shared="sharing-twitter-{{ .Params.wp_id }}" class="share-twitter sd-button share-icon" href="https://twitter.com/intent/tweet?text={{ .Title | urlquery }}&amp;url={{ .Permalink }}" rel="noopener noreferrer" target="_blank" title="Click to share on Twitter"><span>Twitter</span></a></li><li class="share-facebook"><a rel="nofollow" data-shared="sharing-facebook-{{ .Params.wp_id }}" class="share-facebook sd-button share-icon" href="https://www.facebook.com/sharer/sharer.php?u={{ .Permalink }}" rel="noopener noreferrer" target="_blank" title="Click to share on Facebook"><span>Facebook</span></a></li><li class="share-end"></li></ul></div></div></div>
+                                <div class="clearfix"></div>
+
+	        {{ with .GetTerms "tags" }}<div class="post-meta-terms">
+	            <div class="post-meta-tags">
+	                <span class="btn"><i class="mythemes-icon-tags"></i></span>
+	                {{ range sort . "LinkTitle" }}<a href="{{ .RelPermalink }}" rel="tag">{{ .LinkTitle }}</a>{{ end }}	                <div class="clear clearfix"></div>
+	            </div>
+	        </div>{{ end }}                            </article>
+
+                            <!-- COMMENTS -->
+
+
+                </div>
+                </section>
+
+            {{ partial "sidebar.html" . }}
+
+            </div>
+
+        </div>
+    </div>
+{{ end }}

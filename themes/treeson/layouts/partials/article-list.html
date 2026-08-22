@@ -1,0 +1,33 @@
+<article class="post-{{ .Params.wp_id }} post type-post status-publish format-standard hentry{{ range sort (.GetTerms "categories") "LinkTitle" }} category-{{ index (last 1 (split (trim .RelPermalink "/") "/")) 0 }}{{ end }}{{ range sort (.GetTerms "tags") "LinkTitle" }} tag-{{ index (last 1 (split (trim .RelPermalink "/") "/")) 0 }}{{ end }}">
+
+    <h2 class="post-title">
+
+            <a href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a>
+
+            </h2>
+
+            <div class="mythemes-top-meta meta">
+
+            <ul class="post-categories">
+	{{- range sort (.GetTerms "categories") "LinkTitle" }}<li><a href="{{ .RelPermalink }}" rel="category tag">{{ .LinkTitle }}</a></li>
+	{{- end }}</ul>
+            <a class="author" href="{{ site.Home.RelPermalink }}" title="Writed by {{ site.Params.author }}">by {{ site.Params.author }}</a>
+
+            <time datetime="{{ .Date.Format "2006-01-02" }}">on {{ partial "date-ordinal.html" .Date }}</time>
+
+                    </div>
+
+
+    <div class="post-content">
+
+        {{ .Summary }}{{ if .Params.more }} <a href="{{ .RelPermalink }}#more-{{ .Params.wp_id }}" class="more-link"><span class="hidden-xs">Read More</span><span class="hidden-sm hidden-md hidden-lg"><i class="mythemes-icon-right-big"></i></span></a>{{ end }}
+                <div class="mythemes-post-social">
+                                    <span class="mythemes-post-views">
+                        <strong></strong>
+                        <span></span>
+                    </span>
+                </div>
+                <div class="clearfix"></div>
+
+    </div>
+    </article>

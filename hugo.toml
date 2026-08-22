@@ -1,0 +1,49 @@
+baseURL = "https://www.simonmott.co.uk/"
+languageCode = "en-GB"
+title = "Simon Mott"
+theme = "treeson"
+enableRobotsTXT = true
+disableKinds = ["taxonomy"]
+
+[pagination]
+pagerSize = 10
+
+[taxonomies]
+category = "categories"
+tag = "tags"
+
+[permalinks]
+[permalinks.term]
+categories = "/category/:slug/"
+tags = "/tag/:slug/"
+
+[markup]
+[markup.goldmark]
+[markup.goldmark.renderer]
+unsafe = true
+
+[params]
+description = "All about me"
+author = "Simon"
+headerImage = "/wp-content/uploads/2016/06/header.jpg"
+topPosts = ["post/owntracks-and-my-google-timeline"]
+
+[menus]
+[[menus.main]]
+name = "Home"
+pageRef = "/"
+weight = 1
+[[menus.main]]
+name = "Popular"
+identifier = "popular"
+weight = 2
+[[menus.main]]
+name = "LVM"
+parent = "popular"
+url = "/2010/03/logical-volume-manager-lvm/"
+weight = 1
+[[menus.main]]
+name = "VPN Bonding"
+parent = "popular"
+url = "/2012/03/vpn-bonding/"
+weight = 2

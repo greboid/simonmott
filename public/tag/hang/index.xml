@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hang on Simon Mott</title>
+    <link>https://www.simonmott.co.uk/tag/hang/</link>
+    <description>Recent content in Hang on Simon Mott</description>
+    <generator>Hugo</generator>
+    <language>en-GB</language>
+    <lastBuildDate>Wed, 13 Jul 2016 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.simonmott.co.uk/tag/hang/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Odd behaviour with /etc/mtab being a regular file</title>
+      <link>https://www.simonmott.co.uk/2016/07/odd-behaviour-with-etcmtab-regular-file/</link>
+      <pubDate>Wed, 13 Jul 2016 00:00:00 +0000</pubDate>
+      <guid>https://www.simonmott.co.uk/2016/07/odd-behaviour-with-etcmtab-regular-file/</guid>
+      <description>&lt;p&gt;One of our customers had recently requested a Bare-Metal Restore (BMR) of one of their servers; which is a pretty routine task for us. However, upon bringing the restored server up I&amp;#8217;d noticed some odd behaviour with some of its services, notably snmpd.&lt;/p&gt;&#xA;&lt;p&gt;Our monitoring successfully polls most metrics that we look for, however fails on getting disk statistics and eventually snmpd just starts timing out. Using &lt;code&gt;snmpbulkwalk&lt;/code&gt; I could see that I was getting a response right up until midway through the &lt;strong&gt;HOST-RESOURCES MIB&lt;/strong&gt;. It did look to be hanging on mount points and once snmpbulkwalk had timed out, I couldn&amp;#8217;t get a successful response from snmpd again. This was also seemingly affecting MariaDB, preventing it from starting, amongst other things.</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en-GB" prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script>(function(){var t=null;try{t=window.localStorage.getItem('sm-theme');}catch(e){}if(t!=='dark'&&t!=='light'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);})();</script>
+        <link rel="profile" href="http://gmpg.org/xfn/11" />
+        <title>VPN Bonding - Simon Mott</title>
+        <meta name="description" content="All about me" />
+        <link rel="canonical" href="https://www.simonmott.co.uk/2012/03/vpn-bonding/" />
+        <meta property="og:locale" content="en_GB" />
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="VPN Bonding" />
+        <meta property="og:description" content="All about me" />
+        <meta property="og:url" content="https://www.simonmott.co.uk/2012/03/vpn-bonding/" />
+        <meta property="og:site_name" content="Simon Mott" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:description" content="All about me" />
+        <meta name="twitter:title" content="VPN Bonding" />
+        <link rel="alternate" type="application/rss+xml" title="Simon Mott &raquo; Feed" href="https://www.simonmott.co.uk/index.xml" />
+        <link rel='stylesheet' id='mythemes-google-fonts-roboto-css' href='https://fonts.googleapis.com/css?family=Roboto%3A300%2C400%2C500%2C600%2C700' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-google-fonts-open-sans-css' href='https://fonts.googleapis.com/css?family=Open+Sans%3A300%2C400%2C700' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-icons-css' href='/css/mythemes-icons.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-effects-css' href='/css/effects.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-header-css' href='/css/header.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-bootstrap-css' href='/css/bootstrap.min.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-typography-css' href='/css/typography.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-navigation-css' href='/css/navigation.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-nav-css' href='/css/nav.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-blog-css' href='/css/blog.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-forms-css' href='/css/forms.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-elements-css' href='/css/elements.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-widgets-css' href='/css/widgets.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-comments-css' href='/css/comments.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-comments-typography-css' href='/css/comments-typography.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-footer-css' href='/css/footer.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-pretty-photo-css' href='/css/prettyPhoto.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-plugins-css' href='/css/plugins.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-style-css' href='/css/treeson.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='prettify-css' href='/css/prettify.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='social-logos-css' href='/wp-content/plugins/jetpack/_inc/social-logos/social-logos.min.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='jetpack_css-css' href='/css/jetpack.css' type='text/css' media='all' />
+        <!-- theme customizer styles, copied verbatim from the original site -->
+<style data-from="original" type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 0.07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<style data-from="original" type='text/css'>img#wpstats{display:none}</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-header">
+    .mythemes-header a.header-description{
+        color: rgba( 255,255,255 , 0.5 );
+    }
+    .mythemes-header a.header-description:hover{
+        color: rgba( 255,255,255 , 0.7 );
+    }
+</style>
+<style data-from="original" type="text/css">
+
+     
+    body{
+        background-color: #343b43;
+    }
+    .mythemes-header a.header-title{
+        color: #ffffff;
+    }
+
+     
+    body > div.content,
+    body footer aside{
+        background-image: url();
+        background-repeat: ;
+        background-position: ;
+        background-attachment: ;
+    }
+
+     
+    div.mythemes-page-header{
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-background">
+
+     
+    body > div.content,
+    body footer aside{
+        background-color: #ffffff;
+    }
+
+
+     
+     
+    body.scroll-nav .mythemes-poor{
+        background-color: rgba( 255,255,255 , 0.91 );
+    }
+    .mythemes-poor{
+        background-color: #ffffff;
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-color-btn-1">
+
+     
+    .header-button-wrapper a.btn.first-btn.header-button{
+        color: rgba( 255,255,255 , 0.4 );
+        border: 1px solid rgba( 255,255,255 , 0.2 );
+        background: rgba( 255,255,255 , 0.03 );
+    }
+    .header-button-wrapper a.btn.first-btn.header-button:hover{
+        color: rgba( 255,255,255 , 0.9 );
+        border: 1px solid rgba( 255,255,255 , 0.7 );
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-color-btn-2">
+
+     
+    .header-button-wrapper a.btn.second-btn.header-button{
+        color: rgba( 255,255,255 , 0.4 );
+        border: 1px solid rgba( 255,255,255 , 0.2 );
+        background: rgba( 255,255,255 , 0.03 );
+    }
+    .header-button-wrapper a.btn.second-btn.header-button:hover{
+        color: rgba( 255,255,255 , 0.9 );
+        border: 1px solid rgba( 255,255,255 , 0.7 );
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-color-1">
+
+     
+    nav.base-nav ul li a,
+    div.widget-grofile.grofile a.grofile-full-link{
+        color: #414c97;
+    }
+    nav.base-nav ul li:hover > a,
+    nav.base-nav ul li > a:hover,
+    nav.base-nav ul li.current-menu-item > a,
+    nav.base-nav ul li.current-menu-ancestor > a,
+    div.widget-grofile.grofile a.grofile-full-link:hover{
+        color: #00001f;
+    }
+
+     
+    div.comments-list > ol li.pingback header cite a:hover,
+    div.comments-list > ol li.comment header cite a:hover{
+        color: #232e79;
+    }
+
+     
+     
+    .btn,
+    .button,
+    .mythemes-button,
+
+     
+    button,
+    input[type="submit"],
+    input[type="button"],
+
+     
+    .hentry button,
+    .hentry input[type="button"],
+    .hentry input[type="submit"],
+    
+     
+    div.widget_calendar table th,
+    div.widget_post_meta ul li span.post-tag,
+
+     
+    article div.post-meta-tags a:hover,
+    article div.post-meta-categories a,
+
+     
+    div.comments-list > ol li.comment header span.comment-meta span.comment-replay a:hover,
+    div#comments  p.form-submit input[type="submit"],
+
+     
+    div.pagination nav span{
+        background-color: #05105b;
+    }
+
+     
+     
+     
+    .btn,
+    .button,
+    .mythemes-button,
+
+     
+    button,
+    input[type="submit"],
+    input[type="button"],
+
+     
+    .hentry button,
+    .hentry input[type="button"],
+    .hentry input[type="submit"],
+
+     
+    div.widget_post_meta ul li span.post-tag,
+
+     
+    article div.post-meta-tags a:hover,
+    article div.post-meta-categories a,
+
+     
+    div#comments  p.form-submit input[type="submit"],
+
+     
+    div.pagination nav span{
+        border-bottom: 1px solid #000033;
+    }
+
+     
+    div.pagination nav a,
+    article div.meta,
+    article div.meta a,
+    article a.more-link:hover,
+    article div.meta ul.post-categories li a{
+        color: #05105b;
+    }
+    article div.meta ul.post-categories li a:hover{
+        background-color: #05105b;
+    }
+    article a.more-link:hover{
+        border: 3px solid #05105b;
+    }
+
+     
+    article.sticky a.more-link{
+        background: #05105b;
+        border: 3px solid #05105b;
+    }
+    article.sticky a.more-link:hover{
+        color: #05105b;
+    }
+        
+
+     
+    footer .mythemes-black-side{
+        background: #05105b;
+    }
+    footer .mythemes-black-side .mythemes-copyright p,
+    footer .mythemes-black-side .mythemes-menu a{
+        color: #646fba;
+    }
+    footer .mythemes-black-side .mythemes-copyright a,
+    footer .mythemes-black-side .mythemes-menu a:hover{
+        color: #9ba6f1;
+    }
+    footer .mythemes-black-side .mythemes-copyright a:hover{
+        color: #c3ceff;   
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-color-2">
+
+     
+    nav.base-nav ul li.current-menu-item > a{
+        color: #7db74d;
+    }
+
+     
+    a:hover,
+
+     
+    article div.meta a:hover{
+        color: #7db74d;
+    }
+
+     
+     
+    .btn.second-button,
+    .button.second-button,
+    .mythemes-button.second-button,
+
+     
+    .mythemes-nav-btn button.btn-base-nav,
+
+     
+    div.widget_post_tags div.tagcloud a,
+    div.widget_tag_cloud div.tagcloud a,
+    div.widget_newsletter form button[type="submit"],
+
+     
+    div.comments-list > ol li.comment header span.comment-meta span.comment-replay a,
+    div.comment-respond h3.comment-reply-title small a,
+    
+     
+    article div.post-meta-categories a:hover,
+    article div.post-meta-tags a{
+        background-color: #5f992f;
+    }
+
+     
+     
+     
+    .btn.second-button,
+    .button.second-button,
+    .mythemes-button.second-button,
+
+     
+    .mythemes-nav-btn button.btn-base-nav,
+
+     
+    div.widget_post_tags div.tagcloud a,
+    div.widget_tag_cloud div.tagcloud a,
+    div.widget_newsletter form button[type="submit"],
+
+     
+    article div.post-meta-tags a,
+    article div.post-meta-categories a:hover,
+
+     
+    div.comment-respond h3.comment-reply-title small a{
+        border-bottom: 1px solid #377107;
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-color-3">
+
+     
+     
+    a,
+
+     
+    div.widget ul li a:hover,
+    div.widget_calendar table td a:hover,
+    div.widget_categories ul li a:hover,
+    div.widget_recent_comments_with_avatar ul li h5 a:hover{
+        color: #5f88bb;
+    }
+
+     
+    .hentry h2 a:hover,
+    article h2 a:hover{
+        color: #416a9d;
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-css">
+
+    div.content div.container aside.mythemes-header-items,
+div.content div.container aside.mythemes-header-items + div.row{
+    display: none;
+}
+
+.mythemes-post-social {
+display: none;
+}
+
+div.widget.widget_text {
+margin-bottom: 0px;
+margin-top:-50px;
+padding-bottom: 15px;
+}
+
+div.mythemes-header a.header-title {
+font-weight: bold;
+margin-top: 100px;
+}
+
+.hentry, .hentry p, article p {
+  color: #5d5d5d;
+}
+</style>
+
+        <link rel='stylesheet' id='mythemes-darkmode-css' href='/css/darkmode.css' type='text/css' media='all' />
+        
+    </head>
+    <body class="single single-post postid-90 single-format-standard">
+        <header>
+
+<div class="mythemes-header overflow-wrapper parallax-container" style="height: 400px;">
+    <div class="valign-cell-wrapper" style="background: rgba( 1,0,81, 0.19 );">
+
+        
+        <div class="valign-cell">
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <a class="header-title" href="/" title="Simon Mott - All about me">Simon Mott</a><a class="header-description" href="/" title="Simon Mott - All about me">All about me</a>                    </div>
+                </div>
+
+        </div>
+    </div>
+
+
+    <div class="parallax" style="background-image: url(https://www.simonmott.co.uk/wp-content/uploads/2016/06/header.jpg);"><img src="https://www.simonmott.co.uk/wp-content/uploads/2016/06/header.jpg" alt="Simon Mott - All about me"></div></div>
+            <div class="mythemes-poor">
+                <div class="container">
+
+                    <div class="row mythemes-nav-small-device">
+                        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 mythemes-nav-label">
+                                                        <a href="/" title="Simon Mott - All about me">
+                                Simon Mott                            </a>
+                        </div>
+                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 mythemes-nav-btn">
+                            <button type="button" class="btn-collapse btn-base-nav" data-toggle=".header-nav.base-nav">
+                                <i>+</i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <nav class="mythemes-nav-inline base-nav header-nav nav-collapse">
+
+                            <div class="nav-wrapper"><ul id="menu-popular" class="mythemes-menu"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/">Home</a></li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href="#">Popular</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-post"><a href="/2010/03/logical-volume-manager-lvm/">LVM</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-post"><a href="/2012/03/vpn-bonding/">VPN Bonding</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom theme-toggle-item"><a href="#" id="theme-toggle" title="Toggle dark mode"><i class="mythemes-icon-moon icon-moon"></i><i class="mythemes-icon-sun icon-sun"></i></a></li></ul></div>                            </nav>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </header>
+
+        
+        
+    <div class="content">
+        <div class="container">
+            <div class="row">
+
+
+<section class="col-sm-8 col-md-9 col-lg-9">
+                <div class="content-border right"><article class="post-90 post type-post status-publish format-standard hentry category-networking category-system-administration tag-bonding tag-ifenslave tag-networking tag-routing tag-ssh tag-tcp tag-vpn">
+
+                                
+                                <h1 class="post-title">VPN Bonding</h1>
+
+                                
+                                        <div class="mythemes-top-meta meta">
+
+            <ul class="post-categories"><li><a href="/category/networking/" rel="category tag">Networking</a></li><li><a href="/category/system-administration/" rel="category tag">System Administration</a></li></ul>
+            <a class="author" href="/" title="Writed by Simon">by Simon</a>
+
+            <time datetime="2012-03-05">on 5th March 2012</time>
+
+                    </div>
+
+
+                                
+                                <p style="text-align: justify;">This page details step by step how I accomplished aggregating two separate internet connections into one, seemingly single, connection to the Internet. This &#8220;single&#8221; connection has a greater bandwidth capacity that either of the individual connections could yield. As a side affect this also nicely doubles up as a redundant connection. This method can be used for achieving link aggregation for both home and business users alike for a fraction of the cost of commercial connections / aggregation units available that do the same thing and in theory could be expanded to as many links you like however be warned, the more links there are, the more overheads there will be with tunnelling; thus potentially noticeable drops in speed.</p>
+<p style="text-align: justify;">For this demonstration I am using two Virtual Machines via <a href="http://virtualbox.org/">VirtualBox</a>. This enables me to experiment with without cutting my servers off from remote administration. Both machines are running <a href="http://www.ubuntu.com/">Ubuntu 10.04.3 LTS (Lucid)</a> however there is no reason this wont work for other distributions as long as you modify the steps accordingly.
+
+
+
+
+<span id="more-90"></span></p>
+<p style="text-align: justify;"><strong>Just to get this out of the way. I am not responsible for anything you might break. Be cautious when playing around with routing tables/network interfaces especially with remote servers as it could potentially cause loss of connectivity which might not be a simple fix.</strong></p>
+<h3 style="text-align: justify;">Requirements</h3>
+<p style="text-align: justify;">Firstly, we will cover the requirements needed for this demonstration:</p>
+<ul>
+<li style="text-align: justify;">Linux bonding driver on both machines (see Initial Setup)</li>
+<li style="text-align: justify;">Server with a fat internet connection. I have a server in a Data Center with 100Mbit link that I use.</li>
+<li style="text-align: justify;">The remote server ideally needs to have two or more IP addresses accessible (see routing for details why)</li>
+<li style="text-align: justify;">Two or more Internet connections at the site you wish to create the aggregated connection</li>
+<li style="text-align: justify;">Server at the site you wish to aggregate that you can use as a Gateway device</li>
+</ul>
+<p><span style="color: #ff0000;"><strong>*NB, This article is now quite old. I&#8217;ve heard that newer versions of ifenslave break this now*</strong></span></p>
+<p><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><ins class="adsbygoogle" style="display: block; text-align: center;" data-ad-format="fluid" data-ad-layout="in-article" data-ad-client="ca-pub-3235343726212802" data-ad-slot="5775455771"></ins><br />
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script></p>
+<h3>How It Works</h3>
+<p>The idea behind this is quite simple and has been around for a long time. Think of it in terms of plumbing. You have a narrow pipe from your house (Your ISP), to the drain outside (The Internet). This pipe can only carry so much water (Information) to its destination at any given moment. If you add another pipe and link them together you are essentially allowing both pipes between them to carry more to the destination, thus increasing throughput.</p>
+<p style="text-align: justify;">The only initial problem with this is that each of the connections to your ISP have their own routes and IP addresses. You cant simply have multiple connections to one ISP and have it magically work (Unless your ISP supports Channel Bonding and will set it up for you). What this guide aims to do (continuing from the analogy above), is wrap both pipes together with tape so that from inside the house and outside, they appear as one and carry more down tham then a single pipe on its own.</p>
+<p style="text-align: justify;">The solution is to create a VPN tunnel to your fat pipe endpoint via each connection. Once the tunnels have been bonded it will act as one interface. Your remote fat pipe server will appear as one IP address but all traffic to that new IP address is being split down both links and vice versa. Once at the other end, as its VPN tunnelled, your server will see it as originating from the same IP inside your network, regardless of the route it takes. This then enables you to route it to the Internet and back with ease.</p>
+<h3 style="text-align: justify;">Diagram</h3>
+<p style="text-align: justify;">This diagram summarizes the setup we are trying to achieve:</p>
+<p style="text-align: justify;"><a href="/wp-content/uploads/2016/05/vpn-bonding-diagram.png"><img class="aligncenter wp-image-91 size-full" src="/wp-content/uploads/2016/05/vpn-bonding-diagram.png" alt="VPN Bonding Diagram" width="767" height="213" srcset="/wp-content/uploads/2016/05/vpn-bonding-diagram.png 767w, /wp-content/uploads/2016/05/vpn-bonding-diagram-300x83.png 300w" sizes="(max-width: 767px) 100vw, 767px" /></a></p>
+<h3 style="text-align: justify;">Initial Setup</h3>
+<p style="text-align: justify;">First off we&#8217;ll install the bonding driver onto <strong>both servers</strong>. This is nice and simple: (Note # represents a command as root)</p>
+<pre style="text-align: justify;"># apt-get install ifenslave</pre>
+<p style="text-align: justify;">As we want to aggregate the multiple connections into one seemingly single link, I will be using Bonding mode 1, aka <strong>balace-rr</strong>. To enable this, we need to edit the <strong>/etc/network/interfaces</strong> file and add the following:</p>
+<p style="text-align: justify;">Note that my local subnet is <strong>10.0.0.0/8</strong> and so it is clear when I am using the tunnel, my VPN subnet will be <strong>172.26.0.0/30</strong></p>
+<pre style="text-align: justify;">local-server# pico /etc/network/interfaces
+
+#This should be added to the config file
+ iface bond0 inet static
+ address 172.26.0.2
+ netmask 255.255.255.252
+ bond-slaves tun0 tun1
+ bond_mode balance-rr</pre>
+<p style="text-align: justify;">And the remote server:</p>
+<pre style="text-align: justify;">remote-server# pico /etc/network/interfaces
+
+#This should be added to the config file
+ iface bond0 inet static
+ address 172.26.0.1
+ netmask 255.255.255.252
+ bond-slaves tun0 tun1
+ bond_mode balance-rr</pre>
+<p style="text-align: justify;">As a brief explanation, <strong>balance-rr</strong> does not load balance connections but actually load balances the packets.</p>
+<p style="text-align: justify;">This might seem backwards to some people but when all is said and done, we will be forwarding all internet traffic to 172.26.0.1 thus that would be our gateway. As a rule of thumb gateway&#8217;s are always the first IP in the subnet&#8230; (Usually)</p>
+<h3 style="text-align: justify;">Routing</h3>
+<p style="text-align: justify;">For this to work, we need to ensure that we have separate connections to our endpoint. These separate connections need to travel through each internet connection. For arguments sake, I have two ADSL connections and thus two routers on my network &#8211; <strong>10.0.0.1</strong> and <strong>10.0.0.254</strong>.</p>
+<p style="text-align: justify;">My fat pipe endpoint also needs to have two IP addresses. For this example &#8211; 87.117.217.27 and 87.117.217.44. These will enable me to ensure that my tunnels are routed via separate ISPs.</p>
+<p style="text-align: justify;">On my local server I need to do the following:</p>
+<pre style="text-align: justify;">local-server# ip route add 87.117.217.27 via 10.0.0.1 dev eth0
+local-server# ip route add 87.117.217.44 via 10.0.0.254 dev eth0</pre>
+<p style="text-align: justify;">Note: If you want to aggregate more than two connections, using this method you would need the same number of remote IP addresses as you do Internet connections to ensure that traffic is sent via each interface.</p>
+<p style="text-align: justify;">Please be aware that this is by no means an elegant solution&#8230;</p>
+<h3 style="text-align: justify;">Creating VPN Tunnels &#8211; Using SSH</h3>
+<p style="text-align: justify;">I originally decided to use SSH tunnels when I was playing around with bonding as both of my servers already had OpenSSH installed which meant no messing about installing/configuring OpenVPN (SSH is so versatile!). The only caveat to this method is that it requires you to allow SSH Logins via Root. It is also worth noting that using SSH Tunnels for the VPN connections essentially means you are tunnelling TCP over TCP which can potentially have a lot of overheads, especially via SSH due to the encryption and compression should you use it. See <a href="http://sites.inka.de/~W1011/devel/tcp-tcp.html">this article</a> for some more information.</p>
+<p style="text-align: justify;">At this stage I&#8217;d like to point out that whilst I did use SSH, you can potentially use any VPN/Tunnelling technology such as OpenVPN &#8211; as long as you get a tun/tap interface that you can use with the bonding driver. That is however out of the scope of this article. If you will be using another technology or protocol to create your tun or tap devices then you can skip ahead to Bonding the links</p>
+<p style="text-align: justify;">As mentioned at the top of this page, my end point is in a Data Center. It is however a VM running on my server. Primarily this was to prevent me from losing access to my machine if I broke things however it also adds the security of, if the machine is compromised, the intruder doesn&#8217;t have access to any of my services.</p>
+<p style="text-align: justify;">Never the less, we will secure it as much as possible&#8230; You need to edit your <strong>/etc/ssh/sshd_config</strong> file on your <strong>Remote Server</strong> and change/add the following:</p>
+<pre style="text-align: justify;">PermitRootLogin without-password
+PermitTunnel yes
+PasswordAuthentication no</pre>
+<p style="text-align: justify;">Once that is done, add some keys from your local server to your remote server so that you can ssh to the root account. More information on SSH Keys can be found here or simply by googling.</p>
+<p style="text-align: justify;">Once you have confirmed that you can SSH to the root account of the remote server <strong>from the root account of your local server</strong> you are ready to go.</p>
+<p style="text-align: justify;">We will be making use of the <strong>-w</strong> parameter of ssh. This will create a tunX interface on both ends that we will later bond together.</p>
+<pre style="text-align: justify;">local-server# ssh -NTCf -w 0:0 87.117.217.27
+local-server# ssh -NTCf -w 1:1 87.117.217.44</pre>
+<ul>
+<li style="text-align: justify;">-N Do not execute a remote command. This is useful for just forwarding ports (or in this case tunnels).</li>
+<li style="text-align: justify;">-T Disable pseudo-tty allocation.</li>
+<li style="text-align: justify;">-C Requests compression of all data (including stdin, stdout, stderr, and data for forwarded X11 and TCP connections). Compress can speed up or potentially slow down your speed, so try with and without.</li>
+<li style="text-align: justify;">-f Requests ssh to go to background just before command execution.</li>
+</ul>
+<p>If this is successful, <strong>ifconfig -a</strong> on both machines should reveal a <strong>tun0</strong> and <strong>tun1</strong> interface!</p>
+<pre style="text-align: justify;"># ifconfig -a
+ tun0 Link encap:UNSPEC HWaddr 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+ POINTOPOINT NOARP MULTICAST MTU:1500 Metric:1
+ RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+ TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+ collisions:0 txqueuelen:500
+ RX bytes:0 (0.0 B) TX bytes:0 (0.0 B)
+
+tun1 Link encap:UNSPEC HWaddr 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+ POINTOPOINT NOARP MULTICAST MTU:1500 Metric:1
+ RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+ TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+ collisions:0 txqueuelen:500
+ RX bytes:0 (0.0 B) TX bytes:0 (0.0 B)</pre>
+<p style="text-align: justify;">Great! Now we can proceed to bonding them.</p>
+<p style="text-align: justify;"><strong>NOTE</strong>: It might be advisable at this time to check netstat to ensure that you have connections coming in from separate ISPs:</p>
+<pre style="text-align: justify;">remote-server# netstat -an | grep ":22" | grep ESTABLISHED
+ tcp 0 48 87.117.217.27:22 66.118.190.24:54284 ESTABLISHED
+ tcp 0 0 87.117.217.27:22 <strong>78.33.121.161</strong>:50165 ESTABLISHED
+ tcp 0 0 87.117.217.44:22 <strong>92.40.207.249</strong>:56158 ESTABLISHED</pre>
+<p style="text-align: justify;">The bold addresses are my tunnels and the other is a terminal I have open to execute netstat. The command I used shows only connections on port 22 (default ssh port) and will only show Established ones. Looks like we are good to go!</p>
+<h3 style="text-align: justify;">Bonding the links</h3>
+<p style="text-align: justify;">This part is relatively easy now all the heavy lifting is done. As mentioned above, we have created a bond0 interface on both servers that have two (or potentially more) slaves, tun0 and tun1. To bring this interface up we simply execute the following on <strong>both servers</strong></p>
+<pre style="text-align: justify;">This should be done on both servers:
+
+# ifup bond0
+ # ifconfig bond0
+ bond0 Link encap:UNSPEC HWaddr 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+ inet addr:172.26.0.X Bcast:172.26.0.3 Mask:255.255.255.252
+ UP BROADCAST RUNNING MASTER MULTICAST MTU:1500 Metric:1
+ RX packets:41 errors:0 dropped:0 overruns:0 frame:0
+ TX packets:2 errors:0 dropped:0 overruns:0 carrier:0
+ collisions:0 txqueuelen:0
+ RX bytes:8054 (8.0 KB) TX bytes:168 (168.0 B)</pre>
+<p style="text-align: justify;">Presto! Both interfaces are now up and running. You can test to ensure it is working by trying to ping each other</p>
+<pre style="text-align: justify;"># ping 172.26.0.1
+ PING 172.26.0.1 (172.26.0.1) 56(84) bytes of data.
+ 64 bytes from 172.26.0.1: icmp_seq=1 ttl=64 time=28.3 ms
+ 64 bytes from 172.26.0.1: icmp_seq=2 ttl=64 time=28.2 ms
+ 64 bytes from 172.26.0.1: icmp_seq=3 ttl=64 time=25.9 ms</pre>
+<p style="text-align: justify;">Next you ned to remove the default gateway of your local server (if there is one) and tell it to use the remote server&#8217;s VPN address as its gateway instead:</p>
+<pre style="text-align: justify;">local-server# ip route del 0.0.0.0/0
+local-server# ip route add 0.0.0.0/0 via 172.26.0.1 dev bond0</pre>
+<p style="text-align: justify;">All that is left is to enable ipv4 forwarding on <strong>both servers</strong> and add a route back to your internal network on the remote server and then you should be all set for using the local server as a gateway for the internet!</p>
+<p style="text-align: justify;">To enable:</p>
+<pre style="text-align: justify;">This should be done on both servers:
+
+# sysctl net.ipv4.ip_forward=1</pre>
+<p style="text-align: justify;">To enable permanently:</p>
+<pre style="text-align: justify;">This should be done on both servers:
+
+# echo "net.ipv4.ip_forward=1" &gt;&gt; /etc/sysctl.conf</pre>
+<p style="text-align: justify;">And then to tell the remote server how to get back to our network so that our requests get answered:</p>
+<pre style="text-align: justify;">remote-server# ip route add 10.0.0.0/8 via 172.26.0.2 dev bond0</pre>
+<p style="text-align: justify;">A pinch of iptables hackery:</p>
+<pre style="text-align: justify;">remote-server# iptables -A FORWARD -o eth0 -i bond0 -s 10.0.0.0/8 -m conntrack --ctstate NEW -j ACCEPT
+remote-server# iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+remote-server# iptables -A POSTROUTING -t nat -o eth0 -j MASQUERADE</pre>
+<p style="text-align: justify;">Your local server should now be able to access the world wide web. Note that this server should, in this example at least, have an IP in the 10.0.0.0/8 subnet. That is the IP you use for your gateway on all your other machines to allow them to use the aggregated link.</p>
+<p style="text-align: justify;">I will at a later stage document automating the whole process as much as I can and have some form of connection monitoring in case the ADSL links stop working. Watch this space!</p>
+<h3 style="text-align: justify;">NAT</h3>
+<p style="text-align: justify;">If everything was done correctly, your bonded link should be up and running. Your remote server should be able to &#8220;see&#8221; your local server via its VPN IP address and vice versa! If this is the case then most of the leg work has been done for you.</p>
+<p style="text-align: justify;">All outgoing connections to the internet from your local server should now be appearing as if they are from your remote server&#8217;s IP address, in my example, 87.117.217.27. (You can quickly test this by using <a href="http://www.whatismyip.com/">whatismyip.com</a>). Lets say that you want to access a web page that you have set up on the local server that gives statistics about your setup. We will use iptables to acheive this:</p>
+<p style="text-align: justify;">We are assuming that your remote server connects to the internet via <strong>eth0</strong></p>
+<pre style="text-align: justify;">remote-server# iptables -A PREROUTING -t nat -i eth0 -p tcp -m tcp --dport 80 -j DNAT --to-destination 172.26.0.2:80</pre>
+<p style="text-align: justify;">Once this is done, any connection to http://87.117.217.27 should be transparently forwarded down your bonded link to the other end which should serve your web page.</p>
+<p style="text-align: justify;">This could also be expanded to, for example, allow Windows Remote Desktop to one of your internal computers to be accessible via the bonded link, or any service inside your LAN to be accessible from the publicly routable address of your remote server</p>
+<pre style="text-align: justify;">remote-server# iptables -A PREROUTING -t nat -i eth0 -p tcp -m tcp --dport 3389 -j DNAT --to-destination 10.0.0.60:3389</pre>
+<p style="text-align: justify;"><strong>NOTE</strong>: For the example above for forwarding RDP connections, the PC you are forwarding to will need to have its gateway set to the 10.0.0.0/8 address of the machine hosting the bonded link else it wont know where to send the responses to.</p>
+<p style="text-align: justify;">I found <a href="http://www.karlrupp.net/en/computer/nat_tutorial">Karl Rupp&#8217;s NAT page</a> to be helpful in explaining NAT with iptables!</p>
+                                <div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon-text sd-sharing"><h3 class="sd-title">Share this:</h3><div class="sd-content"><ul><li class="share-reddit"><a rel="nofollow" data-shared="" class="share-reddit sd-button share-icon" href="https://www.reddit.com/submit?url=https%3a%2f%2fwww.simonmott.co.uk%2f2012%2f03%2fvpn-bonding%2f&amp;title=VPN&#43;Bonding" rel="noopener noreferrer" target="_blank" title="Click to share on Reddit"><span>Reddit</span></a></li><li class="share-twitter"><a rel="nofollow" data-shared="sharing-twitter-90" class="share-twitter sd-button share-icon" href="https://twitter.com/intent/tweet?text=VPN&#43;Bonding&amp;url=https%3a%2f%2fwww.simonmott.co.uk%2f2012%2f03%2fvpn-bonding%2f" rel="noopener noreferrer" target="_blank" title="Click to share on Twitter"><span>Twitter</span></a></li><li class="share-facebook"><a rel="nofollow" data-shared="sharing-facebook-90" class="share-facebook sd-button share-icon" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fwww.simonmott.co.uk%2f2012%2f03%2fvpn-bonding%2f" rel="noopener noreferrer" target="_blank" title="Click to share on Facebook"><span>Facebook</span></a></li><li class="share-end"></li></ul></div></div></div>
+                                <div class="clearfix"></div>
+
+	        <div class="post-meta-terms">
+	            <div class="post-meta-tags">
+	                <span class="btn"><i class="mythemes-icon-tags"></i></span>
+	                <a href="/tag/bonding/" rel="tag">Bonding</a><a href="/tag/ifenslave/" rel="tag">Ifenslave</a><a href="/tag/networking/" rel="tag">Networking</a><a href="/tag/routing/" rel="tag">Routing</a><a href="/tag/ssh/" rel="tag">Ssh</a><a href="/tag/tcp/" rel="tag">Tcp</a><a href="/tag/vpn/" rel="tag">Vpn</a>	                <div class="clear clearfix"></div>
+	            </div>
+	        </div>                            </article>
+
+                            
+
+
+                </div>
+                </section>
+
+            <aside class="col-sm-4 col-md-3 col-lg-3 sidebar-to-right"><div id="search-4" class="widget widget_search"><form action="/search/" method="get" id="searchform">
+    <fieldset>
+        <div id="searchbox">
+            <input type="text" name="s"  id="keywords" value="type here..." onfocus="if (this.value == 'type here...') {this.value = '';}" onblur="if (this.value == '') {this.value = 'type here...';}">
+            <button type="submit"><i class="mythemes-icon-search-5"></i></button>
+        </div>
+    </fieldset>
+</form>
+</div><div id="top-posts-2" class="widget widget_top-posts"><h4 class="widget-title"><i></i>Top Posts &amp; Pages</h4><ul>				<li>
+										<a href="/2026/08/owntracks-and-my-google-timeline/" class="bump-view" data-bump-view="tp">
+						OwnTracks and my Google Timeline					</a>
+									</li>
+			</ul></div>
+		<div id="recent-posts-8" class="widget widget_recent_entries">
+		<h4 class="widget-title"><i></i>Recent Posts</h4>
+		<ul>
+											<li>
+					<a href="/2026/08/owntracks-and-my-google-timeline/">OwnTracks and my Google Timeline</a>
+									</li>
+											<li>
+					<a href="/2024/12/using-ffmpegs-vpp_qsv-detail-enhancement-filter/">Using ffmpeg’s vpp_qsv detail enhancement filter</a>
+									</li>
+											<li>
+					<a href="/2024/12/transcoding-with-an-intel-arc-gpu/">Transcoding with an Intel Arc GPU</a>
+									</li>
+											<li>
+					<a href="/2023/06/auto-mount-luks-without-a-filesystem/">Auto mount LUKS without a filesystem</a>
+									</li>
+											<li>
+					<a href="/2022/02/a-stratum-1-time-server-the-basics/">A Stratum 1 Time Server – The Basics</a>
+									</li>
+											
+					</ul>
+
+		</div><div id="categories-6" class="widget widget_categories"><h4 class="widget-title"><i></i>Categories</h4>
+			<ul>
+					<li class="cat-item"><a href="/category/benchmarks/">Benchmarks</a>
+</li>
+	<li class="cat-item"><a href="/category/coding/">Coding</a>
+</li>
+	<li class="cat-item"><a href="/category/data/">Data</a>
+</li>
+	<li class="cat-item"><a href="/category/debugging/">Debugging</a>
+</li>
+	<li class="cat-item"><a href="/category/firmware/">Firmware</a>
+</li>
+	<li class="cat-item"><a href="/category/gaming/">Gaming</a>
+</li>
+	<li class="cat-item"><a href="/category/general/">General</a>
+</li>
+	<li class="cat-item"><a href="/category/learning/">Learning</a>
+</li>
+	<li class="cat-item"><a href="/category/networking/">Networking</a>
+</li>
+	<li class="cat-item"><a href="/category/system-administration/">System Administration</a>
+</li>
+	<li class="cat-item"><a href="/category/technology/">Technology</a>
+</li>
+	<li class="cat-item"><a href="/category/tweaking/">Tweaking</a>
+</li>
+	
+			</ul>
+
+			</div><div id="archives-5" class="widget widget_archive"><h4 class="widget-title"><i></i>Archives</h4>
+			<ul>
+			
+				<li><a href='/2026-08/'>August 2026</a></li>
+			
+				<li><a href='/2024-12/'>December 2024</a></li>
+			
+				<li><a href='/2023-06/'>June 2023</a></li>
+			
+				<li><a href='/2022-02/'>February 2022</a></li>
+			
+				<li><a href='/2018-08/'>August 2018</a></li>
+			
+				<li><a href='/2018-06/'>June 2018</a></li>
+			
+				<li><a href='/2017-07/'>July 2017</a></li>
+			
+				<li><a href='/2017-03/'>March 2017</a></li>
+			
+				<li><a href='/2016-09/'>September 2016</a></li>
+			
+				<li><a href='/2016-07/'>July 2016</a></li>
+			
+				<li><a href='/2016-06/'>June 2016</a></li>
+			
+				<li><a href='/2013-08/'>August 2013</a></li>
+			
+				<li><a href='/2012-03/'>March 2012</a></li>
+			
+				<li><a href='/2012-02/'>February 2012</a></li>
+			
+				<li><a href='/2011-04/'>April 2011</a></li>
+			
+				<li><a href='/2011-03/'>March 2011</a></li>
+			
+				<li><a href='/2010-04/'>April 2010</a></li>
+			
+				<li><a href='/2010-03/'>March 2010</a></li>
+			
+				<li><a href='/2010-01/'>January 2010</a></li>
+			
+				<li><a href='/2009-09/'>September 2009</a></li>
+			
+				<li><a href='/2009-08/'>August 2009</a></li>
+			
+			</ul>
+
+			</div></aside>
+
+
+            </div>
+
+        </div>
+    </div>
+
+        <footer>
+
+            <div class="mythemes-black-side">
+                <div class="container mythemes-copyright">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-6 col-lg-6">
+                            <p>
+                                <span class="copyright">Copyright © Simon Mott</span>
+                                <span>Designed by <a href="http://mythem.es/" target="_blank" title="myThem.es">myThem.es</a>.</span>
+                            </p>
+                        </div>
+                                                <div class="col-sm-6 col-md-6 col-lg-6">
+                            <div class="mythemes-social">
+                                <a href="https://twitter.com/simon_mott" class="mythemes-icon-twitter " target="_blank"></a><a href="https://github.com/tsumaru720" class="mythemes-icon-github " target="_blank"></a><a href="https://www.flickr.com/photos/tsumaru720" class="mythemes-icon-flickr " target="_blank"></a><a href="https://www.facebook.com/dementedidiot" class="mythemes-icon-facebook " target="_blank"></a><a href="https://www.simonmott.co.uk/feed/" class="mythemes-icon-rss " target="_blank"></a>                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </footer>
+
+        <script src='/js/jquery.min.js'></script>
+        <script src='/js/jquery-migrate.min.js'></script>
+        <script src='/js/bootstrap.min.js'></script>
+        <script src='/js/functions.js'></script>
+        <script src='/js/jquery.prettyPhoto.js'></script>
+        <script src='/js/jquery.prettyPhoto.settings.js'></script>
+        <script src='/js/prettify.js'></script>
+        <script>jQuery(document).ready(function () { prettyPrint(); });</script>
+        
+        <script>(function(){var b=document.getElementById('theme-toggle');if(!b){return;}b.addEventListener('click',function(e){e.preventDefault();var r=document.documentElement;var t=r.getAttribute('data-theme')==='dark'?'light':'dark';r.setAttribute('data-theme',t);try{window.localStorage.setItem('sm-theme',t);}catch(err){}});})();</script>
+    </body>
+</html>

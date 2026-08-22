@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Php on Simon Mott</title>
+    <link>https://www.simonmott.co.uk/tag/php/</link>
+    <description>Recent content in Php on Simon Mott</description>
+    <generator>Hugo</generator>
+    <language>en-GB</language>
+    <lastBuildDate>Sat, 11 Jun 2016 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.simonmott.co.uk/tag/php/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>PHP Handlers and PHP 5 vs 7</title>
+      <link>https://www.simonmott.co.uk/2016/06/php-handlers-php-5-vs-7/</link>
+      <pubDate>Sat, 11 Jun 2016 00:00:00 +0000</pubDate>
+      <guid>https://www.simonmott.co.uk/2016/06/php-handlers-php-5-vs-7/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://www.simonmott.co.uk/wp-content/uploads/2016/06/php_logo.png&#34;&gt;&lt;img class=&#34;alignright size-full wp-image-203&#34; src=&#34;https://www.simonmott.co.uk/wp-content/uploads/2016/06/php_logo.png&#34; alt=&#34;php_logo&#34; width=&#34;248&#34; height=&#34;130&#34; /&gt;&lt;/a&gt;The idea for this post actually came from observing performance after moving this site over to WordPress (and to a lesser extent, my other website, &lt;a href=&#34;http://www.gentog.co.uk/&#34;&gt;General Photography&lt;/a&gt;). I use &lt;a href=&#34;https://puppet.com/&#34;&gt;Puppet&lt;/a&gt; orchestration for my servers and I made the mistake of trying to convert everything to puppet manifests and also get things working how I wanted without fully understanding how puppet works at the same time; That however is another story. This does means that my puppet manifests are not very flexible currently and I use suphp as my main PHP handler just because for me, at the time, it was easier.&lt;/p&gt;&#xA;&lt;p&gt;That being said &amp;#8211; I&amp;#8217;m fully aware of the performance issues suphp exhibits because my &lt;a href=&#34;http://www.observium.org/&#34;&gt;Observium&lt;/a&gt; install used it at first &amp;#8211; it now uses mod_php because loading all the graphs was noticably slow. I thought I&amp;#8217;d try to quantify the performance differences between suphp and mod_php and decided I should do all 3 common PHP handlers. Whilst I was gathering metrics for this I decided It&amp;#8217;d be useful to include PHP7 results too.</description>
+    </item>
+  </channel>
+</rss>

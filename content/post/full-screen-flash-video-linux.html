@@ -1,0 +1,28 @@
++++
+title = "Full screen Flash Video on Linux"
+date = 2013-08-05T00:00:00Z
+url = "/2013/08/full-screen-flash-video-linux/"
+wp_id = 71
+more = true
+categories = ["System Administration", "Tweaking"]
+tags = ["flash", "hex", "linux", "tweak"]
++++
+<p style="text-align: justify;"><a href="/wp-content/uploads/2016/05/ghex.png"><img loading="lazy" class="alignright size-medium wp-image-72" src="/wp-content/uploads/2016/05/ghex-300x226.png" alt="ghex" width="300" height="226" srcset="/wp-content/uploads/2016/05/ghex-300x226.png 300w, /wp-content/uploads/2016/05/ghex-768x578.png 768w, /wp-content/uploads/2016/05/ghex.png 890w" sizes="(max-width: 300px) 100vw, 300px" /></a>So here we have it &#8211; I&#8217;ve finally got around to tackling this issue which has been bugging me for a while.</p>
+<p style="text-align: justify;">When watching a flash video in full screen on dual monitors, as soon as you go off to do something else you will soon notice that your video is no longer full screen! How annoying.</p>
+<p style="text-align: justify;">The way to fix this is to edit the flash player binary. Firstly you need a hex editor &#8211; I use &#8220;ghex&#8221;</p>
+<pre>$ sudo apt-get install ghex</pre>
+<p style="text-align: justify;">You can of course use your hex editor of choice.
+<!--more-->
+<span id="more-71"></span></p>
+<p style="text-align: justify;">Now that we have that sorted, its time to find our flash binary! Start playing a flash video and then see which plugin is open.</p>
+<pre>$ lsof -n | grep -i flash
+ firefox 4655 simon mem REG 8,1 17418724 1966425 /usr/lib/flashplugin-installer/libflashplayer.so</pre>
+<p style="text-align: justify;">Open this file with your hex editor and look for the following string:</p>
+<pre>_NET_ACTIVE_WINDOW</pre>
+<p style="text-align: justify;">Once you have this found, change any of the letters &#8211; In my case I changed it to:</p>
+<pre>__ET_ACTIVE_WINDOW</pre>
+<p style="text-align: justify;">Save and re-open your browser and you should be able to watch full screen video in flash player whilst doing other things!</p>
+<p style="text-align: justify;">This will need to be re-applied every time you update flash.</p>
+<p style="text-align: justify;">A final note about this modification:</p>
+<p style="text-align: justify;">Chrome (not Chromium) uses its own built in flash plugin called PepperFlash which doesn&#8217;t have &#8220;_NET_ACTIVE_WINDOW&#8221;, so if you want this fix to work with Google Chrome, enter &#8220;chrome://plugins/&#8221; in the url bar, then click &#8220;Details&#8221; on the right, scroll to the Adobe Flash Player plugin and 2 versions should be listed; disable the one that has &#8220;/opt/google/chrome/PepperFlash/libpepflashplayer.so&#8221; as its path. Doing this, Google Chrome will use the system Adobe Flash Player and not the built-in Google Chrome Adobe Flash Player.</p>
+<p style="text-align: justify;">Enjoy</p>

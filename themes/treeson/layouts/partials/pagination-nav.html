@@ -1,0 +1,17 @@
+{{- $pag := . -}}
+{{- if gt $pag.TotalPages 1 -}}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="pagination aligncenter">
+                    <nav class="mythemes-nav-inline">
+                        <ul class='page-numbers'>
+	{{ if $pag.HasPrev }}<li><a class="prev page-numbers" href="{{ $pag.Prev.URL }}">Previous</a></li>
+{{ end }}{{ range $pag.Pagers }}{{ if eq .PageNumber $pag.PageNumber }}<li><span aria-current="page" class="page-numbers current">{{ .PageNumber }}</span></li>
+	{{ else }}<li><a class="page-numbers" href="{{ .URL }}">{{ .PageNumber }}</a></li>
+{{ end }}{{ end }}{{ if $pag.HasNext }}<li><a class="next page-numbers" href="{{ $pag.Next.URL }}">Next</a></li>
+{{ end }}</ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+{{- end -}}

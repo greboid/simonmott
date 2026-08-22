@@ -1,0 +1,103 @@
++++
+title = "Caching with Apache’s mod_cache and mod_deflate"
+date = 2016-06-06T00:00:00Z
+url = "/2016/06/caching-apaches-mod_cache-mod_deflate/"
+wp_id = 125
+more = true
+categories = ["System Administration", "Tweaking"]
+tags = ["apache", "cache", "mod_cache", "mod_cache_disk", "mod_deflate"]
++++
+<p>I currently work in the hosting industry and as part of my job I have to deal with WordPress on a regular basis and as such I&#8217;ve seen how appalling it can be sometimes with regards to page loading times. Given that my content on here doesn&#8217;t change all too often, it makes sense to spend the time generating the content only once and serving it to meet multiple requests for the same document. In order to do this one would usually employ some form of caching.</p>
+<p>WordPress itself does have the option for multiple caching plugins which integrate nicely but in my experience they still have to pass the request off to a PHP handler which means some processing is still needed to accommodate the request (albeit less than a full page load). For the purposes of this article though, I&#8217;m going to assume a generic framework as this technique is not specific to WordPress at all.</p>
+<p>There&#8217;re a number of software solutions to sit in front of your web server which act as a cache and some of the more notable ones are <a href="https://www.nginx.com/">nginx</a> and <a href="https://varnish-cache.org/">varnish</a> and each have their pros and cons (As far as I know, Varnish can&#8217;t do native SSL termination yet). For this post though, I&#8217;ll be making use of some Apache modules to do the same thing. This was mostly an experiment for myself to see what I could do with it &#8211; I&#8217;ve found some limitations which as of yet I haven&#8217;t been able to work around for lack of knowledge on the inner workings of Apache, but for now It does the job.
+<!--more-->
+<span id="more-125"></span></p>
+<p>I&#8217;ll probably be doing an article on varnish and/or nginx in the future, but for now lets focus on <a href="https://httpd.apache.org/docs/current/mod/mod_cache.html" target="_blank">mod_cache</a> and <a href="https://httpd.apache.org/docs/current/mod/mod_cache_disk.html" target="_blank">mod_cache_disk</a>.</p>
+<p>Lets start by taking a benchmark of how long the homepage takes to load without cache. The following will hit my homepage 5 times with a 1 second delay between each request</p>
+<pre>simon@kinmu:~$ i=0; while [ $i -lt 5 ]; do time -p curl "/" &gt; /dev/null; sleep 1; i=$[$i+1]; done 2&gt;&amp;1 | grep real | awk '{print $2}' | awk '{avg += ($1 - avg) / NR;} END {print "Average: " avg "s";}'
+Average: 0.696s</pre>
+<p>This gives us an average of <strong>0.696s</strong> to load the page&#8230; This is the time to beat 🙂</p>
+<p>Before we begin &#8211; I encourage you to read the Apache documentation for <a href="https://httpd.apache.org/docs/current/mod/mod_cache.html" target="_blank">mod_cache</a> and <a href="https://httpd.apache.org/docs/current/mod/mod_cache_disk.html" target="_blank">mod_cache_disk</a> &#8211; it will make a lot more sense if you do!</p>
+<p><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><ins class="adsbygoogle" style="display: block; text-align: center;" data-ad-format="fluid" data-ad-layout="in-article" data-ad-client="ca-pub-3235343726212802" data-ad-slot="5775455771"></ins><br />
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script></p>
+<h3>mod_cache &#8211; The config</h3>
+<p>I&#8217;ll start by showing you my current config &#8211; I&#8217;ll then go through each option and comment as to why I made the decision to use that particular setting/option. This snippet of config lives in my <strong>VirtualHost</strong> directive for my website and I suspect a lot of my comments will essentially be copy/pasted from apache.org</p>
+<pre>CacheQuickHandler off
+
+CacheRoot /var/cache/apache2/mod_cache_disk/simonmott.co.uk
+CacheEnable disk /
+CacheDirLevels 2
+CacheDirLength 1
+CacheMaxFileSize 2000000
+
+CacheIgnoreNoLastMod On
+CacheDefaultExpire 7200
+CacheIgnoreCacheControl On
+CacheLastModifiedFactor 0.5
+CacheIgnoreHeaders Set-Cookie Cookie
+CacheHeader on
+
+CacheLock on
+
+CacheDisable /wp-admin
+CacheDisable /wp-login.php
+CacheDisable /wp-cron.php
+
+SetOutputFilter CACHE
+AddOutputFilterByType DEFLATE text/html text/plain text/css application/javascript application/rss+xml text/xml image/svg+xml</pre>
+<h3>The config explained</h3>
+<p>OK, we&#8217;ve got the config, now lets go through it</p>
+<pre>CacheQuickHandler off</pre>
+<p>The CacheQuickHandler directive controls the phase in which the cache is handled.</p>
+<p>In the default enabled configuration, the cache operates within the quick handler phase. This phase short circuits the majority of server processing, and represents the most performant mode of operation for a typical server. The cache bolts onto the front of the server, and the majority of server processing is avoided.</p>
+<p>When disabled, the cache operates as a normal handler, and is subject to the full set of phases when handling a server request. While this mode is slower than the default, it allows the cache to be used in cases where full processing is required, such as when content is subject to authorization</p>
+<p>We currently don&#8217;t want the cache to be processed &#8220;quickly&#8221; for reasons we&#8217;ll explain later 😉</p>
+<pre>CacheRoot /var/cache/apache2/mod_cache_disk/simonmott.co.uk</pre>
+<p>This option simply defines where on disk the cache will be stored &#8211; The default for my installation is <strong>/var/cache/apache2/mod_cache_disk</strong> but I opted to split the cache by vhost so that I have slightly finer control (For example, I can completely clear the cache for my website by removing the contents of <strong>/var/cache/apache2/mod_cache_disk/simonmott.co.uk</strong> which shouldn&#8217;t affect the cache for another website)</p>
+<pre>CacheEnable disk /</pre>
+<p>This option simply enables the cache for any URL under this domain. If you wanted to only cache for simonmott.co.uk/test then you would use &#8220;/test&#8221; instead of &#8220;/&#8221;</p>
+<pre>CacheDirLevels 2
+CacheDirLength 1
+CacheMaxFileSize 2000000 # &lt;-- This is 2MB</pre>
+<p>This set of options controls how many files can be stored on disk and the max-file size that can be committed to cache. <strong>CacheDirLevels</strong> specifies how many levels of subdirectory there should be, and <strong>CacheDirLength</strong> specifies how many characters should be in each directory. With the example settings given above, the hash would be turned into a filename prefix as /var/cache/apache2/mod_cache_disk/simonmott.co.uk/x/y/TGxSMO2b68mBCykqkp1w.</p>
+<p>The overall aim of this technique is to reduce the number of subdirectories or files that may be in a particular directory, as most file-systems slow down as this number increases. With setting of &#8220;1&#8221; for <strong>CacheDirLength</strong> there can at most be 64 subdirectories at any particular level. With a setting of 2 there can be 64 * 64 subdirectories, and so on. Unless you have a good reason not to, using a setting of &#8220;1&#8221; for <strong>CacheDirLength</strong> is recommended.</p>
+<p>Setting <strong>CacheDirLevels</strong> depends on how many files you anticipate to store in the cache. With the setting of &#8220;2&#8221; used in the above example, a grand total of 4096 subdirectories can ultimately be created. With 1 million files cached, this works out at roughly 245 cached URLs per directory. <strong>CacheMaxFileSize</strong> controls the max size of a file that can be stored (in bytes).</p>
+<pre>CacheIgnoreNoLastMod On
+CacheDefaultExpire 7200</pre>
+<p>The <strong>CacheIgnoreNoLastMod</strong> directive provides a way to specify that documents without last-modified dates should be considered for caching, even without a last-modified date. If neither a last-modified date nor an expiry date are provided with the document then the value specified by the <strong>CacheDefaultExpire</strong> directive will be used to generate an expiration date.</p>
+<pre>CacheIgnoreCacheControl On</pre>
+<p><strong>CacheIgnoreCacheControl On</strong> tells the server to attempt to serve the resource from the cache even if the request from a client contains no-cache header value</p>
+<pre>CacheLastModifiedFactor 0.5</pre>
+<p>In the event that a document does not provide an expiry date but does provide a last-modified date, an expiry date can be calculated based on the time since the document was last modified with the <strong>CacheLastModifiedFactor</strong> directive</p>
+<pre>CacheIgnoreHeaders Set-Cookie Cookie</pre>
+<p><strong>CacheIgnoreHeaders</strong> specifies additional HTTP headers that should not to be stored in the cache. For example, it makes sense in some cases to prevent cookies from being stored in the cache.</p>
+<pre>CacheHeader on</pre>
+<p>When the <strong>CacheHeader</strong> directive is switched on, an <strong>X-Cache</strong> header will be added to the response with the cache status of this response.</p>
+<pre>CacheLock on</pre>
+<p>The <strong>CacheLock</strong> directive enables the thundering herd lock for the given URL space.</p>
+<pre>CacheDisable /wp-admin
+CacheDisable /wp-login.php
+CacheDisable /wp-cron.php</pre>
+<p>The <strong>CacheDisable</strong> directive instructs mod_cache to not cache urls at or below url-string. The values I&#8217;ve chosen here <em><strong>ARE</strong></em> specific to WordPress</p>
+<p>The last two lines in my config for <strong>SetOutputFilter</strong> and <strong>AddOutputFilterByType</strong> is where things get interesting and this one requires some more in-depth explanation&#8230;</p>
+<h3 style="text-align: justify;">mod_deflate and the <em>Vary</em> header</h3>
+<p>Because of where mod_cache initially sits, if you enable mod_deflate and your visitor sends appropriate &#8220;<strong>Accept-Encoding</strong>&#8221; headers then mod_deflate will dutifully compress the output for you, but this happens before mod_cache saves it. This isn&#8217;t a big problem because mod_deflate adds a &#8220;<strong>Vary: accept-encoding</strong>&#8221; header to the output, thus mod_cache will store a separate cached copy of your content for each variation of the &#8220;Accept-Encoding&#8221; header it encounters. This method does mean that ALL processing is cached &#8211; dynamic content generated by PHP is saved, so no need to process the request again and CPU time to compress the output has already been done which to some is ideal and you can stop here without adding the last two lines above.</p>
+<p>I however don&#8217;t like the idea of multiple copies of the same page &#8211; If I visit a page on my Desktop using Chrome, I want the same page when I visit on my Phone using Chrome. The problem here is that Chrome for desktop sends <code>Accept-Encoding: gzip, sdch</code> whereas Chrome for Android sends <code>Accept-Encoding: gzip, sdch, br</code> which is a different variation of the header, thus they get two separate copies processed and cached, despite having an already cached copy that is of suitable encoding. Something to also consider is the vector for a DoS by filling my server with files based on lots of different <code>Accept-Encoding</code> headers</p>
+<p>Depending on how popular your website is, you could end up with hundreds of copies for a single page cached because of the differing headers and for my site, that just doesn&#8217;t sit right with me. Documentation <a href="https://httpd.apache.org/docs/current/mod/mod_cache.html#finecontrol" target="_blank">here</a> suggests you can defer mod_deflate until after your content has been saved in the cache, however this doesn&#8217;t seem to work &#8211; It spits an error about duplicate &#8220;CACHE&#8221; filters and just continues as normal, compressing then caching.</p>
+<pre>[cache:debug] [pid 9497] mod_cache.c(1718): [client 10.0.0.20:40156] AH00777: cache: CACHE filter was added twice, or was added where the cache has been bypassed and will be ignored: /</pre>
+<p>I have a work-around, but it does have a caveat which I&#8217;ll get to shortly &#8211; I have also approached Apache httpd mailing lists, but as of yet I don&#8217;t have a solid fix for this but for now the workaround is:</p>
+<pre>SetOutputFilter CACHE
+AddOutputFilterByType DEFLATE text/html text/plain text/css application/javascript application/rss+xml text/xml image/svg+xml</pre>
+<p>To the best of my knowledge (as the docs are a bit sketchy here), <strong>SetOutputFilter</strong> will force all output to be passed through the <strong>CACHE</strong> filter; Doing this here ensures content is saved to our cache first and we then conditionally pass through <strong>DEFLATE</strong> for text-based content (As that generally compresses well). Sounds exactly like what I want, right?</p>
+<p>Well&#8230; Not quite.</p>
+<p>It seems that doing this combination of output filters means that content is actually being saved into our cache before mod_expires has chance to add correct cache-control headers and specific expires headers. This just means that all content is being cached for the duration of <strong>CacheDefaultExpire</strong>, instead of what I try to set via mod_expires. The headers do eventually get added though so at least our visitors browsers will cache content correctly 🙂</p>
+<p>For the time being I can live with this behaviour, but as mentioned earlier, I will probably be looking to move my web stack over to nginx so this will suffice until then.</p>
+<h3>Conclusion</h3>
+<p>So, we have caching all set up and working, but is it making a difference? Well &#8211; Once a page is requested, but its not cached (a MISS), the request will process as normal and return output to the visitor. Subsequent requests are served from cache so no processing is needed.</p>
+<p>Once all this was set up, I visited my website which generated the page and stored it in cache &#8211; My average page loading time from earlier was <strong>0.696s</strong>, so lets see what it is now its in cache</p>
+<pre>simon@kinmu:~$ i=0; while [ $i -lt 5 ]; do time -p curl "/" &gt; /dev/null; sleep 1; i=$[$i+1]; done 2&gt;&amp;1 | grep real | awk '{print $2}' | awk '{avg += ($1 - avg) / NR;} END {print "Average: " avg "s";}'
+Average: 0.036s</pre>
+<p>Thats an impressive <span style="color: #ff0000;"><strong>19x</strong></span> improvement on average page loading time!</p>
+<p>I&#8217;d say its working nicely 😉</p>

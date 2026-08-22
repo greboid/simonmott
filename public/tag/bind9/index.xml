@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Bind9 on Simon Mott</title>
+    <link>https://www.simonmott.co.uk/tag/bind9/</link>
+    <description>Recent content in Bind9 on Simon Mott</description>
+    <generator>Hugo</generator>
+    <language>en-GB</language>
+    <lastBuildDate>Sun, 26 Jun 2016 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.simonmott.co.uk/tag/bind9/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Slow DNS resolving using bind9 as caching resolver</title>
+      <link>https://www.simonmott.co.uk/2016/06/slow-dns-resolving-using-bind9-caching-resolver/</link>
+      <pubDate>Sun, 26 Jun 2016 00:00:00 +0000</pubDate>
+      <guid>https://www.simonmott.co.uk/2016/06/slow-dns-resolving-using-bind9-caching-resolver/</guid>
+      <description>&lt;p&gt;I currently have 4 DNS servers across my estate and until recently these were all configured to forward all queries to Google DNS (8.8.8.8). I ended up having an issue with Google caching an undesired record value so I opted to change my DNS servers so that they no longer forward queries elsewhere, but instead try to answer it themselves; Doing this gives me slightly more control over my DNS cache.&lt;/p&gt;&#xA;&lt;p&gt;As I use named (bind9) this was a pretty trivial change &amp;#8211; Simply remove the &lt;code&gt;forwarders { 8.8.8.8; };&lt;/code&gt; clause in my configuration and that should be that.&lt;/p&gt;&#xA;&lt;p&gt;During my post-change testing though I&amp;#8217;d noticed that resolution was taking significantly longer for un-cached queries than I&amp;#8217;d expect (microsoft.gointeract.io is only used to illustrate my issue):</description>
+    </item>
+  </channel>
+</rss>

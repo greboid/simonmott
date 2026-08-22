@@ -1,0 +1,66 @@
+{{ define "title" }}{{ if eq .Kind "term" }}{{ .Title }} Archives{{ else }}{{ .Title }}{{ end }} - {{ site.Title }}{{ end }}
+{{ define "ogtitle" }}{{ if eq .Kind "term" }}{{ .Title }} Archives{{ else }}{{ .Title }}{{ end }}{{ end }}
+{{ define "ogtitle2" }}{{ if eq .Kind "term" }}{{ .Title }} Archives{{ else }}{{ .Title }}{{ end }}{{ end }}
+
+{{ define "bodyclass" }}{{ if eq .Kind "term" }}archive {{ .Data.Singular }} {{ .Data.Singular }}-{{ index (last 1 (split (trim .RelPermalink "/") "/")) 0 }}{{ else }}archive date{{ end }}{{ end }}
+
+{{ define "pageheader" }}
+{{ $posts := slice }}
+{{ if eq .Kind "term" }}
+  {{ $posts = .Pages }}
+{{ else }}
+  {{ $month := .Params.month }}
+  {{ $year := .Params.year }}
+  {{ range where site.RegularPages "Type" "post" }}
+    {{ if $month }}{{ if eq (.Date.Format "2006-01") $month }}{{ $posts = $posts | append . }}{{ end }}
+    {{ else if eq (.Date.Format "2006") $year }}{{ $posts = $posts | append . }}{{ end }}
+  {{ end }}
+{{ end }}
+                <div class="mythemes-page-header">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-8 col-md-9 col-lg-9">
+                            <nav class="mythemes-nav-inline">
+                                <ul class="mythemes-menu">
+                                    <li id="home-label"><a href="{{ site.Home.RelPermalink }}" title="go to home"><i class="mythemes-icon-home"></i> <span>Home</span></a></li>{{ if eq .Kind "term" }}<li>{{ .Title }}</li>{{ else if .Params.month }}
+                                    <li><a href="/{{ .Params.year }}/" title="Yearly archives - {{ .Params.year }}">{{ .Params.year }}</a></li><li><time datetime="{{ (index $posts 0).Date.Format "2006-01-02" }}">{{ time (printf "%s-01" .Params.month) | time.Format "January" }}</time></li>{{ else }}<li>{{ .Title }}</li>{{ end }}                                    <li></li>
+                                </ul>
+                            </nav>
+                            {{ if eq .Kind "term" }}{{ if eq .Data.Singular "category" }}<h1>Category Archives</h1>{{ else }}<h1>Tag Archives</h1>{{ end }}{{ else if .Params.month }}<h1>Monthly Archives</h1>{{ else }}<h1>Yearly Archives</h1>{{ end }}
+                        </div>
+                        <div class="col-sm-4 col-md-3 col-lg-3 mythemes-posts-found">
+                            <div class="found-details">
+                                {{ $count := len $posts }}{{ if eq $count 1 }}<span>One Article</span>{{ else }}<span>{{ $count }} Articles</span>{{ end }}                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+{{ end }}
+
+{{ define "main" }}
+{{ $posts := slice }}
+{{ if eq .Kind "term" }}
+  {{ $posts = .Pages }}
+{{ else }}
+  {{ $month := .Params.month }}
+  {{ $year := .Params.year }}
+  {{ range where site.RegularPages "Type" "post" }}
+    {{ if $month }}{{ if eq (.Date.Format "2006-01") $month }}{{ $posts = $posts | append . }}{{ end }}
+    {{ else if eq (.Date.Format "2006") $year }}{{ $posts = $posts | append . }}{{ end }}
+  {{ end }}
+{{ end }}
+    <div class="content">
+        <div class="container">
+            <div class="row">
+<!-- CONTENT -->
+<section class="col-sm-8 col-md-9 col-lg-9 mythemes-classic">
+<div class="content-border right">{{ $pag := .Paginate $posts }}{{ $last := sub (len $pag.Pages) 1 }}{{ range $i, $p := $pag.Pages }}{{ partial "article-list.html" $p }}{{ if lt $i $last }}                <div class="mythemes-delimiter no-padding">
+                <div class="delimiter-item"></div>
+            </div>{{ end }}{{ end }}{{ partial "pagination-nav.html" $pag }}</div></section>
+
+{{ partial "sidebar.html" . }}
+
+            </div>
+        </div>
+    </div>
+{{ end }}

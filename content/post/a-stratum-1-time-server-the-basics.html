@@ -1,0 +1,57 @@
++++
+title = "A Stratum 1 Time Server – The Basics"
+date = 2022-02-12T16:31:06Z
+url = "/2022/02/a-stratum-1-time-server-the-basics/"
+wp_id = 254
+more = true
+categories = ["Benchmarks", "Learning", "System Administration", "Technology"]
+tags = ["gps", "ntp", "ntpd", "time"]
++++
+<p>A while ago, I decided to play around with trying to create something cheap that would be able to synchronise its time by using GPS instead of over the internet &#8211; essentially building my own Stratum 1 time server. I intend this to be a series of articles about NTP and time servers, but let&#8217;s start with the basics&#8230;</p>
+<h5>What is a Stratum 1 Time Server?</h5>
+<p><img class="alignright wp-image-266" src="/wp-content/uploads/2017/03/stratum.png" alt="" width="300" height="268" />The lower the &#8220;Stratum&#8221; number the more accurate the time it should be able to tell. Usually Stratum 1 time servers are directly connected to an accurate source of time such as (but not limited to) Atomic, GPS or even Radio clocks. The stratum of the machine which itself is directly interfacing with the accurate time source would be &#8220;Stratum 0&#8221;. For each additional layer of NTP servers added, the stratum increases by 1.</p>
+<p>So if the server that&#8217;s connected directly to the time source is stratum 0, it would appear to any clients who want to synchronise with it as a stratum 1 source. If someone then tries to synchronise to one of those, they would see a stratum 2 source and so on. The image on the right illustrates the top-down increase in stratum and was taken from <a href="https://en.wikipedia.org/wiki/Network_Time_Protocol">Wikipedia</a>.</p>
+<p>Generally the higher the stratum number, the less-accurate its view of time is. A stratum ranges from stratum 1 all the way to stratum 15 indicating the time is getting further away from a reference clock the higher you go. Stratum 16 indicates the clock is pretty far from the reference and should be considered un-synchronised and should not be used.</p>
+<!--more-->
+
+<p><span id="more-254"></span></p>
+<h5>Why do we need time servers?</h5>
+<p>Every computer out there &#8211; be it a desktop, laptop, server or otherwise usually need to keep track of the time one way or the other. Computers usually have dedicated hardware to keep track of the time (notable exceptions are Raspberry Pis), some of which are more accurate than others but ultimately each one is different.</p>
+<p>To demonstrate how computers can&#8217;t keep track of accurate time on their own, I rigged up 2 machines and synchronised their clocks to the same time server. Once initially synchronised I simply left them to run for 8 hours to see how much their view of time has drifted away from what the time server suggests is correct. <em>This test was completed without <code>ntpd</code> creating a drift file (more on that later)</em></p>
+<p>One thing note here is that the Pis clock is running faster than the reference clock, whereas the laptop is actually running slower.</p>
+<p><img loading="lazy" class="wp-image-955 size-full aligncenter" src="/wp-content/uploads/2022/02/drift-wo_drift_file.png" alt="" width="667" height="371" /></p>
+<p>This clearly shows that over just 8 hours, there&#8217;s a significant discrepancy between the two machine&#8217;s local clocks vs what the time actually is. Obviously the longer they remain un-synchronised, the larger the drift becomes.</p>
+<h5>How do I deal with time drift?</h5>
+<p>On Linux, running <code>ntpd</code> has the advantage of having some sophisticated features and algorithms behind it designed to keep your local clock as accurate as possible.</p>
+<p>Once <code>ntpd</code> has been running for a while (and has been able to successfully synchronise time with an external source) it&#8217;s able to estimate the inherent drift of your local clock and compensate for it accordingly.</p>
+<p>The drift itself is called &#8220;frequency error&#8221;. Calculating it is a process that continuously happens in the background, which ultimately results in the generation of a &#8220;drift file&#8221;. This file is used to compensate for drift when <code>ntpd</code> starts up next so it doesn&#8217;t have to go through the initial learning process again.</p>
+<p>Once it had determined the frequency error for my two test machines, I ran the same test we did earlier to see how well <code>ntpd</code> coped with clock drift.<img loading="lazy" class="wp-image-958 size-full aligncenter" src="/wp-content/uploads/2022/02/drift-w_drift_file.png" alt="" width="667" height="371" />As you can see from the above graph (kept at the same scale), we&#8217;ve easily managed to keep drift on both machines to within 0.1s of our reference clock. You&#8217;ll notice however that both clocks are now running faster than our reference&#8230;</p>
+<p>Environmental conditions affect your computers ability to track time, as does system load and even power fluctuations from your utility provider. This means that if you were to monitor the frequency error reported by <code>ntpd</code>, you&#8217;d see that it can fluctuate quite a bit; You&#8217;ll likely never be able to get a stable frequency error so will likely never get 100% perfect time-keeping without help, but its a damn good start and a large improvement over having no clock discipline at all!</p>
+<h5>So, where do I start?</h5>
+<p>Most default installs for <code>ntpd</code> come pre-configured with servers from the <a href="http://www.pool.ntp.org/en/">NTP Pool Project</a> so as long as you&#8217;re running <code>ntpd</code> then you should be OK.</p>
+<p>You can check the current status of <code>ntpd</code> by querying the local machine for its list of peers by using <code>ntpq -pn</code></p>
+<pre># ntpq -pn
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+*85.199.214.99   .GPS.            1 u   32   64  377    8.406   -0.147   0.073
+-138.68.151.69   194.117.9.136    3 u   38 1024  377    5.835    2.372  15.680
++129.250.35.250  249.224.99.213   2 u 1052 1024  377    6.587    0.666   0.139
++80.87.131.131   80.87.128.222    4 u  442 1024  377   22.322   -0.635   0.270</pre>
+<p>This output shows some useful information so lets work through it (Taken from <a href="http://nlug.ml1.co.uk/2012/01/ntpq-p-output/831">http://nlug.ml1.co.uk/2012/01/ntpq-p-output/831</a> where more detailed descriptions of this output can be found)</p>
+<ul>
+<li><strong>remote</strong> &#8211; The remote peer or server being synced to</li>
+<li><strong>refid</strong> &#8211; Where or what the remote peer or server is itself synchronised to</li>
+<li><strong>st</strong> &#8211; The remote peer or server Stratum (from our point of view)</li>
+<li><strong>t</strong> &#8211; Type (u: unicast or manycast, b: broadcast or multicast, l: local reference clock, s: symmetric peer, A: manycast server, B: broadcast server, M: multicast server)</li>
+<li><strong>when</strong> &#8211; When last polled (seconds ago, “h” hours ago, or “d” days ago)</li>
+<li><strong>poll</strong> &#8211; Polling frequency</li>
+<li><strong>reach</strong> &#8211; An 8-bit left-shift shift register value recording polls (bit set = successful, bit reset = fail) displayed in octal</li>
+<li><strong>delay</strong> &#8211; Round trip communication delay to the remote peer or server (milliseconds)</li>
+<li><strong>offset</strong> &#8211; Mean offset (phase) in the times reported between this local host and the remote peer or server (milliseconds)</li>
+<li><strong>jitter</strong> &#8211; Mean deviation (jitter) in the time reported for that remote peer or server (miliseconds)</li>
+</ul>
+<h5>What does all that ACTUALLY mean?</h5>
+<p>Looking at what we have above &#8211; we&#8217;re using <code>85.199.214.99</code> as our primary time source (signified by the<strong> *</strong>). That server is getting its time direct from a GPS clock and so is a stratum 1 server. Its reported time differs from what we think the current time is by only 0.147ms (we&#8217;re running faster than it).</p>
+<p>The stratum 2 and 4 servers are also pretty close with their offset so are potential candidates to synchronise time with if the current stratum 1 server goes offline. <code>ntpd</code> will automatically choose which server to synchronise from and will also weed out ones that are seemingly reporting bad time by comparing it with the other servers loaded. If you&#8217;re using a configuration which makes use of the NTP pool then the servers that appear will likely be different each time you start <code>ntpd</code>.</p>
+<p>A big thanks goes to the volunteers at the <a href="http://www.pool.ntp.org/en/">NTP Pool Project</a> for making it possible without running your own infrastructure!</p>
+<p>This article should hopefully have given you a bit more insight as to why time servers are needed. In the future I plan to explore setting up a local NTP server to use with a view of getting our own GPS timing device hooked up and working.</p>

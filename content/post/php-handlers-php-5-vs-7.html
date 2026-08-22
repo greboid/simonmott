@@ -1,0 +1,62 @@
++++
+title = "PHP Handlers and PHP 5 vs 7"
+date = 2016-06-11T00:00:00Z
+url = "/2016/06/php-handlers-php-5-vs-7/"
+wp_id = 143
+more = true
+categories = ["Benchmarks", "Tweaking"]
+tags = ["apache", "benchmark", "php", "php5", "php7"]
++++
+<p><a href="/wp-content/uploads/2016/06/php_logo.png"><img class="alignright size-full wp-image-203" src="/wp-content/uploads/2016/06/php_logo.png" alt="php_logo" width="248" height="130" /></a>The idea for this post actually came from observing performance after moving this site over to WordPress (and to a lesser extent, my other website, <a href="http://www.gentog.co.uk/">General Photography</a>). I use <a href="https://puppet.com/">Puppet</a> orchestration for my servers and I made the mistake of trying to convert everything to puppet manifests and also get things working how I wanted without fully understanding how puppet works at the same time; That however is another story. This does means that my puppet manifests are not very flexible currently and I use suphp as my main PHP handler just because for me, at the time, it was easier.</p>
+<p>That being said &#8211; I&#8217;m fully aware of the performance issues suphp exhibits because my <a href="http://www.observium.org/">Observium</a> install used it at first &#8211; it now uses mod_php because loading all the graphs was noticably slow. I thought I&#8217;d try to quantify the performance differences between suphp and mod_php and decided I should do all 3 common PHP handlers. Whilst I was gathering metrics for this I decided It&#8217;d be useful to include PHP7 results too.
+<!--more-->
+<span id="more-143"></span></p>
+<h3>The Environment</h3>
+<p>I tried to ensure my testing was fair so I&#8217;ll detail my setup. Firstly I cloned the container my website runs on 3 times. One so I can test suphp, one for mod_php and one for php-fpm.</p>
+<p>I will be performing these tests against different instances of my website which is based on WordPress 4.5.2</p>
+<p>The first container was already set to go as I use suphp already &#8211; it was an exact clone of my website container. The second container I&#8217;d removed suphp and installed mod_php and for the final container, I&#8217;d removed suphp and installed mod_fastcgi and also set up php-fpm. The intial round of testing was done on these 3 containers which were then upgraded to PHP7 and the same round of testing done again.</p>
+<p>I made sure the containers were running on the same host as my main website container to ensure similar performance as my live site and for results to be comparable to each other. They all use the same database container too so thats one less thing to worry about.</p>
+<p><strong>Host Server Spec</strong></p>
+<p>CPU: <a href="http://ark.intel.com/products/40481/Intel-Xeon-Processor-L3360-12M-Cache-2_83-GHz-1333-MHz-FSB?q=l3360">Intel(R) Xeon(R) CPU L3360 @ 2.83GHz 4C/4T</a><br />
+RAM: 8GB DDR2 PC2-6400 (800 MHz)<br />
+HDD: 2x 1TB WD-Black (WD1002FAEX) in RAID1<br />
+OS: Proxmox 4.2-5/7cf09667<br />
+Kernel: 4.4.6-1-pve</p>
+<p><strong>Container Spec</strong></p>
+<p>Contianer Type: LXC<br />
+OS: Ubuntu 14.04.1 <em>(Yes, I know it needs updating!)</em><br />
+RAM: 1GB<br />
+CPU Limit: 2<br />
+CPU Units: 1024</p>
+<p><strong>Software Versions</strong></p>
+<p>Apache Version: 2.4.7<br />
+PHP 5.5.9-1ubuntu4.17<br />
+PHP 7.0.7-4+deb.sury.org~trusty+1<br />
+WordPress 4.5.2<br />
+MySQL: 5.5.41-0ubuntu0.14.04.1 (Although this is hosted in its own container which remains the same through the testing)</p>
+<p><strong>Configuration</strong></p>
+<p>Apache Mode: mpm_prefork<br />
+Apache MaxClients: 20<br />
+Apache ServerLimit: 20<br />
+Apache MaxRequestsPerChild: 4000<br />
+php-fpm Process Manager: dynamic<br />
+php-fpm max_children: 20</p>
+<h3>The Testing</h3>
+<p>I first started by using curl to send 20 sequential GET requests to index.php via Apache and timing how long it takes to send me the generated contents of the page and then averaged it. For comparison purposes I also recorded the length of time PHP took to generate the page by invoking it on command line via <code>php-cgi -f index.php</code>, again taking an average.</p>
+<p><a href="/wp-content/uploads/2016/06/php_time.png"><img loading="lazy" class="aligncenter wp-image-205 size-full" src="/wp-content/uploads/2016/06/php_time.png" alt="Avg load time for 20 sequential requests" width="929" height="511" srcset="/wp-content/uploads/2016/06/php_time.png 929w, /wp-content/uploads/2016/06/php_time-300x165.png 300w, /wp-content/uploads/2016/06/php_time-768x422.png 768w" sizes="(max-width: 929px) 100vw, 929px" /></a></p>
+<p>You can see from the chart above that suphp takes longer to return results than just invoking on the command line but this makes sense because Apache has to process the request and spawn a PHP process to fully deal with it along with network overheads between my test client and test server. PHP7&#8217;s performance enhancements are visible here too with all handlers using PHP7 resulting in faster loading times. For both PHP5.5 and PHP7, mod_php and php-fpm seem to share similar performance.</p>
+<p>The <strong>configuration</strong> section above is important for our next test. I limited the number of processes that could spawn so as to not take out my container by putting it under too high load specifically for mod_php &#8211; Whilst you can tweak those options to suit your liking/environment, each handler have different things to consider &#8211; primarily how much RAM they consume.</p>
+<p>For both suphp and php-fpm handlers, they offload PHP to another process. For the particular modules I had configured in Apache, on average each process for both suphp and php-fpm tests seemed to hover around 7.5MB &#8211; for mod_php however things are a bit different. mod_php is a module that&#8217;s loaded by Apache which allows it to interpret PHP itself without having to pass it off to another process, which is by far one of the reasons mod_php performs so well however this does mean that for each Apache process created, it has to load this module every time which makes this a rather RAM heavy approach &#8211; During testing of mod_php I&#8217;d clocked average Apache RAM usage at around 54MB per process so for all 20 processes running, that&#8217;d all but saturate RAM on my container.</p>
+<p>php-fpm is definately the way to go if RAM is your concern. Whilst it does maintain a separate pool of processes ready to process PHP, its not constantly spawning/killing processes like suphp does and doesnt have to contend with other items in RAM like Apache does making it leaner.</p>
+<p>We&#8217;ve seen above how each handler performs just by processing a simple request, lets take a look what they look like under a bit of load&#8230;</p>
+<p><a href="/wp-content/uploads/2016/06/php_hits.png"><img loading="lazy" class="size-full wp-image-204 aligncenter" src="/wp-content/uploads/2016/06/php_hits.png" alt="150 concurrent over 1 minute" width="930" height="508" srcset="/wp-content/uploads/2016/06/php_hits.png 930w, /wp-content/uploads/2016/06/php_hits-300x164.png 300w, /wp-content/uploads/2016/06/php_hits-768x420.png 768w" sizes="(max-width: 930px) 100vw, 930px" /></a></p>
+<p>In order to generate some load, I&#8217;d used a tool called siege in benchmark mode. Simply put, you point it at a URL (or a list of URLs), tell it how many concurrent &#8220;users&#8221; you want and give it some criteria for how long to run. In my case I used</p>
+<pre>siege -t1m -b -c150 /</pre>
+<p>which would simulate 150 concurrent users hitting my website for 1 minute. Once a &#8220;user&#8221; has sent and received a successful (or failed) request, it immediately sends a new one. Testing in this method illustrates how quickly each handler can actually deal with requests (and shows off the performance improvements for PHP7 quite nicely).</p>
+<p>To illustrate how each handler manages to cope with requests I plotted average, longest and shortest response times which shows especially how suphp, along with the low hit-rate, just struggles to keep up because of having to constantly spawn new processes, on top of that, because the processes are short lived (for the duration of the request), they do not benefit from any kind of opcode caching as mod_php and php-fpm do.</p>
+<h3>Conclusion</h3>
+<p>Another major pitfall of mod_php aside from its RAM consumption is that all PHP it processes is done so as the user Apache runs as which isn&#8217;t ideal for a multi-site environment because all sites need to be accessed (and modified, depending on your application) by your Apache user. This simply means in a multi-site environment that if someone compromises one of your websites, they can potentially glean database username/passwords for other sites accessible by this user and/or other sensitive information depending on your setup.</p>
+<p>suphp is probably one of the easiest ways to afford more security over your websites because each process it spawns to deal with php, is done so as the user that owns the php file its trying to execute. This means that as long as your file permissions are sane, you shouldn&#8217;t be able to read file contents of other users but you just take a major performance hit because of the way it works.</p>
+<p>This leaves php-fpm. This by far is the best way to go if you put the time into configuring it. This handler allows pools of processes to run as specific users so grants you the same level of security as suphp, but it does so by keeping processes around much longer than suphp which means it benefits from not having the overheads of spawning new processes for each request, and can make use of opcode caching to further enhance performance along with better resource management in general.</p>
+<p>The performance improvements for PHP7 are not something to ignore either &#8211; In the case of this WordPress blog, simple page loading time was <strong>2x</strong> faster via both mod_php and php-fpm using the same settings. Furthermore as shown above, PHP7 was able to handle <strong>3x</strong> more requests in 1 minute with better average loading times than the same settings using PHP5.5.</p>
+<p>For me, the clear winner here is php-fpm, no matter which version of PHP you decide to roll</p>

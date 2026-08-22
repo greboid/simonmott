@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en-GB" prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script>(function(){var t=null;try{t=window.localStorage.getItem('sm-theme');}catch(e){}if(t!=='dark'&&t!=='light'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);})();</script>
+        <link rel="profile" href="http://gmpg.org/xfn/11" />
+        <title>Ethereum Mining with NVIDIA on Linux - Simon Mott</title>
+        <meta name="description" content="All about me" />
+        <link rel="canonical" href="https://www.simonmott.co.uk/2017/07/ethereum-mining-nvidia-linux/" />
+        <meta property="og:locale" content="en_GB" />
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="Ethereum Mining with NVIDIA on Linux" />
+        <meta property="og:description" content="All about me" />
+        <meta property="og:url" content="https://www.simonmott.co.uk/2017/07/ethereum-mining-nvidia-linux/" />
+        <meta property="og:site_name" content="Simon Mott" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:description" content="All about me" />
+        <meta name="twitter:title" content="Ethereum Mining with NVIDIA on Linux" />
+        <link rel="alternate" type="application/rss+xml" title="Simon Mott &raquo; Feed" href="https://www.simonmott.co.uk/index.xml" />
+        <link rel='stylesheet' id='mythemes-google-fonts-roboto-css' href='https://fonts.googleapis.com/css?family=Roboto%3A300%2C400%2C500%2C600%2C700' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-google-fonts-open-sans-css' href='https://fonts.googleapis.com/css?family=Open+Sans%3A300%2C400%2C700' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-icons-css' href='/css/mythemes-icons.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-effects-css' href='/css/effects.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-header-css' href='/css/header.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-bootstrap-css' href='/css/bootstrap.min.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-typography-css' href='/css/typography.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-navigation-css' href='/css/navigation.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-nav-css' href='/css/nav.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-blog-css' href='/css/blog.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-forms-css' href='/css/forms.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-elements-css' href='/css/elements.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-widgets-css' href='/css/widgets.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-comments-css' href='/css/comments.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-comments-typography-css' href='/css/comments-typography.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-footer-css' href='/css/footer.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-pretty-photo-css' href='/css/prettyPhoto.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-plugins-css' href='/css/plugins.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-style-css' href='/css/treeson.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='prettify-css' href='/css/prettify.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='social-logos-css' href='/wp-content/plugins/jetpack/_inc/social-logos/social-logos.min.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='jetpack_css-css' href='/css/jetpack.css' type='text/css' media='all' />
+        <!-- theme customizer styles, copied verbatim from the original site -->
+<style data-from="original" type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 0.07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<style data-from="original" type='text/css'>img#wpstats{display:none}</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-header">
+    .mythemes-header a.header-description{
+        color: rgba( 255,255,255 , 0.5 );
+    }
+    .mythemes-header a.header-description:hover{
+        color: rgba( 255,255,255 , 0.7 );
+    }
+</style>
+<style data-from="original" type="text/css">
+
+     
+    body{
+        background-color: #343b43;
+    }
+    .mythemes-header a.header-title{
+        color: #ffffff;
+    }
+
+     
+    body > div.content,
+    body footer aside{
+        background-image: url();
+        background-repeat: ;
+        background-position: ;
+        background-attachment: ;
+    }
+
+     
+    div.mythemes-page-header{
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-background">
+
+     
+    body > div.content,
+    body footer aside{
+        background-color: #ffffff;
+    }
+
+
+     
+     
+    body.scroll-nav .mythemes-poor{
+        background-color: rgba( 255,255,255 , 0.91 );
+    }
+    .mythemes-poor{
+        background-color: #ffffff;
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-color-btn-1">
+
+     
+    .header-button-wrapper a.btn.first-btn.header-button{
+        color: rgba( 255,255,255 , 0.4 );
+        border: 1px solid rgba( 255,255,255 , 0.2 );
+        background: rgba( 255,255,255 , 0.03 );
+    }
+    .header-button-wrapper a.btn.first-btn.header-button:hover{
+        color: rgba( 255,255,255 , 0.9 );
+        border: 1px solid rgba( 255,255,255 , 0.7 );
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-color-btn-2">
+
+     
+    .header-button-wrapper a.btn.second-btn.header-button{
+        color: rgba( 255,255,255 , 0.4 );
+        border: 1px solid rgba( 255,255,255 , 0.2 );
+        background: rgba( 255,255,255 , 0.03 );
+    }
+    .header-button-wrapper a.btn.second-btn.header-button:hover{
+        color: rgba( 255,255,255 , 0.9 );
+        border: 1px solid rgba( 255,255,255 , 0.7 );
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-color-1">
+
+     
+    nav.base-nav ul li a,
+    div.widget-grofile.grofile a.grofile-full-link{
+        color: #414c97;
+    }
+    nav.base-nav ul li:hover > a,
+    nav.base-nav ul li > a:hover,
+    nav.base-nav ul li.current-menu-item > a,
+    nav.base-nav ul li.current-menu-ancestor > a,
+    div.widget-grofile.grofile a.grofile-full-link:hover{
+        color: #00001f;
+    }
+
+     
+    div.comments-list > ol li.pingback header cite a:hover,
+    div.comments-list > ol li.comment header cite a:hover{
+        color: #232e79;
+    }
+
+     
+     
+    .btn,
+    .button,
+    .mythemes-button,
+
+     
+    button,
+    input[type="submit"],
+    input[type="button"],
+
+     
+    .hentry button,
+    .hentry input[type="button"],
+    .hentry input[type="submit"],
+    
+     
+    div.widget_calendar table th,
+    div.widget_post_meta ul li span.post-tag,
+
+     
+    article div.post-meta-tags a:hover,
+    article div.post-meta-categories a,
+
+     
+    div.comments-list > ol li.comment header span.comment-meta span.comment-replay a:hover,
+    div#comments  p.form-submit input[type="submit"],
+
+     
+    div.pagination nav span{
+        background-color: #05105b;
+    }
+
+     
+     
+     
+    .btn,
+    .button,
+    .mythemes-button,
+
+     
+    button,
+    input[type="submit"],
+    input[type="button"],
+
+     
+    .hentry button,
+    .hentry input[type="button"],
+    .hentry input[type="submit"],
+
+     
+    div.widget_post_meta ul li span.post-tag,
+
+     
+    article div.post-meta-tags a:hover,
+    article div.post-meta-categories a,
+
+     
+    div#comments  p.form-submit input[type="submit"],
+
+     
+    div.pagination nav span{
+        border-bottom: 1px solid #000033;
+    }
+
+     
+    div.pagination nav a,
+    article div.meta,
+    article div.meta a,
+    article a.more-link:hover,
+    article div.meta ul.post-categories li a{
+        color: #05105b;
+    }
+    article div.meta ul.post-categories li a:hover{
+        background-color: #05105b;
+    }
+    article a.more-link:hover{
+        border: 3px solid #05105b;
+    }
+
+     
+    article.sticky a.more-link{
+        background: #05105b;
+        border: 3px solid #05105b;
+    }
+    article.sticky a.more-link:hover{
+        color: #05105b;
+    }
+        
+
+     
+    footer .mythemes-black-side{
+        background: #05105b;
+    }
+    footer .mythemes-black-side .mythemes-copyright p,
+    footer .mythemes-black-side .mythemes-menu a{
+        color: #646fba;
+    }
+    footer .mythemes-black-side .mythemes-copyright a,
+    footer .mythemes-black-side .mythemes-menu a:hover{
+        color: #9ba6f1;
+    }
+    footer .mythemes-black-side .mythemes-copyright a:hover{
+        color: #c3ceff;   
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-color-2">
+
+     
+    nav.base-nav ul li.current-menu-item > a{
+        color: #7db74d;
+    }
+
+     
+    a:hover,
+
+     
+    article div.meta a:hover{
+        color: #7db74d;
+    }
+
+     
+     
+    .btn.second-button,
+    .button.second-button,
+    .mythemes-button.second-button,
+
+     
+    .mythemes-nav-btn button.btn-base-nav,
+
+     
+    div.widget_post_tags div.tagcloud a,
+    div.widget_tag_cloud div.tagcloud a,
+    div.widget_newsletter form button[type="submit"],
+
+     
+    div.comments-list > ol li.comment header span.comment-meta span.comment-replay a,
+    div.comment-respond h3.comment-reply-title small a,
+    
+     
+    article div.post-meta-categories a:hover,
+    article div.post-meta-tags a{
+        background-color: #5f992f;
+    }
+
+     
+     
+     
+    .btn.second-button,
+    .button.second-button,
+    .mythemes-button.second-button,
+
+     
+    .mythemes-nav-btn button.btn-base-nav,
+
+     
+    div.widget_post_tags div.tagcloud a,
+    div.widget_tag_cloud div.tagcloud a,
+    div.widget_newsletter form button[type="submit"],
+
+     
+    article div.post-meta-tags a,
+    article div.post-meta-categories a:hover,
+
+     
+    div.comment-respond h3.comment-reply-title small a{
+        border-bottom: 1px solid #377107;
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-color-3">
+
+     
+     
+    a,
+
+     
+    div.widget ul li a:hover,
+    div.widget_calendar table td a:hover,
+    div.widget_categories ul li a:hover,
+    div.widget_recent_comments_with_avatar ul li h5 a:hover{
+        color: #5f88bb;
+    }
+
+     
+    .hentry h2 a:hover,
+    article h2 a:hover{
+        color: #416a9d;
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-css">
+
+    div.content div.container aside.mythemes-header-items,
+div.content div.container aside.mythemes-header-items + div.row{
+    display: none;
+}
+
+.mythemes-post-social {
+display: none;
+}
+
+div.widget.widget_text {
+margin-bottom: 0px;
+margin-top:-50px;
+padding-bottom: 15px;
+}
+
+div.mythemes-header a.header-title {
+font-weight: bold;
+margin-top: 100px;
+}
+
+.hentry, .hentry p, article p {
+  color: #5d5d5d;
+}
+</style>
+
+        <link rel='stylesheet' id='mythemes-darkmode-css' href='/css/darkmode.css' type='text/css' media='all' />
+        
+    </head>
+    <body class="single single-post postid-277 single-format-standard">
+        <header>
+
+<div class="mythemes-header overflow-wrapper parallax-container" style="height: 400px;">
+    <div class="valign-cell-wrapper" style="background: rgba( 1,0,81, 0.19 );">
+
+        
+        <div class="valign-cell">
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <a class="header-title" href="/" title="Simon Mott - All about me">Simon Mott</a><a class="header-description" href="/" title="Simon Mott - All about me">All about me</a>                    </div>
+                </div>
+
+        </div>
+    </div>
+
+
+    <div class="parallax" style="background-image: url(https://www.simonmott.co.uk/wp-content/uploads/2016/06/header.jpg);"><img src="https://www.simonmott.co.uk/wp-content/uploads/2016/06/header.jpg" alt="Simon Mott - All about me"></div></div>
+            <div class="mythemes-poor">
+                <div class="container">
+
+                    <div class="row mythemes-nav-small-device">
+                        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 mythemes-nav-label">
+                                                        <a href="/" title="Simon Mott - All about me">
+                                Simon Mott                            </a>
+                        </div>
+                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 mythemes-nav-btn">
+                            <button type="button" class="btn-collapse btn-base-nav" data-toggle=".header-nav.base-nav">
+                                <i>+</i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <nav class="mythemes-nav-inline base-nav header-nav nav-collapse">
+
+                            <div class="nav-wrapper"><ul id="menu-popular" class="mythemes-menu"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/">Home</a></li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href="#">Popular</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-post"><a href="/2010/03/logical-volume-manager-lvm/">LVM</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-post"><a href="/2012/03/vpn-bonding/">VPN Bonding</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom theme-toggle-item"><a href="#" id="theme-toggle" title="Toggle dark mode"><i class="mythemes-icon-moon icon-moon"></i><i class="mythemes-icon-sun icon-sun"></i></a></li></ul></div>                            </nav>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </header>
+
+        
+        
+    <div class="content">
+        <div class="container">
+            <div class="row">
+
+
+<section class="col-sm-8 col-md-9 col-lg-9">
+                <div class="content-border right"><article class="post-277 post type-post status-publish format-standard hentry category-benchmarks category-gaming category-tweaking tag-benchmark tag-bitcoin tag-ethereum tag-ethereum-mining tag-mining tag-nvidia tag-nvidia-overclocking tag-overclock tag-overclocking">
+
+                                
+                                <h1 class="post-title">Ethereum Mining with NVIDIA on Linux</h1>
+
+                                
+                                        <div class="mythemes-top-meta meta">
+
+            <ul class="post-categories"><li><a href="/category/benchmarks/" rel="category tag">Benchmarks</a></li><li><a href="/category/gaming/" rel="category tag">Gaming</a></li><li><a href="/category/tweaking/" rel="category tag">Tweaking</a></li></ul>
+            <a class="author" href="/" title="Writed by Simon">by Simon</a>
+
+            <time datetime="2017-07-06">on 6th July 2017</time>
+
+                    </div>
+
+
+                                
+                                <p><img loading="lazy" class="alignright size-full wp-image-286" src="/wp-content/uploads/2017/07/ethereum-icon.png" alt="" width="160" height="200" />Bitcoin has been getting a lot of attention in the media lately; primarily due to its association with recent high profile ransomware incidents. Bitcoin was first introduced back in 2009 as a digital currency and has been steadily gaining traction since, increasing almost 140% in value so far this year!</p>
+<p>Bitcoin however, is not the only player in the game; Ethereum is another popular digital currency, currently sitting at 2nd place in total market value and is getting a lot of activity on currency exchanges.</p>
+<p>An incentive to help keep the underlying &#8220;network&#8221; up and running (for both Ethereum and Bitcoin, amongst others) is a piece of software which can be used to validate transactions on the network and issue rewards for doing so. This is otherwise known as <strong>Mining</strong>.</p>
+<p>My current Gaming PC seems to grab me a reasonable amount of Ethereum Tokens on 2+ year old hardware. Certainly enough to make me want to play around with actually mining some.</p>
+
+
+
+
+<p><span id="more-277"></span></p>
+<h5>TLDR</h5>
+<p>Skip right to the overclocking commands <a href="#conclusion">here</a>. Otherwise, continue reading 🙂</p>
+<p><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><ins class="adsbygoogle" style="display: block; text-align: center;" data-ad-format="fluid" data-ad-layout="in-article" data-ad-client="ca-pub-3235343726212802" data-ad-slot="5775455771"></ins><br />
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script></p>
+<h5>Why use Linux?</h5>
+<p>The mining program I am using is currently a <a href="https://github.com/ethereum-mining/ethminer">Fork of a Fork</a> from the original C++ based version developed by the Ethereum Foundation. In its FAQ there seem to be known issues with NVIDIA, WDDM and Windows 10 which cause lower-than expected performance of NVIDIA cards when mining. A supposed fix is to use an older set of NVIDIA drivers along with a different build of the mining software specifically built for CUDA 6.5.</p>
+<p>The machine I am using is my Gaming PC (which requires Windows), so I&#8217;m not prepared to jump through those hoops &#8211; running older drivers isn&#8217;t always conducive to a good gaming experience. My graphics card is NVIDIA and I&#8217;ve always had reasonable experiences using their Linux drivers so giving this a go on Linux seemed like a natural fit.</p>
+<h5>My hardware</h5>
+<p>I&#8217;ve not yet built myself a dedicated mining rig but these are the specs I&#8217;m working with:</p>
+<ul>
+<li>Gigabyte H67N-USB3-B3 Motherboard</li>
+<li>Intel Core i7-2600 CPU @ 3.40GHz</li>
+<li>16GB RAM</li>
+<li>NVIDIA GeForce GTX 970 &#8211; GM204 (GV-N970IXOC-4GD)</li>
+<li>Current Driver Version: 375.66</li>
+</ul>
+<h5>Getting Started</h5>
+<p>In order to start mining Ethereum, you&#8217;ll first need a working Linux installation &#8211; My distro of choice is <a href="https://www.ubuntu.com/">Ubuntu (16.04 LTS) Xenial</a>.</p>
+<p>When first installing and running Ubuntu I did have to make use of <code>nomodeset</code> in grub before anything would actually display on my screen &#8211; This seems to be card specific but it might help you get going! See <a href="https://ubuntuforums.org/showthread.php?t=1613132">here</a> for more info about <code>nomodeset</code>.</p>
+<p>Once you&#8217;re set up, you&#8217;ll need to install NVIDIA drivers. You can obtain Linux specific ones from <a href="http://www.nvidia.co.uk">NVIDIA directly</a> and install those. As I&#8217;m using Ubuntu however, there should be some available in repos &#8211; <code>apt-get install nvidia-375</code> at the time of writing this.</p>
+<h5>Establishing a baseline</h5>
+<p>Before we make any tweaks, we should establish what our baseline is on default settings. Keep in mind that this is specific to me and my hardware &#8211; your baseline may well be different depending on what equipment you use.</p>
+<p>The version of <code>ethminer</code> I am using comes with a built in benchmark mode. To make these tests a fair comparison between tweaks, I&#8217;ve tested everything against block <a href="https://etherchain.org/block/3969748">3969748</a> (A random block I chose which represents the current difficulty of Ethash).</p>
+<p>Running the benchmark for 10 trials, at 5 seconds each gives me an average hash rate of <strong>18.31MH/s</strong> at the current difficulty. This is my baseline.</p>
+<h5>Enabling experimental features</h5>
+<p>By default, the NVIDIA drivers do not let you change any Experimental features (manual control of things) out of the box. In order to enable these, we need to add an option to our <code>xorg.conf</code> file. Before we make any changes here, you should back up your current config file if one exists. In my case this is <code>/etc/X11/xorg.conf</code> but your location may vary.</p>
+<p>Once you know where your config file is, we need to add NVIDIA&#8217;s <strong>Coolbits</strong> option to the <strong>Devices</strong> section in the config. Using 28 in my case enables all experimental features &#8211; Even if we dont use them all 🙂</p>
+<pre>Section "Device"
+    Identifier     "Device0"
+    Driver         "nvidia"
+<strong>    Option         "Coolbits" "28"</strong>
+    VendorName     "NVIDIA Corporation"
+EndSection</pre>
+<p>If you&#8217;re using multiple GPUs, you need to add the <strong>Option</strong> to each individual <strong>Device</strong> section in your config.</p>
+<p>A simple way to see if it worked is to (after a reboot) open <code>nvidia-settings</code> and look at the <strong>Thermal Settings</strong> tab; You should see fan control options now available:</p>
+<p><a href="/wp-content/uploads/2017/07/nvidia-fan-control.png"><img loading="lazy" class="aligncenter wp-image-288" style="border: 1px solid #cecece;" src="/wp-content/uploads/2017/07/nvidia-fan-control.png" alt="" width="473" height="328" /></a></p>
+<h5>Persistence Mode</h5>
+<p>Before we do any actual tweaks, we should enable <strong>Persistence Mode</strong> to ensure our changes stay active even after we close any applications that might be using our card.</p>
+<p>The <code>nvidia-smi</code> utility allows you to control multiple GPUs with its <code>-i</code> option.</p>
+<pre>nvidia-smi -i <strong>0</strong> -pm 1
+nvidia-smi -i <strong>1</strong> -pm 1
+nvidia-smi -i <strong>2</strong> -pm 1
+etc</pre>
+<p>So enabling Persistence Mode on my machine would be:</p>
+<pre>simon@kirika:~$ sudo nvidia-smi -i 0 -pm 1
+Enabled persistence mode for GPU 0000:01:00.0.
+All done.</pre>
+<h5>Power Limits</h5>
+<p>One of the tweaks we have access to is the ability to change power limits for our card. This is also controlled via <code>nvidia-smi</code> command line tool.</p>
+<p>Lets look at what power limit options we have available:</p>
+<pre>simon@kirika:~$ nvidia-smi -i 0 -q -d power
+
+==============NVSMI LOG==============
+
+Timestamp                           : Mon Jul  3 18:11:28 2017
+Driver Version                      : 375.66
+
+Attached GPUs                       : 1
+GPU 0000:01:00.0
+    Power Readings
+        Power Management            : Supported
+        Power Draw                  : 12.90 W
+        Power Limit                 : 160.00 W
+<strong>        Default Power Limit         : 160.00 W
+</strong>        Enforced Power Limit        : 160.00 W
+        Min Power Limit             : 100.00 W
+<strong>        Max Power Limit             : 180.00 W
+</strong>    Power Samples
+        Duration                    : 78.01 sec
+        Number of Samples           : 119
+        Max                         : 61.22 W
+        Min                         : 12.71 W
+        Avg                         : 14.83 W
+</pre>
+<p>On this initial query, I can see that the default power limit for my card is 160 watts and that the maximum I can set it to is 180 watts.</p>
+<p>Lets set it to 180w</p>
+<pre>simon@kirika:~$ sudo nvidia-smi -i 0 -pl 180
+Power limit for GPU 0000:01:00.0 was set to 180.00 W from 160.00 W.
+All done.</pre>
+<p>More power should mean better performance, Right? &#8211; <span style="color: #000000;">Nope</span>.</p>
+<h5>Performance States</h5>
+<p>I performed a benchmark at each power level my card supports, with a 5w increment between them.<br />
+<a href="/wp-content/uploads/2017/07/chart-default.png"><img loading="lazy" class="aligncenter wp-image-292 size-full" style="border: 1px solid #cecece;" src="/wp-content/uploads/2017/07/chart-default.png" alt="" width="599" height="371" /></a>The graph above shows what I&#8217;d expect when we decrease our power limit below 160w; A steady decrease in hashes the lower the supplied power goes. At the top end of the scale though, I don&#8217;t actually gain any performance improvements what-so-ever.</p>
+<p>After a bit of reading around on forums &#8211; This is because the mining application is providing a compute workload to the card, rather than something more graphical in nature. The default clock speeds for &#8220;Applications&#8221; appears lower than what the card is capable of and thus it gets capped into <strong>P2 Performance State</strong>; Hence the flatline on the graph.</p>
+<p>To view what our current Application Clock is set to, we can take a look using <code>nvidia-smi</code> once again, and looking for <strong>Application Clocks</strong> and <strong>Default Application Clocks</strong>.</p>
+<pre>simon@kirika:~$ nvidia-smi -i 0 -q -d clock
+
+==============NVSMI LOG==============
+
+Timestamp                           : Wed Jul  5 00:00:38 2017
+Driver Version                      : 375.66
+
+Attached GPUs                       : 1
+GPU 0000:01:00.0
+    Clocks
+        Graphics                    : 1240 MHz
+        SM                          : 1240 MHz
+        Memory                      : 3004 MHz
+        Video                       : 1141 MHz
+<strong>    Applications Clocks
+        Graphics                    : 1076 MHz
+        Memory                      : 3505 MHz
+    Default Applications Clocks
+        Graphics                    : 1076 MHz
+        Memory                      : 3505 MHz</strong>
+<strong>    Max Clocks</strong>
+<strong>        Graphics                    : 1418 MHz</strong>
+        SM                          : 1418 MHz
+<strong>        Memory                      : 3505 MHz</strong>
+        Video                       : 1304 MHz
+    SM Clock Samples
+        Duration                    : 547.35 sec
+        Number of Samples           : 100
+        Max                         : 1476 MHz
+        Min                         : 1240 MHz
+        Avg                         : 1422 MHz
+    Memory Clock Samples
+        Duration                    : 547.35 sec
+        Number of Samples           : 100
+        Max                         : 3505 MHz
+        Min                         : 3004 MHz
+        Avg                         : 3491 MHz
+    Clock Policy
+        Auto Boost                  : N/A
+        Auto Boost Default          : N/A
+</pre>
+<p>This output is also useful in that it shows what our current maximum clock speeds can be set to. It&#8217;s clear in the output above that our max clock differ from what Applications are permitted to use.</p>
+<p>Armed with these values, I can proceed to change my <strong>Application Clocks </strong>to allow the GPU to clock higher when performing compute workloads. This higher performance state is known as <strong>P0 Performance State</strong>.</p>
+<pre>simon@kirika:~$ sudo nvidia-smi -i 0 -ac 3505,1418
+Applications clocks set to "(MEM 3505, SM 1418)" for GPU 0000:01:00.0
+All done.</pre>
+<p>Lets run our benchmark again:<a href="/wp-content/uploads/2017/07/chart-p0.png"><img loading="lazy" class="aligncenter wp-image-293 size-full" style="border: 1px solid #cecece;" src="/wp-content/uploads/2017/07/chart-p0.png" alt="" width="599" height="371" /></a>You can just make out that the top-end of our graph is no longer a flatline which suggests we&#8217;re now using the full range of clock speeds available on the card. Albeit with little gain&#8230; But, I&#8217;m sure I can do better!</p>
+<h5>Overclocking</h5>
+<p>The final stages of tweaking are whats known as overclocking. The values I&#8217;ve chosen here are very much specific to my hardware. You might be able to get a more stable overclock, or have to use lower values &#8211; It entirely depends on your own hardware.</p>
+<p>In order to achieve this, I&#8217;ll be using <code>nvidia-settings</code> which requires a working X server to be able to apply changes to our card. We tell <code>nvidia-settings</code> which X server to attach to with the <code>-c :0</code> option and in my examples, we&#8217;re using display <code>:0</code></p>
+<p>We can also apply changes to multiple GPUs by changing the ID number in the command:</p>
+<pre>nvidia-settings -c :0 -a [gpu:<strong>0</strong>]/GPUGraphicsClockOffset[3]=0
+nvidia-settings -c :0 -a [gpu:<strong>1</strong>]/GPUGraphicsClockOffset[3]=0
+nvidia-settings -c :0 -a [gpu:<strong>2</strong>]/GPUGraphicsClockOffset[3]=0</pre>
+<p>Figuring out how large an overclock your card supports will take a bit of trial, error and a lot of reboots &#8211; I started with 100MHz and increased slowly until the card became unstable/crashed. Once you know a stable number, increase it in smaller increments until you start having issues.</p>
+<p>My card took a stable overclock at <strong>240MHz</strong>. If I go as high as 250MHz, CUDA would sometimes fail to initialize, so make sure you test each value properly.</p>
+<pre>simon@kirika:~$ nvidia-settings -c :0 -a [gpu:0]/GPUGraphicsClockOffset[3]=240
+
+  Attribute 'GPUGraphicsClockOffset' (kirika:0[gpu:0]) assigned value 240.
+</pre>
+<p>For the sake of being thorough, you can also apply an offset to Memory. The comments above still apply here with finding a stable value. In my case, an offset of <strong>1,100MHz</strong> was stable, although this actually seemed to result in a frequency change of only 550MHz (which is half of 1,100). In my testing however, a Memory overclock had negligible impact on my results, but your mileage may vary so its still worth giving it a shot&#8230;</p>
+<pre>nvidia-settings -c :0 -a [gpu:0]/GPUMemoryTransferRateOffset[3]=1100</pre>
+<p>Once you know a good value for both of these, we can now look at adjusting the <strong>Application Clocks</strong> mentioned earlier to accommodate the new clock speeds for compute workloads.</p>
+<p>Check the max values using <code>nvidia-smi -i 0 -q -d clock</code> like before, and set the new clocks accordingly.</p>
+<pre>simon@kirika:~$ sudo nvidia-smi -ac 4055,1658
+Applications clocks set to "(MEM 4055, SM 1658)" for GPU 0000:01:00.0
+All done</pre>
+<p>With my card overclocked and stable, I did another round of benchmarks and you can clearly see the improvement compared to default settings. I mentioned previously that the memory overclock had a negligible impact on my results so I&#8217;ve omitted those from the graph.<a href="/wp-content/uploads/2017/07/chart-overclock.png"><img loading="lazy" class="aligncenter size-full wp-image-294" style="border: 1px solid #cecece;" src="/wp-content/uploads/2017/07/chart-overclock.png" alt="" width="599" height="371" /></a></p>
+<h5 id="conclusion">Conclusion</h5>
+<p>I&#8217;ve managed to improve my hash rate by <span style="color: #008000;"><strong>18.4%</strong></span> &#8211; from <strong>18.31MH/s</strong> to <strong>21.68MH/s</strong>, by overclocking my GPU and increasing the power limit available to the card. Power consumption of the card has increased by approximately <strong>12.5%</strong> when at 180 watts (instead of the default 160w), but it&#8217;s still worth me running at the higher power threshold.</p>
+<p>If however, I wanted to keep power usage at similar (or lower) levels to what we started with, I can limit to 160w and still achieve <strong>21.06MH/s</strong> with the overclock, which is still a <span style="color: #008000;"><strong>15%</strong></span> improvement over default settings! This also has the added advantage of keeping GPU temperatures under control.</p>
+<p>For convenience, here are all the changes I&#8217;ve made in order to get this improvement (which includes some fan control options to keep on top of cooling):</p>
+<pre># Edit X Config to add coolbits
+# Reboot
+# Make sure X is running
+
+# Enable persistence mode
+sudo nvidia-smi -i 0 -pm 1
+
+# Increase our Power Limit from 160 up to 180
+sudo nvidia-smi -i 0 -pl 180
+
+# Ensure fan speed is controllable and set it to 55%
+# (You can use whatever value you like for fan speed)
+nvidia-settings -c :0 \
+-a [gpu:0]/GPUFanControlState=1 \
+-a [fan:0]/GPUTargetFanSpeed=55 \
+
+# Overclock GPU/RAM
+nvidia-settings -c :0 \
+-a [gpu:0]/GPUGraphicsClockOffset[3]=240 \
+-a [gpu:0]/GPUMemoryTransferRateOffset[3]=1100
+
+# Apply new clocks
+sudo nvidia-smi -ac 4055,1658
+
+</pre>
+<p>The <code>nvidia-settings</code> commands could be merged into one, but I kept them separate for clarity.</p>
+                                <div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon-text sd-sharing"><h3 class="sd-title">Share this:</h3><div class="sd-content"><ul><li class="share-reddit"><a rel="nofollow" data-shared="" class="share-reddit sd-button share-icon" href="https://www.reddit.com/submit?url=https%3a%2f%2fwww.simonmott.co.uk%2f2017%2f07%2fethereum-mining-nvidia-linux%2f&amp;title=Ethereum&#43;Mining&#43;with&#43;NVIDIA&#43;on&#43;Linux" rel="noopener noreferrer" target="_blank" title="Click to share on Reddit"><span>Reddit</span></a></li><li class="share-twitter"><a rel="nofollow" data-shared="sharing-twitter-277" class="share-twitter sd-button share-icon" href="https://twitter.com/intent/tweet?text=Ethereum&#43;Mining&#43;with&#43;NVIDIA&#43;on&#43;Linux&amp;url=https%3a%2f%2fwww.simonmott.co.uk%2f2017%2f07%2fethereum-mining-nvidia-linux%2f" rel="noopener noreferrer" target="_blank" title="Click to share on Twitter"><span>Twitter</span></a></li><li class="share-facebook"><a rel="nofollow" data-shared="sharing-facebook-277" class="share-facebook sd-button share-icon" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fwww.simonmott.co.uk%2f2017%2f07%2fethereum-mining-nvidia-linux%2f" rel="noopener noreferrer" target="_blank" title="Click to share on Facebook"><span>Facebook</span></a></li><li class="share-end"></li></ul></div></div></div>
+                                <div class="clearfix"></div>
+
+	        <div class="post-meta-terms">
+	            <div class="post-meta-tags">
+	                <span class="btn"><i class="mythemes-icon-tags"></i></span>
+	                <a href="/tag/benchmark/" rel="tag">Benchmark</a><a href="/tag/bitcoin/" rel="tag">Bitcoin</a><a href="/tag/ethereum/" rel="tag">Ethereum</a><a href="/tag/ethereum-mining/" rel="tag">Ethereum Mining</a><a href="/tag/mining/" rel="tag">Mining</a><a href="/tag/nvidia/" rel="tag">Nvidia</a><a href="/tag/nvidia-overclocking/" rel="tag">Nvidia Overclocking</a><a href="/tag/overclock/" rel="tag">Overclock</a><a href="/tag/overclocking/" rel="tag">Overclocking</a>	                <div class="clear clearfix"></div>
+	            </div>
+	        </div>                            </article>
+
+                            
+
+
+                </div>
+                </section>
+
+            <aside class="col-sm-4 col-md-3 col-lg-3 sidebar-to-right"><div id="search-4" class="widget widget_search"><form action="/search/" method="get" id="searchform">
+    <fieldset>
+        <div id="searchbox">
+            <input type="text" name="s"  id="keywords" value="type here..." onfocus="if (this.value == 'type here...') {this.value = '';}" onblur="if (this.value == '') {this.value = 'type here...';}">
+            <button type="submit"><i class="mythemes-icon-search-5"></i></button>
+        </div>
+    </fieldset>
+</form>
+</div><div id="top-posts-2" class="widget widget_top-posts"><h4 class="widget-title"><i></i>Top Posts &amp; Pages</h4><ul>				<li>
+										<a href="/2026/08/owntracks-and-my-google-timeline/" class="bump-view" data-bump-view="tp">
+						OwnTracks and my Google Timeline					</a>
+									</li>
+			</ul></div>
+		<div id="recent-posts-8" class="widget widget_recent_entries">
+		<h4 class="widget-title"><i></i>Recent Posts</h4>
+		<ul>
+											<li>
+					<a href="/2026/08/owntracks-and-my-google-timeline/">OwnTracks and my Google Timeline</a>
+									</li>
+											<li>
+					<a href="/2024/12/using-ffmpegs-vpp_qsv-detail-enhancement-filter/">Using ffmpeg’s vpp_qsv detail enhancement filter</a>
+									</li>
+											<li>
+					<a href="/2024/12/transcoding-with-an-intel-arc-gpu/">Transcoding with an Intel Arc GPU</a>
+									</li>
+											<li>
+					<a href="/2023/06/auto-mount-luks-without-a-filesystem/">Auto mount LUKS without a filesystem</a>
+									</li>
+											<li>
+					<a href="/2022/02/a-stratum-1-time-server-the-basics/">A Stratum 1 Time Server – The Basics</a>
+									</li>
+											
+					</ul>
+
+		</div><div id="categories-6" class="widget widget_categories"><h4 class="widget-title"><i></i>Categories</h4>
+			<ul>
+					<li class="cat-item"><a href="/category/benchmarks/">Benchmarks</a>
+</li>
+	<li class="cat-item"><a href="/category/coding/">Coding</a>
+</li>
+	<li class="cat-item"><a href="/category/data/">Data</a>
+</li>
+	<li class="cat-item"><a href="/category/debugging/">Debugging</a>
+</li>
+	<li class="cat-item"><a href="/category/firmware/">Firmware</a>
+</li>
+	<li class="cat-item"><a href="/category/gaming/">Gaming</a>
+</li>
+	<li class="cat-item"><a href="/category/general/">General</a>
+</li>
+	<li class="cat-item"><a href="/category/learning/">Learning</a>
+</li>
+	<li class="cat-item"><a href="/category/networking/">Networking</a>
+</li>
+	<li class="cat-item"><a href="/category/system-administration/">System Administration</a>
+</li>
+	<li class="cat-item"><a href="/category/technology/">Technology</a>
+</li>
+	<li class="cat-item"><a href="/category/tweaking/">Tweaking</a>
+</li>
+	
+			</ul>
+
+			</div><div id="archives-5" class="widget widget_archive"><h4 class="widget-title"><i></i>Archives</h4>
+			<ul>
+			
+				<li><a href='/2026-08/'>August 2026</a></li>
+			
+				<li><a href='/2024-12/'>December 2024</a></li>
+			
+				<li><a href='/2023-06/'>June 2023</a></li>
+			
+				<li><a href='/2022-02/'>February 2022</a></li>
+			
+				<li><a href='/2018-08/'>August 2018</a></li>
+			
+				<li><a href='/2018-06/'>June 2018</a></li>
+			
+				<li><a href='/2017-07/'>July 2017</a></li>
+			
+				<li><a href='/2017-03/'>March 2017</a></li>
+			
+				<li><a href='/2016-09/'>September 2016</a></li>
+			
+				<li><a href='/2016-07/'>July 2016</a></li>
+			
+				<li><a href='/2016-06/'>June 2016</a></li>
+			
+				<li><a href='/2013-08/'>August 2013</a></li>
+			
+				<li><a href='/2012-03/'>March 2012</a></li>
+			
+				<li><a href='/2012-02/'>February 2012</a></li>
+			
+				<li><a href='/2011-04/'>April 2011</a></li>
+			
+				<li><a href='/2011-03/'>March 2011</a></li>
+			
+				<li><a href='/2010-04/'>April 2010</a></li>
+			
+				<li><a href='/2010-03/'>March 2010</a></li>
+			
+				<li><a href='/2010-01/'>January 2010</a></li>
+			
+				<li><a href='/2009-09/'>September 2009</a></li>
+			
+				<li><a href='/2009-08/'>August 2009</a></li>
+			
+			</ul>
+
+			</div></aside>
+
+
+            </div>
+
+        </div>
+    </div>
+
+        <footer>
+
+            <div class="mythemes-black-side">
+                <div class="container mythemes-copyright">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-6 col-lg-6">
+                            <p>
+                                <span class="copyright">Copyright © Simon Mott</span>
+                                <span>Designed by <a href="http://mythem.es/" target="_blank" title="myThem.es">myThem.es</a>.</span>
+                            </p>
+                        </div>
+                                                <div class="col-sm-6 col-md-6 col-lg-6">
+                            <div class="mythemes-social">
+                                <a href="https://twitter.com/simon_mott" class="mythemes-icon-twitter " target="_blank"></a><a href="https://github.com/tsumaru720" class="mythemes-icon-github " target="_blank"></a><a href="https://www.flickr.com/photos/tsumaru720" class="mythemes-icon-flickr " target="_blank"></a><a href="https://www.facebook.com/dementedidiot" class="mythemes-icon-facebook " target="_blank"></a><a href="https://www.simonmott.co.uk/feed/" class="mythemes-icon-rss " target="_blank"></a>                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </footer>
+
+        <script src='/js/jquery.min.js'></script>
+        <script src='/js/jquery-migrate.min.js'></script>
+        <script src='/js/bootstrap.min.js'></script>
+        <script src='/js/functions.js'></script>
+        <script src='/js/jquery.prettyPhoto.js'></script>
+        <script src='/js/jquery.prettyPhoto.settings.js'></script>
+        <script src='/js/prettify.js'></script>
+        <script>jQuery(document).ready(function () { prettyPrint(); });</script>
+        
+        <script>(function(){var b=document.getElementById('theme-toggle');if(!b){return;}b.addEventListener('click',function(e){e.preventDefault();var r=document.documentElement;var t=r.getAttribute('data-theme')==='dark'?'light':'dark';r.setAttribute('data-theme',t);try{window.localStorage.setItem('sm-theme',t);}catch(err){}});})();</script>
+    </body>
+</html>

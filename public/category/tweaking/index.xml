@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tweaking on Simon Mott</title>
+    <link>https://www.simonmott.co.uk/category/tweaking/</link>
+    <description>Recent content in Tweaking on Simon Mott</description>
+    <generator>Hugo</generator>
+    <language>en-GB</language>
+    <lastBuildDate>Sun, 22 Dec 2024 05:04:27 +0000</lastBuildDate>
+    <atom:link href="https://www.simonmott.co.uk/category/tweaking/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Using ffmpeg’s vpp_qsv detail enhancement filter</title>
+      <link>https://www.simonmott.co.uk/2024/12/using-ffmpegs-vpp_qsv-detail-enhancement-filter/</link>
+      <pubDate>Sun, 22 Dec 2024 05:04:27 +0000</pubDate>
+      <guid>https://www.simonmott.co.uk/2024/12/using-ffmpegs-vpp_qsv-detail-enhancement-filter/</guid>
+      <description>&lt;p&gt;As part of my last post, I was exploring video transcoding with an Intel Arc GPU and how different levels of ICQ affect video size and quality. During which, I noticed there&amp;#8217;s a QSV compatible filter in ffmpeg called &lt;strong&gt;vpp_qsv&lt;/strong&gt; which has a detail parameter. VPP stands for Video Post Processing and the filter help text simply says &amp;#8220;enhancement level&amp;#8221; for detail. The potential to do some automatic picture enhancements directly on the GPU piqued my interest so I decided to have a play with it.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Transcoding with an Intel Arc GPU</title>
+      <link>https://www.simonmott.co.uk/2024/12/transcoding-with-an-intel-arc-gpu/</link>
+      <pubDate>Fri, 20 Dec 2024 18:30:51 +0000</pubDate>
+      <guid>https://www.simonmott.co.uk/2024/12/transcoding-with-an-intel-arc-gpu/</guid>
+      <description>&lt;p&gt;I am a bit of an NVIDIA fanboy when it comes to GPUs. This is partly down to being a long time Linux Desktop user (until recently) and them having excellent drivers allowing me to pretty effortlessly get proper hardware acceleration working.&lt;/p&gt;&#xA;&lt;p&gt;In my lab environment I have an old Nvidia Quadro P400 that&amp;#8217;s set up for various transcoding workloads and its been working absolutely great for me despite being an older card. I have been primarily using the h264 codec but I recently moved over to h265 (hevc) mostly out of curiosity, and to see if I could get quality on-par with h264, whilst getting similar file sizes.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Auto mount LUKS without a filesystem</title>
+      <link>https://www.simonmott.co.uk/2023/06/auto-mount-luks-without-a-filesystem/</link>
+      <pubDate>Sat, 24 Jun 2023 14:52:58 +0000</pubDate>
+      <guid>https://www.simonmott.co.uk/2023/06/auto-mount-luks-without-a-filesystem/</guid>
+      <description>&lt;p&gt;One of my friends recently installed a new storage server in our shared lab environment and graciously gave me some storage space on it via iSCSI. I use Proxmox for my personal lab, and I intended to store some non-critical VM disks on this new storage so I could play around with properly using HA (High Availability) with Proxmox. Additionally, I wanted to gain some experience using iSCSI at the same time. While I trust my friend, the storage itself is outside of my control, so I figured it would be good practice to encrypt my data. The general go-to solution for this would seem to be LUKS.</description>
+    </item>
+    <item>
+      <title>Dual-stacking Proxmox Web UI (pveproxy)</title>
+      <link>https://www.simonmott.co.uk/2018/06/dual-stacking-proxmox-web-ui-pveproxy/</link>
+      <pubDate>Wed, 20 Jun 2018 20:49:59 +0000</pubDate>
+      <guid>https://www.simonmott.co.uk/2018/06/dual-stacking-proxmox-web-ui-pveproxy/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://www.simonmott.co.uk/wp-content/uploads/2018/06/Proxmox-logo-stacked.png&#34;&gt;&lt;img loading=&#34;lazy&#34; class=&#34;alignright size-full wp-image-354&#34; src=&#34;https://www.simonmott.co.uk/wp-content/uploads/2018/06/Proxmox-logo-stacked.png&#34; alt=&#34;&#34; width=&#34;200&#34; height=&#34;190&#34; /&gt;&lt;/a&gt;As part of my recent (and ongoing) project to implement native IPv6 on my own infrastructure (except at home&amp;#8230; I&amp;#8217;m looking at you &lt;a href=&#34;https://www.hyperoptic.com/&#34;&gt;Hyperoptic&lt;/a&gt;), I decided to try to dual-stack as much as possible so that when I have IPv6 connectivity, services would prefer that over IPv4, without making things unavailable.&lt;/p&gt;&#xA;&lt;p&gt;As it turns out, Proxmox&amp;#8217;s Web interface (pveproxy) doesn&amp;#8217;t listen on the IPv6 address family by default. This stumped me for a little while, but its pretty simple to fix when you know whats going on.&lt;/p&gt;&#xA;&lt;p&gt;This post is going to spend most of its time explaining why this happens rather than the fix. If you&amp;#8217;re just here to see how to do it, check below.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Ethereum Mining with NVIDIA on Linux</title>
+      <link>https://www.simonmott.co.uk/2017/07/ethereum-mining-nvidia-linux/</link>
+      <pubDate>Thu, 06 Jul 2017 00:05:52 +0000</pubDate>
+      <guid>https://www.simonmott.co.uk/2017/07/ethereum-mining-nvidia-linux/</guid>
+      <description>&lt;p&gt;&lt;img loading=&#34;lazy&#34; class=&#34;alignright size-full wp-image-286&#34; src=&#34;https://www.simonmott.co.uk/wp-content/uploads/2017/07/ethereum-icon.png&#34; alt=&#34;&#34; width=&#34;160&#34; height=&#34;200&#34; /&gt;Bitcoin has been getting a lot of attention in the media lately; primarily due to its association with recent high profile ransomware incidents. Bitcoin was first introduced back in 2009 as a digital currency and has been steadily gaining traction since, increasing almost 140% in value so far this year!&lt;/p&gt;&#xA;&lt;p&gt;Bitcoin however, is not the only player in the game; Ethereum is another popular digital currency, currently sitting at 2nd place in total market value and is getting a lot of activity on currency exchanges.&lt;/p&gt;&#xA;&lt;p&gt;An incentive to help keep the underlying &amp;#8220;network&amp;#8221; up and running (for both Ethereum and Bitcoin, amongst others) is a piece of software which can be used to validate transactions on the network and issue rewards for doing so. This is otherwise known as &lt;strong&gt;Mining&lt;/strong&gt;.&lt;/p&gt;&#xA;&lt;p&gt;My current Gaming PC seems to grab me a reasonable amount of Ethereum Tokens on 2+ year old hardware. Certainly enough to make me want to play around with actually mining some.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>PHP Handlers and PHP 5 vs 7</title>
+      <link>https://www.simonmott.co.uk/2016/06/php-handlers-php-5-vs-7/</link>
+      <pubDate>Sat, 11 Jun 2016 00:00:00 +0000</pubDate>
+      <guid>https://www.simonmott.co.uk/2016/06/php-handlers-php-5-vs-7/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://www.simonmott.co.uk/wp-content/uploads/2016/06/php_logo.png&#34;&gt;&lt;img class=&#34;alignright size-full wp-image-203&#34; src=&#34;https://www.simonmott.co.uk/wp-content/uploads/2016/06/php_logo.png&#34; alt=&#34;php_logo&#34; width=&#34;248&#34; height=&#34;130&#34; /&gt;&lt;/a&gt;The idea for this post actually came from observing performance after moving this site over to WordPress (and to a lesser extent, my other website, &lt;a href=&#34;http://www.gentog.co.uk/&#34;&gt;General Photography&lt;/a&gt;). I use &lt;a href=&#34;https://puppet.com/&#34;&gt;Puppet&lt;/a&gt; orchestration for my servers and I made the mistake of trying to convert everything to puppet manifests and also get things working how I wanted without fully understanding how puppet works at the same time; That however is another story. This does means that my puppet manifests are not very flexible currently and I use suphp as my main PHP handler just because for me, at the time, it was easier.&lt;/p&gt;&#xA;&lt;p&gt;That being said &amp;#8211; I&amp;#8217;m fully aware of the performance issues suphp exhibits because my &lt;a href=&#34;http://www.observium.org/&#34;&gt;Observium&lt;/a&gt; install used it at first &amp;#8211; it now uses mod_php because loading all the graphs was noticably slow. I thought I&amp;#8217;d try to quantify the performance differences between suphp and mod_php and decided I should do all 3 common PHP handlers. Whilst I was gathering metrics for this I decided It&amp;#8217;d be useful to include PHP7 results too.</description>
+    </item>
+    <item>
+      <title>Caching with Apache’s mod_cache and mod_deflate</title>
+      <link>https://www.simonmott.co.uk/2016/06/caching-apaches-mod_cache-mod_deflate/</link>
+      <pubDate>Mon, 06 Jun 2016 00:00:00 +0000</pubDate>
+      <guid>https://www.simonmott.co.uk/2016/06/caching-apaches-mod_cache-mod_deflate/</guid>
+      <description>&lt;p&gt;I currently work in the hosting industry and as part of my job I have to deal with WordPress on a regular basis and as such I&amp;#8217;ve seen how appalling it can be sometimes with regards to page loading times. Given that my content on here doesn&amp;#8217;t change all too often, it makes sense to spend the time generating the content only once and serving it to meet multiple requests for the same document. In order to do this one would usually employ some form of caching.&lt;/p&gt;&#xA;&lt;p&gt;WordPress itself does have the option for multiple caching plugins which integrate nicely but in my experience they still have to pass the request off to a PHP handler which means some processing is still needed to accommodate the request (albeit less than a full page load). For the purposes of this article though, I&amp;#8217;m going to assume a generic framework as this technique is not specific to WordPress at all.&lt;/p&gt;&#xA;&lt;p&gt;There&amp;#8217;re a number of software solutions to sit in front of your web server which act as a cache and some of the more notable ones are &lt;a href=&#34;https://www.nginx.com/&#34;&gt;nginx&lt;/a&gt; and &lt;a href=&#34;https://varnish-cache.org/&#34;&gt;varnish&lt;/a&gt; and each have their pros and cons (As far as I know, Varnish can&amp;#8217;t do native SSL termination yet). For this post though, I&amp;#8217;ll be making use of some Apache modules to do the same thing. This was mostly an experiment for myself to see what I could do with it &amp;#8211; I&amp;#8217;ve found some limitations which as of yet I haven&amp;#8217;t been able to work around for lack of knowledge on the inner workings of Apache, but for now It does the job.</description>
+    </item>
+    <item>
+      <title>Full screen Flash Video on Linux</title>
+      <link>https://www.simonmott.co.uk/2013/08/full-screen-flash-video-linux/</link>
+      <pubDate>Mon, 05 Aug 2013 00:00:00 +0000</pubDate>
+      <guid>https://www.simonmott.co.uk/2013/08/full-screen-flash-video-linux/</guid>
+      <description>&lt;p style=&#34;text-align: justify;&#34;&gt;&lt;a href=&#34;https://www.simonmott.co.uk/wp-content/uploads/2016/05/ghex.png&#34;&gt;&lt;img loading=&#34;lazy&#34; class=&#34;alignright size-medium wp-image-72&#34; src=&#34;https://www.simonmott.co.uk/wp-content/uploads/2016/05/ghex-300x226.png&#34; alt=&#34;ghex&#34; width=&#34;300&#34; height=&#34;226&#34; srcset=&#34;https://www.simonmott.co.uk/wp-content/uploads/2016/05/ghex-300x226.png 300w, https://www.simonmott.co.uk/wp-content/uploads/2016/05/ghex-768x578.png 768w, https://www.simonmott.co.uk/wp-content/uploads/2016/05/ghex.png 890w&#34; sizes=&#34;(max-width: 300px) 100vw, 300px&#34; /&gt;&lt;/a&gt;So here we have it &amp;#8211; I&amp;#8217;ve finally got around to tackling this issue which has been bugging me for a while.&lt;/p&gt;&#xA;&lt;p style=&#34;text-align: justify;&#34;&gt;When watching a flash video in full screen on dual monitors, as soon as you go off to do something else you will soon notice that your video is no longer full screen! How annoying.&lt;/p&gt;&#xA;&lt;p style=&#34;text-align: justify;&#34;&gt;The way to fix this is to edit the flash player binary. Firstly you need a hex editor &amp;#8211; I use &amp;#8220;ghex&amp;#8221;&lt;/p&gt;&#xA;&lt;pre&gt;$ sudo apt-get install ghex&lt;/pre&gt;&#xA;&lt;p style=&#34;text-align: justify;&#34;&gt;You can of course use your hex editor of choice.</description>
+    </item>
+  </channel>
+</rss>

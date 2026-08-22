@@ -1,0 +1,104 @@
++++
+title = "Logical Volume Manager – LVM"
+date = 2010-03-11T00:00:00Z
+url = "/2010/03/logical-volume-manager-lvm/"
+wp_id = 79
+more = true
+categories = ["System Administration"]
+tags = ["fdisk", "lvm"]
++++
+<p style="text-align: justify;">This page covers some of the basics of using LVM. Please ensure that you back up any important data on any had drive or partition you wish to use for LVM.</p>
+<p style="text-align: justify;">I take no responsibility for any data loss if you choose to use any of the commands on this page</p>
+<h3 style="text-align: justify;">Installation</h3>
+<p style="text-align: justify;">For the purposes of this guide, I am using <strong>Ubuntu Hardy 8.04</strong> and the package manager <strong>apt</strong> but this should work with any installation of LVM
+<!--more-->
+<span id="more-79"></span></p>
+<p style="text-align: justify;">First off, you need to install LVM. For my install it was as simple as:</p>
+<pre># apt-get install lvm2</pre>
+<p style="text-align: justify;">Once this is complete you should have a working install of LVM. To check, look for the following binaries</p>
+<pre>$ which lvcreate
+ /sbin/lvcreate
+ $ which pvcreate
+ /sbin/pvcreate
+ $ which vgcreate
+ /sbin/vgcreate</pre>
+<p style="text-align: justify;">If you do not have the three binaries above then you need to double check you installed LVM correctly.</p>
+<h3 id="setup" style="text-align: justify;">Setup</h3>
+<p style="text-align: justify;">The very first thing you need to do (After backing up any data that needs to be backed up of course) is decide which disks or partitions you wish to use. Once this is done we need to set the correct type of partition for use with LVM. In my example, I will be using a partition that takes up an entire disk.</p>
+<p style="text-align: justify;">To set up the partition we use <strong>fdisk</strong>. As root we need to:</p>
+<pre># fdisk /dev/sda
+
+The number of cylinders for this disk is set to 1125.
+ There is nothing wrong with that, but this is larger than 1024,
+ and could in certain setups cause problems with:
+ 1) software that runs at boot time (e.g., old versions of LILO)
+ 2) booting and partitioning software from other OSs
+ (e.g., DOS FDISK, OS/2 FDISK)
+
+Command (m for help):</pre>
+<p style="text-align: justify;">If you already have any partitions on this disk you should remove them by typing d and selecting each partition as they are listed.</p>
+<p style="text-align: justify;">Once this is done, we need to create a new partition</p>
+<pre>Command (m for help): n
+ Command action
+ e extended
+ p primary partition (1-4)
+ p
+ Partition number (1-4): 1
+ First cylinder (1-1125, default 1):
+ Using default value 1
+ Last cylinder or +size or +sizeM or +sizeK (1-1125, default 1125):
+ Using default value 1125
+
+Command (m for help):</pre>
+<p style="text-align: justify;">And then we change its type to <strong>Linux LVM</strong></p>
+<pre>Command (m for help): t
+ Selected partition 1
+ Hex code (type L to list codes): 8e
+ Changed system type of partition 1 to 8e (Linux LVM)
+
+Command (m for help):</pre>
+<p style="text-align: justify;">To finalize the partitioning, we type <strong>w</strong>:</p>
+<pre>Command (m for help): w
+ The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+ Syncing disks.</pre>
+<p style="text-align: justify;">This step will need to be repeated for every disk (or partition) you wish to use in your LVM Array.</p>
+<h3 style="text-align: justify;">pvcreate</h3>
+<p style="text-align: justify;">Once all your disks have been partitioned you need to write LVM Superblock headers into them, this is done with the <strong>pvcreate</strong> command:</p>
+<pre># pvcreate /dev/sda1 /dev/sdb1
+ Physical volume "/dev/sda1" successfully created
+ Physical volume "/dev/sdb1" successfully created</pre>
+<p style="text-align: justify;">Thats it, you now have all the nessecery information for LVM Arrays in the superblocks of the disks. This will be amended at a later stage automatically by LVM to include the UUIDs for each disk/partition in the event of an array failure.</p>
+<h3 style="text-align: justify;">vgcreate</h3>
+<p style="text-align: justify;">Now that is overwith we need to create a volume group to house the logical disk. In this example I am going to use a volume group of <strong>VolGrp001</strong> and a logical disk name of <strong>LogVol001</strong></p>
+<pre># vgcreate VolGrp001 /dev/sda1 /dev/sdb1
+ Volume group "VolGrp001" successfully created</pre>
+<h3 style="text-align: justify;">lvcreate</h3>
+<p style="text-align: justify;">Now we need to create the new logical volume and add it to the newly created volume group.</p>
+<p style="text-align: justify;">Whilst there are many more options available with these commands I&#8217;ve omitted most of them for ease. Feel free to have a play around, just take note to be careful as if you mess something up you could lose all the data you have on the hard drives you are trying to use in an LVM Array.</p>
+<p style="text-align: justify;">To create the new array we use the following (the flag after LogVol001 is a lowercase L):</p>
+<pre># lvcreate --name LogVol001 -l 100%VG VolGrp001
+ Rounding up size to full physical extent 2793.96 GB
+ Logical volume "LogVol001" created</pre>
+<p style="text-align: justify;">Thats it, all the hard work of setting up LVM is done. All that is left is to make it contain a usable format and then stand in awe as you have a huge, seemingly single disk to store all your data</p>
+<p style="text-align: justify;">In most cases, I would imagine you want to use the newly created LVM Device for data storage. My Choice of filesystem is <strong>ext3</strong> however you can use any you like along with any settings you choose.</p>
+<p style="text-align: justify;">To create a useable ext3 format on the LVM Device we use <strong>mkfs.ext3</strong>:</p>
+<pre># mkfs.ext3 -m 0 /dev/VolGrp001/LogVol001</pre>
+<p style="text-align: justify;">The above command might take some time depending on how large the array is and how well your disks perform. It&#8217;s worth noting that the -m 0 option gives you some more space. By default ext3 reserves 5% of the total space for the super user. If you are using this to store data the super user would not need this</p>
+<p style="text-align: justify;">Once this is done you can now happily mount the new file system and start using it (<strong>/mnt/lvm</strong> is my mount point of choice):</p>
+<pre># mount /dev/VolGrp001/LogVol001 /mnt/lvm</pre>
+<h3 style="text-align: justify;">Extending LVM Devices</h3>
+<p style="text-align: justify;">So, you&#8217;ve had your LVM Device up and running for a while and it&#8217;s starting to get full. You can happily add extra disks/partitions to your LVM device.</p>
+<p style="text-align: justify;">Firstly, as with creating a new LVM Array you need to <a href="#setup">partition the disk</a> to <strong>Linux LVM</strong>. This is done with the <strong>pvcreate</strong> command:</p>
+<pre># pvcreate /dev/sdc1
+ Physical volume "/dev/sdc1" successfully created</pre>
+<p style="text-align: justify;">The next tast will be to add the new disk or partition to the same Volume Group as the Logical volume we want to extend. To do this we use the <strong>vgextend</strong></p>
+<p style="text-align: justify;"><strong>WARNING</strong>: It is recommended that before you make any modifications to a logical volume that you unmount it first</p>
+<pre># vgextend VolGrp001 /dev/sdc1</pre>
+<p style="text-align: justify;"><strong>/dev/sdc1</strong> has now been added to the volume group. Now we need to extend the size of the logical volume (the same as earlier, this flag is a lowercase L)</p>
+<pre># lvextend -l +100%FREE /dev/VolGrp001/LogVol001 /dev/sdc1</pre>
+<p style="text-align: justify;">The above adds 931.32GB of usable space to the Logical Volume and tells it where this space actually is, /dev/sdc1. The next task is to resize the partition to fill the Device. It is the same as if you were resizing an ext3 patition on a physical disk. First we check the file system for errors (Make sure it is unmounted first) and then we resize the partition to take up the entirety of the disk space available</p>
+<pre># e2fsck -f /dev/VolGrp001/LogVol001
+# resize2fs /dev/VolGrp001/LogVol001</pre>
+<p style="text-align: justify;">Again, this make take some time depending on the size of the file system and how well your hard drives perform. Once all this is done however, you&#8217;re ready to go. Re mount the file system and it should have increased by 931.32GB or whatever you increased it by.</p>

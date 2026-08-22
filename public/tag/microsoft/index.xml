@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Microsoft on Simon Mott</title>
+    <link>https://www.simonmott.co.uk/tag/microsoft/</link>
+    <description>Recent content in Microsoft on Simon Mott</description>
+    <generator>Hugo</generator>
+    <language>en-GB</language>
+    <lastBuildDate>Tue, 28 Feb 2012 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.simonmott.co.uk/tag/microsoft/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Office 2010, KMS Activation and Domain Relationships</title>
+      <link>https://www.simonmott.co.uk/2012/02/office-2010-kms-activation-domain-relationships/</link>
+      <pubDate>Tue, 28 Feb 2012 00:00:00 +0000</pubDate>
+      <guid>https://www.simonmott.co.uk/2012/02/office-2010-kms-activation-domain-relationships/</guid>
+      <description>&lt;p style=&#34;text-align: justify;&#34;&gt;Whilst this seems trivial to some people, not only did this issue affect my office, but one of our branches in India too so I figure its worth noting somewhere!&lt;/p&gt;&#xA;&lt;p style=&#34;text-align: justify;&#34;&gt;My current employer has many operating companies (OpCo&amp;#8217;s) dotted around the world, all under one brand. Because of this structure, our OpCo in the UK has a two way trust relationship between our domain and the parent company&amp;#8217;s. For arguments sake, lets call them UKNET and CENTRALNET.&lt;/p&gt;&#xA;&lt;p style=&#34;text-align: justify;&#34;&gt;At the end of last year we were told to use a Microsoft KMS server hosted on CENTRALNET to install Office 2010 on some of our workstations. Easy.. or so we thought.</description>
+    </item>
+  </channel>
+</rss>

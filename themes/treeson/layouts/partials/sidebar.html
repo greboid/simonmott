@@ -1,0 +1,29 @@
+<aside class="col-sm-4 col-md-3 col-lg-3 sidebar-to-right"><div id="search-4" class="widget widget_search">{{ partial "searchform.html" . }}</div><div id="top-posts-2" class="widget widget_top-posts"><h4 class="widget-title"><i></i>Top Posts &amp; Pages</h4><ul>				<li>
+										{{ with site.GetPage (index site.Params.topPosts 0) }}<a href="{{ .RelPermalink }}" class="bump-view" data-bump-view="tp">
+						{{ .Title }}					</a>{{ end }}
+									</li>
+			</ul></div>
+		<div id="recent-posts-8" class="widget widget_recent_entries">
+		<h4 class="widget-title"><i></i>Recent Posts</h4>
+		<ul>
+											{{ range first 5 (where site.RegularPages "Type" "post") }}<li>
+					<a href="{{ .RelPermalink }}">{{ .Title }}</a>
+									</li>
+											{{ end }}
+					</ul>
+
+		</div><div id="categories-6" class="widget widget_categories"><h4 class="widget-title"><i></i>Categories</h4>
+			<ul>
+					{{ range site.Taxonomies.categories.Alphabetical }}<li class="cat-item"><a href="{{ .Page.RelPermalink }}">{{ .Page.LinkTitle }}</a>
+</li>
+	{{ end }}
+			</ul>
+
+			</div><div id="archives-5" class="widget widget_archive"><h4 class="widget-title"><i></i>Archives</h4>
+			<ul>
+			{{ $months := slice }}{{ range where site.RegularPages "Type" "post" }}{{ $months = $months | append (.Date.Format "2006-01") }}{{ end }}{{ range uniq $months }}{{ $t := time (printf "%s-01" .) }}
+				<li><a href='/{{ . }}/'>{{ $t.Format "January 2006" }}</a></li>
+			{{ end }}
+			</ul>
+
+			</div></aside>

@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en-GB" prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script>(function(){var t=null;try{t=window.localStorage.getItem('sm-theme');}catch(e){}if(t!=='dark'&&t!=='light'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);})();</script>
+        <link rel="profile" href="http://gmpg.org/xfn/11" />
+        <title>PHP Handlers and PHP 5 vs 7 - Simon Mott</title>
+        <meta name="description" content="All about me" />
+        <link rel="canonical" href="https://www.simonmott.co.uk/2016/06/php-handlers-php-5-vs-7/" />
+        <meta property="og:locale" content="en_GB" />
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="PHP Handlers and PHP 5 vs 7" />
+        <meta property="og:description" content="All about me" />
+        <meta property="og:url" content="https://www.simonmott.co.uk/2016/06/php-handlers-php-5-vs-7/" />
+        <meta property="og:site_name" content="Simon Mott" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:description" content="All about me" />
+        <meta name="twitter:title" content="PHP Handlers and PHP 5 vs 7" />
+        <link rel="alternate" type="application/rss+xml" title="Simon Mott &raquo; Feed" href="https://www.simonmott.co.uk/index.xml" />
+        <link rel='stylesheet' id='mythemes-google-fonts-roboto-css' href='https://fonts.googleapis.com/css?family=Roboto%3A300%2C400%2C500%2C600%2C700' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-google-fonts-open-sans-css' href='https://fonts.googleapis.com/css?family=Open+Sans%3A300%2C400%2C700' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-icons-css' href='/css/mythemes-icons.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-effects-css' href='/css/effects.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-header-css' href='/css/header.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-bootstrap-css' href='/css/bootstrap.min.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-typography-css' href='/css/typography.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-navigation-css' href='/css/navigation.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-nav-css' href='/css/nav.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-blog-css' href='/css/blog.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-forms-css' href='/css/forms.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-elements-css' href='/css/elements.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-widgets-css' href='/css/widgets.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-comments-css' href='/css/comments.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-comments-typography-css' href='/css/comments-typography.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-footer-css' href='/css/footer.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-pretty-photo-css' href='/css/prettyPhoto.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-plugins-css' href='/css/plugins.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='mythemes-style-css' href='/css/treeson.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='prettify-css' href='/css/prettify.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='social-logos-css' href='/wp-content/plugins/jetpack/_inc/social-logos/social-logos.min.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='jetpack_css-css' href='/css/jetpack.css' type='text/css' media='all' />
+        <!-- theme customizer styles, copied verbatim from the original site -->
+<style data-from="original" type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 0.07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<style data-from="original" type='text/css'>img#wpstats{display:none}</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-header">
+    .mythemes-header a.header-description{
+        color: rgba( 255,255,255 , 0.5 );
+    }
+    .mythemes-header a.header-description:hover{
+        color: rgba( 255,255,255 , 0.7 );
+    }
+</style>
+<style data-from="original" type="text/css">
+
+     
+    body{
+        background-color: #343b43;
+    }
+    .mythemes-header a.header-title{
+        color: #ffffff;
+    }
+
+     
+    body > div.content,
+    body footer aside{
+        background-image: url();
+        background-repeat: ;
+        background-position: ;
+        background-attachment: ;
+    }
+
+     
+    div.mythemes-page-header{
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-background">
+
+     
+    body > div.content,
+    body footer aside{
+        background-color: #ffffff;
+    }
+
+
+     
+     
+    body.scroll-nav .mythemes-poor{
+        background-color: rgba( 255,255,255 , 0.91 );
+    }
+    .mythemes-poor{
+        background-color: #ffffff;
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-color-btn-1">
+
+     
+    .header-button-wrapper a.btn.first-btn.header-button{
+        color: rgba( 255,255,255 , 0.4 );
+        border: 1px solid rgba( 255,255,255 , 0.2 );
+        background: rgba( 255,255,255 , 0.03 );
+    }
+    .header-button-wrapper a.btn.first-btn.header-button:hover{
+        color: rgba( 255,255,255 , 0.9 );
+        border: 1px solid rgba( 255,255,255 , 0.7 );
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-color-btn-2">
+
+     
+    .header-button-wrapper a.btn.second-btn.header-button{
+        color: rgba( 255,255,255 , 0.4 );
+        border: 1px solid rgba( 255,255,255 , 0.2 );
+        background: rgba( 255,255,255 , 0.03 );
+    }
+    .header-button-wrapper a.btn.second-btn.header-button:hover{
+        color: rgba( 255,255,255 , 0.9 );
+        border: 1px solid rgba( 255,255,255 , 0.7 );
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-color-1">
+
+     
+    nav.base-nav ul li a,
+    div.widget-grofile.grofile a.grofile-full-link{
+        color: #414c97;
+    }
+    nav.base-nav ul li:hover > a,
+    nav.base-nav ul li > a:hover,
+    nav.base-nav ul li.current-menu-item > a,
+    nav.base-nav ul li.current-menu-ancestor > a,
+    div.widget-grofile.grofile a.grofile-full-link:hover{
+        color: #00001f;
+    }
+
+     
+    div.comments-list > ol li.pingback header cite a:hover,
+    div.comments-list > ol li.comment header cite a:hover{
+        color: #232e79;
+    }
+
+     
+     
+    .btn,
+    .button,
+    .mythemes-button,
+
+     
+    button,
+    input[type="submit"],
+    input[type="button"],
+
+     
+    .hentry button,
+    .hentry input[type="button"],
+    .hentry input[type="submit"],
+    
+     
+    div.widget_calendar table th,
+    div.widget_post_meta ul li span.post-tag,
+
+     
+    article div.post-meta-tags a:hover,
+    article div.post-meta-categories a,
+
+     
+    div.comments-list > ol li.comment header span.comment-meta span.comment-replay a:hover,
+    div#comments  p.form-submit input[type="submit"],
+
+     
+    div.pagination nav span{
+        background-color: #05105b;
+    }
+
+     
+     
+     
+    .btn,
+    .button,
+    .mythemes-button,
+
+     
+    button,
+    input[type="submit"],
+    input[type="button"],
+
+     
+    .hentry button,
+    .hentry input[type="button"],
+    .hentry input[type="submit"],
+
+     
+    div.widget_post_meta ul li span.post-tag,
+
+     
+    article div.post-meta-tags a:hover,
+    article div.post-meta-categories a,
+
+     
+    div#comments  p.form-submit input[type="submit"],
+
+     
+    div.pagination nav span{
+        border-bottom: 1px solid #000033;
+    }
+
+     
+    div.pagination nav a,
+    article div.meta,
+    article div.meta a,
+    article a.more-link:hover,
+    article div.meta ul.post-categories li a{
+        color: #05105b;
+    }
+    article div.meta ul.post-categories li a:hover{
+        background-color: #05105b;
+    }
+    article a.more-link:hover{
+        border: 3px solid #05105b;
+    }
+
+     
+    article.sticky a.more-link{
+        background: #05105b;
+        border: 3px solid #05105b;
+    }
+    article.sticky a.more-link:hover{
+        color: #05105b;
+    }
+        
+
+     
+    footer .mythemes-black-side{
+        background: #05105b;
+    }
+    footer .mythemes-black-side .mythemes-copyright p,
+    footer .mythemes-black-side .mythemes-menu a{
+        color: #646fba;
+    }
+    footer .mythemes-black-side .mythemes-copyright a,
+    footer .mythemes-black-side .mythemes-menu a:hover{
+        color: #9ba6f1;
+    }
+    footer .mythemes-black-side .mythemes-copyright a:hover{
+        color: #c3ceff;   
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-color-2">
+
+     
+    nav.base-nav ul li.current-menu-item > a{
+        color: #7db74d;
+    }
+
+     
+    a:hover,
+
+     
+    article div.meta a:hover{
+        color: #7db74d;
+    }
+
+     
+     
+    .btn.second-button,
+    .button.second-button,
+    .mythemes-button.second-button,
+
+     
+    .mythemes-nav-btn button.btn-base-nav,
+
+     
+    div.widget_post_tags div.tagcloud a,
+    div.widget_tag_cloud div.tagcloud a,
+    div.widget_newsletter form button[type="submit"],
+
+     
+    div.comments-list > ol li.comment header span.comment-meta span.comment-replay a,
+    div.comment-respond h3.comment-reply-title small a,
+    
+     
+    article div.post-meta-categories a:hover,
+    article div.post-meta-tags a{
+        background-color: #5f992f;
+    }
+
+     
+     
+     
+    .btn.second-button,
+    .button.second-button,
+    .mythemes-button.second-button,
+
+     
+    .mythemes-nav-btn button.btn-base-nav,
+
+     
+    div.widget_post_tags div.tagcloud a,
+    div.widget_tag_cloud div.tagcloud a,
+    div.widget_newsletter form button[type="submit"],
+
+     
+    article div.post-meta-tags a,
+    article div.post-meta-categories a:hover,
+
+     
+    div.comment-respond h3.comment-reply-title small a{
+        border-bottom: 1px solid #377107;
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-style-color-3">
+
+     
+     
+    a,
+
+     
+    div.widget ul li a:hover,
+    div.widget_calendar table td a:hover,
+    div.widget_categories ul li a:hover,
+    div.widget_recent_comments_with_avatar ul li h5 a:hover{
+        color: #5f88bb;
+    }
+
+     
+    .hentry h2 a:hover,
+    article h2 a:hover{
+        color: #416a9d;
+    }
+
+</style>
+<style data-from="original" type="text/css" id="mythemes-custom-css">
+
+    div.content div.container aside.mythemes-header-items,
+div.content div.container aside.mythemes-header-items + div.row{
+    display: none;
+}
+
+.mythemes-post-social {
+display: none;
+}
+
+div.widget.widget_text {
+margin-bottom: 0px;
+margin-top:-50px;
+padding-bottom: 15px;
+}
+
+div.mythemes-header a.header-title {
+font-weight: bold;
+margin-top: 100px;
+}
+
+.hentry, .hentry p, article p {
+  color: #5d5d5d;
+}
+</style>
+
+        <link rel='stylesheet' id='mythemes-darkmode-css' href='/css/darkmode.css' type='text/css' media='all' />
+        
+    </head>
+    <body class="single single-post postid-143 single-format-standard">
+        <header>
+
+<div class="mythemes-header overflow-wrapper parallax-container" style="height: 400px;">
+    <div class="valign-cell-wrapper" style="background: rgba( 1,0,81, 0.19 );">
+
+        
+        <div class="valign-cell">
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <a class="header-title" href="/" title="Simon Mott - All about me">Simon Mott</a><a class="header-description" href="/" title="Simon Mott - All about me">All about me</a>                    </div>
+                </div>
+
+        </div>
+    </div>
+
+
+    <div class="parallax" style="background-image: url(https://www.simonmott.co.uk/wp-content/uploads/2016/06/header.jpg);"><img src="https://www.simonmott.co.uk/wp-content/uploads/2016/06/header.jpg" alt="Simon Mott - All about me"></div></div>
+            <div class="mythemes-poor">
+                <div class="container">
+
+                    <div class="row mythemes-nav-small-device">
+                        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 mythemes-nav-label">
+                                                        <a href="/" title="Simon Mott - All about me">
+                                Simon Mott                            </a>
+                        </div>
+                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 mythemes-nav-btn">
+                            <button type="button" class="btn-collapse btn-base-nav" data-toggle=".header-nav.base-nav">
+                                <i>+</i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <nav class="mythemes-nav-inline base-nav header-nav nav-collapse">
+
+                            <div class="nav-wrapper"><ul id="menu-popular" class="mythemes-menu"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/">Home</a></li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href="#">Popular</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-post"><a href="/2010/03/logical-volume-manager-lvm/">LVM</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-post"><a href="/2012/03/vpn-bonding/">VPN Bonding</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom theme-toggle-item"><a href="#" id="theme-toggle" title="Toggle dark mode"><i class="mythemes-icon-moon icon-moon"></i><i class="mythemes-icon-sun icon-sun"></i></a></li></ul></div>                            </nav>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </header>
+
+        
+        
+    <div class="content">
+        <div class="container">
+            <div class="row">
+
+
+<section class="col-sm-8 col-md-9 col-lg-9">
+                <div class="content-border right"><article class="post-143 post type-post status-publish format-standard hentry category-benchmarks category-tweaking tag-apache tag-benchmark tag-php tag-php5 tag-php7">
+
+                                
+                                <h1 class="post-title">PHP Handlers and PHP 5 vs 7</h1>
+
+                                
+                                        <div class="mythemes-top-meta meta">
+
+            <ul class="post-categories"><li><a href="/category/benchmarks/" rel="category tag">Benchmarks</a></li><li><a href="/category/tweaking/" rel="category tag">Tweaking</a></li></ul>
+            <a class="author" href="/" title="Writed by Simon">by Simon</a>
+
+            <time datetime="2016-06-11">on 11th June 2016</time>
+
+                    </div>
+
+
+                                
+                                <p><a href="/wp-content/uploads/2016/06/php_logo.png"><img class="alignright size-full wp-image-203" src="/wp-content/uploads/2016/06/php_logo.png" alt="php_logo" width="248" height="130" /></a>The idea for this post actually came from observing performance after moving this site over to WordPress (and to a lesser extent, my other website, <a href="http://www.gentog.co.uk/">General Photography</a>). I use <a href="https://puppet.com/">Puppet</a> orchestration for my servers and I made the mistake of trying to convert everything to puppet manifests and also get things working how I wanted without fully understanding how puppet works at the same time; That however is another story. This does means that my puppet manifests are not very flexible currently and I use suphp as my main PHP handler just because for me, at the time, it was easier.</p>
+<p>That being said &#8211; I&#8217;m fully aware of the performance issues suphp exhibits because my <a href="http://www.observium.org/">Observium</a> install used it at first &#8211; it now uses mod_php because loading all the graphs was noticably slow. I thought I&#8217;d try to quantify the performance differences between suphp and mod_php and decided I should do all 3 common PHP handlers. Whilst I was gathering metrics for this I decided It&#8217;d be useful to include PHP7 results too.
+
+
+
+
+<span id="more-143"></span></p>
+<h3>The Environment</h3>
+<p>I tried to ensure my testing was fair so I&#8217;ll detail my setup. Firstly I cloned the container my website runs on 3 times. One so I can test suphp, one for mod_php and one for php-fpm.</p>
+<p>I will be performing these tests against different instances of my website which is based on WordPress 4.5.2</p>
+<p>The first container was already set to go as I use suphp already &#8211; it was an exact clone of my website container. The second container I&#8217;d removed suphp and installed mod_php and for the final container, I&#8217;d removed suphp and installed mod_fastcgi and also set up php-fpm. The intial round of testing was done on these 3 containers which were then upgraded to PHP7 and the same round of testing done again.</p>
+<p>I made sure the containers were running on the same host as my main website container to ensure similar performance as my live site and for results to be comparable to each other. They all use the same database container too so thats one less thing to worry about.</p>
+<p><strong>Host Server Spec</strong></p>
+<p>CPU: <a href="http://ark.intel.com/products/40481/Intel-Xeon-Processor-L3360-12M-Cache-2_83-GHz-1333-MHz-FSB?q=l3360">Intel(R) Xeon(R) CPU L3360 @ 2.83GHz 4C/4T</a><br />
+RAM: 8GB DDR2 PC2-6400 (800 MHz)<br />
+HDD: 2x 1TB WD-Black (WD1002FAEX) in RAID1<br />
+OS: Proxmox 4.2-5/7cf09667<br />
+Kernel: 4.4.6-1-pve</p>
+<p><strong>Container Spec</strong></p>
+<p>Contianer Type: LXC<br />
+OS: Ubuntu 14.04.1 <em>(Yes, I know it needs updating!)</em><br />
+RAM: 1GB<br />
+CPU Limit: 2<br />
+CPU Units: 1024</p>
+<p><strong>Software Versions</strong></p>
+<p>Apache Version: 2.4.7<br />
+PHP 5.5.9-1ubuntu4.17<br />
+PHP 7.0.7-4+deb.sury.org~trusty+1<br />
+WordPress 4.5.2<br />
+MySQL: 5.5.41-0ubuntu0.14.04.1 (Although this is hosted in its own container which remains the same through the testing)</p>
+<p><strong>Configuration</strong></p>
+<p>Apache Mode: mpm_prefork<br />
+Apache MaxClients: 20<br />
+Apache ServerLimit: 20<br />
+Apache MaxRequestsPerChild: 4000<br />
+php-fpm Process Manager: dynamic<br />
+php-fpm max_children: 20</p>
+<h3>The Testing</h3>
+<p>I first started by using curl to send 20 sequential GET requests to index.php via Apache and timing how long it takes to send me the generated contents of the page and then averaged it. For comparison purposes I also recorded the length of time PHP took to generate the page by invoking it on command line via <code>php-cgi -f index.php</code>, again taking an average.</p>
+<p><a href="/wp-content/uploads/2016/06/php_time.png"><img loading="lazy" class="aligncenter wp-image-205 size-full" src="/wp-content/uploads/2016/06/php_time.png" alt="Avg load time for 20 sequential requests" width="929" height="511" srcset="/wp-content/uploads/2016/06/php_time.png 929w, /wp-content/uploads/2016/06/php_time-300x165.png 300w, /wp-content/uploads/2016/06/php_time-768x422.png 768w" sizes="(max-width: 929px) 100vw, 929px" /></a></p>
+<p>You can see from the chart above that suphp takes longer to return results than just invoking on the command line but this makes sense because Apache has to process the request and spawn a PHP process to fully deal with it along with network overheads between my test client and test server. PHP7&#8217;s performance enhancements are visible here too with all handlers using PHP7 resulting in faster loading times. For both PHP5.5 and PHP7, mod_php and php-fpm seem to share similar performance.</p>
+<p>The <strong>configuration</strong> section above is important for our next test. I limited the number of processes that could spawn so as to not take out my container by putting it under too high load specifically for mod_php &#8211; Whilst you can tweak those options to suit your liking/environment, each handler have different things to consider &#8211; primarily how much RAM they consume.</p>
+<p>For both suphp and php-fpm handlers, they offload PHP to another process. For the particular modules I had configured in Apache, on average each process for both suphp and php-fpm tests seemed to hover around 7.5MB &#8211; for mod_php however things are a bit different. mod_php is a module that&#8217;s loaded by Apache which allows it to interpret PHP itself without having to pass it off to another process, which is by far one of the reasons mod_php performs so well however this does mean that for each Apache process created, it has to load this module every time which makes this a rather RAM heavy approach &#8211; During testing of mod_php I&#8217;d clocked average Apache RAM usage at around 54MB per process so for all 20 processes running, that&#8217;d all but saturate RAM on my container.</p>
+<p>php-fpm is definately the way to go if RAM is your concern. Whilst it does maintain a separate pool of processes ready to process PHP, its not constantly spawning/killing processes like suphp does and doesnt have to contend with other items in RAM like Apache does making it leaner.</p>
+<p>We&#8217;ve seen above how each handler performs just by processing a simple request, lets take a look what they look like under a bit of load&#8230;</p>
+<p><a href="/wp-content/uploads/2016/06/php_hits.png"><img loading="lazy" class="size-full wp-image-204 aligncenter" src="/wp-content/uploads/2016/06/php_hits.png" alt="150 concurrent over 1 minute" width="930" height="508" srcset="/wp-content/uploads/2016/06/php_hits.png 930w, /wp-content/uploads/2016/06/php_hits-300x164.png 300w, /wp-content/uploads/2016/06/php_hits-768x420.png 768w" sizes="(max-width: 930px) 100vw, 930px" /></a></p>
+<p>In order to generate some load, I&#8217;d used a tool called siege in benchmark mode. Simply put, you point it at a URL (or a list of URLs), tell it how many concurrent &#8220;users&#8221; you want and give it some criteria for how long to run. In my case I used</p>
+<pre>siege -t1m -b -c150 /</pre>
+<p>which would simulate 150 concurrent users hitting my website for 1 minute. Once a &#8220;user&#8221; has sent and received a successful (or failed) request, it immediately sends a new one. Testing in this method illustrates how quickly each handler can actually deal with requests (and shows off the performance improvements for PHP7 quite nicely).</p>
+<p>To illustrate how each handler manages to cope with requests I plotted average, longest and shortest response times which shows especially how suphp, along with the low hit-rate, just struggles to keep up because of having to constantly spawn new processes, on top of that, because the processes are short lived (for the duration of the request), they do not benefit from any kind of opcode caching as mod_php and php-fpm do.</p>
+<h3>Conclusion</h3>
+<p>Another major pitfall of mod_php aside from its RAM consumption is that all PHP it processes is done so as the user Apache runs as which isn&#8217;t ideal for a multi-site environment because all sites need to be accessed (and modified, depending on your application) by your Apache user. This simply means in a multi-site environment that if someone compromises one of your websites, they can potentially glean database username/passwords for other sites accessible by this user and/or other sensitive information depending on your setup.</p>
+<p>suphp is probably one of the easiest ways to afford more security over your websites because each process it spawns to deal with php, is done so as the user that owns the php file its trying to execute. This means that as long as your file permissions are sane, you shouldn&#8217;t be able to read file contents of other users but you just take a major performance hit because of the way it works.</p>
+<p>This leaves php-fpm. This by far is the best way to go if you put the time into configuring it. This handler allows pools of processes to run as specific users so grants you the same level of security as suphp, but it does so by keeping processes around much longer than suphp which means it benefits from not having the overheads of spawning new processes for each request, and can make use of opcode caching to further enhance performance along with better resource management in general.</p>
+<p>The performance improvements for PHP7 are not something to ignore either &#8211; In the case of this WordPress blog, simple page loading time was <strong>2x</strong> faster via both mod_php and php-fpm using the same settings. Furthermore as shown above, PHP7 was able to handle <strong>3x</strong> more requests in 1 minute with better average loading times than the same settings using PHP5.5.</p>
+<p>For me, the clear winner here is php-fpm, no matter which version of PHP you decide to roll</p>
+                                <div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon-text sd-sharing"><h3 class="sd-title">Share this:</h3><div class="sd-content"><ul><li class="share-reddit"><a rel="nofollow" data-shared="" class="share-reddit sd-button share-icon" href="https://www.reddit.com/submit?url=https%3a%2f%2fwww.simonmott.co.uk%2f2016%2f06%2fphp-handlers-php-5-vs-7%2f&amp;title=PHP&#43;Handlers&#43;and&#43;PHP&#43;5&#43;vs&#43;7" rel="noopener noreferrer" target="_blank" title="Click to share on Reddit"><span>Reddit</span></a></li><li class="share-twitter"><a rel="nofollow" data-shared="sharing-twitter-143" class="share-twitter sd-button share-icon" href="https://twitter.com/intent/tweet?text=PHP&#43;Handlers&#43;and&#43;PHP&#43;5&#43;vs&#43;7&amp;url=https%3a%2f%2fwww.simonmott.co.uk%2f2016%2f06%2fphp-handlers-php-5-vs-7%2f" rel="noopener noreferrer" target="_blank" title="Click to share on Twitter"><span>Twitter</span></a></li><li class="share-facebook"><a rel="nofollow" data-shared="sharing-facebook-143" class="share-facebook sd-button share-icon" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fwww.simonmott.co.uk%2f2016%2f06%2fphp-handlers-php-5-vs-7%2f" rel="noopener noreferrer" target="_blank" title="Click to share on Facebook"><span>Facebook</span></a></li><li class="share-end"></li></ul></div></div></div>
+                                <div class="clearfix"></div>
+
+	        <div class="post-meta-terms">
+	            <div class="post-meta-tags">
+	                <span class="btn"><i class="mythemes-icon-tags"></i></span>
+	                <a href="/tag/apache/" rel="tag">Apache</a><a href="/tag/benchmark/" rel="tag">Benchmark</a><a href="/tag/php/" rel="tag">Php</a><a href="/tag/php5/" rel="tag">Php5</a><a href="/tag/php7/" rel="tag">Php7</a>	                <div class="clear clearfix"></div>
+	            </div>
+	        </div>                            </article>
+
+                            
+
+
+                </div>
+                </section>
+
+            <aside class="col-sm-4 col-md-3 col-lg-3 sidebar-to-right"><div id="search-4" class="widget widget_search"><form action="/search/" method="get" id="searchform">
+    <fieldset>
+        <div id="searchbox">
+            <input type="text" name="s"  id="keywords" value="type here..." onfocus="if (this.value == 'type here...') {this.value = '';}" onblur="if (this.value == '') {this.value = 'type here...';}">
+            <button type="submit"><i class="mythemes-icon-search-5"></i></button>
+        </div>
+    </fieldset>
+</form>
+</div><div id="top-posts-2" class="widget widget_top-posts"><h4 class="widget-title"><i></i>Top Posts &amp; Pages</h4><ul>				<li>
+										<a href="/2026/08/owntracks-and-my-google-timeline/" class="bump-view" data-bump-view="tp">
+						OwnTracks and my Google Timeline					</a>
+									</li>
+			</ul></div>
+		<div id="recent-posts-8" class="widget widget_recent_entries">
+		<h4 class="widget-title"><i></i>Recent Posts</h4>
+		<ul>
+											<li>
+					<a href="/2026/08/owntracks-and-my-google-timeline/">OwnTracks and my Google Timeline</a>
+									</li>
+											<li>
+					<a href="/2024/12/using-ffmpegs-vpp_qsv-detail-enhancement-filter/">Using ffmpeg’s vpp_qsv detail enhancement filter</a>
+									</li>
+											<li>
+					<a href="/2024/12/transcoding-with-an-intel-arc-gpu/">Transcoding with an Intel Arc GPU</a>
+									</li>
+											<li>
+					<a href="/2023/06/auto-mount-luks-without-a-filesystem/">Auto mount LUKS without a filesystem</a>
+									</li>
+											<li>
+					<a href="/2022/02/a-stratum-1-time-server-the-basics/">A Stratum 1 Time Server – The Basics</a>
+									</li>
+											
+					</ul>
+
+		</div><div id="categories-6" class="widget widget_categories"><h4 class="widget-title"><i></i>Categories</h4>
+			<ul>
+					<li class="cat-item"><a href="/category/benchmarks/">Benchmarks</a>
+</li>
+	<li class="cat-item"><a href="/category/coding/">Coding</a>
+</li>
+	<li class="cat-item"><a href="/category/data/">Data</a>
+</li>
+	<li class="cat-item"><a href="/category/debugging/">Debugging</a>
+</li>
+	<li class="cat-item"><a href="/category/firmware/">Firmware</a>
+</li>
+	<li class="cat-item"><a href="/category/gaming/">Gaming</a>
+</li>
+	<li class="cat-item"><a href="/category/general/">General</a>
+</li>
+	<li class="cat-item"><a href="/category/learning/">Learning</a>
+</li>
+	<li class="cat-item"><a href="/category/networking/">Networking</a>
+</li>
+	<li class="cat-item"><a href="/category/system-administration/">System Administration</a>
+</li>
+	<li class="cat-item"><a href="/category/technology/">Technology</a>
+</li>
+	<li class="cat-item"><a href="/category/tweaking/">Tweaking</a>
+</li>
+	
+			</ul>
+
+			</div><div id="archives-5" class="widget widget_archive"><h4 class="widget-title"><i></i>Archives</h4>
+			<ul>
+			
+				<li><a href='/2026-08/'>August 2026</a></li>
+			
+				<li><a href='/2024-12/'>December 2024</a></li>
+			
+				<li><a href='/2023-06/'>June 2023</a></li>
+			
+				<li><a href='/2022-02/'>February 2022</a></li>
+			
+				<li><a href='/2018-08/'>August 2018</a></li>
+			
+				<li><a href='/2018-06/'>June 2018</a></li>
+			
+				<li><a href='/2017-07/'>July 2017</a></li>
+			
+				<li><a href='/2017-03/'>March 2017</a></li>
+			
+				<li><a href='/2016-09/'>September 2016</a></li>
+			
+				<li><a href='/2016-07/'>July 2016</a></li>
+			
+				<li><a href='/2016-06/'>June 2016</a></li>
+			
+				<li><a href='/2013-08/'>August 2013</a></li>
+			
+				<li><a href='/2012-03/'>March 2012</a></li>
+			
+				<li><a href='/2012-02/'>February 2012</a></li>
+			
+				<li><a href='/2011-04/'>April 2011</a></li>
+			
+				<li><a href='/2011-03/'>March 2011</a></li>
+			
+				<li><a href='/2010-04/'>April 2010</a></li>
+			
+				<li><a href='/2010-03/'>March 2010</a></li>
+			
+				<li><a href='/2010-01/'>January 2010</a></li>
+			
+				<li><a href='/2009-09/'>September 2009</a></li>
+			
+				<li><a href='/2009-08/'>August 2009</a></li>
+			
+			</ul>
+
+			</div></aside>
+
+
+            </div>
+
+        </div>
+    </div>
+
+        <footer>
+
+            <div class="mythemes-black-side">
+                <div class="container mythemes-copyright">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-6 col-lg-6">
+                            <p>
+                                <span class="copyright">Copyright © Simon Mott</span>
+                                <span>Designed by <a href="http://mythem.es/" target="_blank" title="myThem.es">myThem.es</a>.</span>
+                            </p>
+                        </div>
+                                                <div class="col-sm-6 col-md-6 col-lg-6">
+                            <div class="mythemes-social">
+                                <a href="https://twitter.com/simon_mott" class="mythemes-icon-twitter " target="_blank"></a><a href="https://github.com/tsumaru720" class="mythemes-icon-github " target="_blank"></a><a href="https://www.flickr.com/photos/tsumaru720" class="mythemes-icon-flickr " target="_blank"></a><a href="https://www.facebook.com/dementedidiot" class="mythemes-icon-facebook " target="_blank"></a><a href="https://www.simonmott.co.uk/feed/" class="mythemes-icon-rss " target="_blank"></a>                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </footer>
+
+        <script src='/js/jquery.min.js'></script>
+        <script src='/js/jquery-migrate.min.js'></script>
+        <script src='/js/bootstrap.min.js'></script>
+        <script src='/js/functions.js'></script>
+        <script src='/js/jquery.prettyPhoto.js'></script>
+        <script src='/js/jquery.prettyPhoto.settings.js'></script>
+        <script src='/js/prettify.js'></script>
+        <script>jQuery(document).ready(function () { prettyPrint(); });</script>
+        
+        <script>(function(){var b=document.getElementById('theme-toggle');if(!b){return;}b.addEventListener('click',function(e){e.preventDefault();var r=document.documentElement;var t=r.getAttribute('data-theme')==='dark'?'light':'dark';r.setAttribute('data-theme',t);try{window.localStorage.setItem('sm-theme',t);}catch(err){}});})();</script>
+    </body>
+</html>

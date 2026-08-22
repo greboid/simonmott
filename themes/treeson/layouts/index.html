@@ -1,0 +1,48 @@
+{{ define "title" }}{{ $pages := where site.RegularPages "Type" "post" }}{{ $pag := .Paginate $pages }}{{ if gt $pag.PageNumber 1 }}{{ site.Title }} - Page {{ $pag.PageNumber }} of {{ $pag.TotalPages }}{{ else }}{{ site.Title }}{{ end }}{{ end }}
+
+{{ define "bodyclass" }}{{ $pages := where site.RegularPages "Type" "post" }}{{ $pag := .Paginate $pages }}home blog{{ if gt $pag.PageNumber 1 }} paged paged-{{ $pag.PageNumber }}{{ end }}{{ end }}
+
+{{ define "main" }}
+    <div class="content">
+        <div class="container">
+
+
+                <aside class="row mythemes-header-items">
+
+                    <!-- FEATURE 1 -->
+                    <div class="col-sm-6 col-md-4 col-lg-4 header-item">
+                                            </div>
+
+                    <!-- FEATURE 2 -->
+                    <div class="col-sm-6 col-md-4 col-lg-4 header-item">
+                                            </div>
+
+                    <div class="clearfix visible-xs-block visible-sm-block"></div>
+
+                    <!-- FEATURE 3 -->
+                    <div class="col-sm-12 col-md-4 col-lg-4 header-item">
+                                            </div>
+
+                </aside>
+
+                <div class="row">
+                    <div class="col-lg-12 mythemes-delimiter"><div class="delimiter-item"></div></div>
+                </div>
+
+
+        <div class="row">
+
+
+<!-- CONTENT -->
+<section class="col-sm-8 col-md-9 col-lg-9 mythemes-classic">
+<div class="content-border right">{{ $pages := where site.RegularPages "Type" "post" }}{{ $pag := .Paginate $pages }}{{ $last := sub (len $pag.Pages) 1 }}{{ range $i, $p := $pag.Pages }}{{ partial "article-list.html" $p }}{{ if lt $i $last }}                <div class="mythemes-delimiter no-padding">
+                <div class="delimiter-item"></div>
+            </div>{{ end }}{{ end }}{{ partial "pagination-nav.html" $pag }}</div></section>
+
+{{ partial "sidebar.html" . }}
+
+        </div>
+
+        </div>
+    </div>
+{{ end }}

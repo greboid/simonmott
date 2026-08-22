@@ -1,0 +1,50 @@
+{{ define "title" }}Search - {{ site.Title }}{{ end }}
+
+{{ define "bodyclass" }}search{{ end }}
+
+{{ define "pageheader" }}
+                <div class="mythemes-page-header">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-8 col-md-9 col-lg-9">
+                            <nav class="mythemes-nav-inline">
+                                <ul class="mythemes-menu">
+                                    <li id="home-label"><a href="{{ site.Home.RelPermalink }}" title="go to home"><i class="mythemes-icon-home"></i> <span>Home</span></a></li><li>Search</li>
+                                    <li></li>
+                                </ul>
+                            </nav>
+                            <h1>Search</h1>
+                        </div>
+                        <div class="col-sm-4 col-md-3 col-lg-3 mythemes-posts-found">
+                            <div class="found-details">
+                                <span id="search-count"></span>                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+{{ end }}
+
+{{ define "main" }}
+    <div class="content">
+        <div class="container">
+            <div class="row">
+<!-- CONTENT -->
+<section class="col-sm-8 col-md-9 col-lg-9 mythemes-classic">
+<div class="content-border right">
+    <div class="post-content">
+        {{ partial "searchform.html" . }}
+        <div id="search-results"></div>
+        <div class="clearfix"></div>
+    </div>
+</div></section>
+
+{{ partial "sidebar.html" . }}
+
+            </div>
+        </div>
+    </div>
+{{ end }}
+
+{{ define "scriptsextra" }}
+<script src="{{ "js/search.js" | relURL }}"></script>
+{{ end }}
