@@ -22,7 +22,7 @@
 			</div><div id="archives-5" class="widget widget_archive"><h4 class="widget-title"><i></i>Archives</h4>
 			<ul>
 			{{ $months := slice }}{{ range where site.RegularPages "Type" "post" }}{{ $months = $months | append (.Date.Format "2006-01") }}{{ end }}{{ range uniq $months }}{{ $t := time (printf "%s-01" .) }}
-				<li><a href='/{{ . }}/'>{{ $t.Format "January 2006" }}</a></li>
+				<li><a href='/{{ replace . "-" "/" }}/'>{{ $t.Format "January 2006" }}</a></li>
 			{{ end }}
 			</ul>
 
